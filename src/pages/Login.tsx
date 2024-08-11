@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { setToken } from '@/utils/tokenWrapper'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -43,7 +44,9 @@ function Login() {
         'http://localhost:3000/api/user/login',
         values
       )
-      console.log(res.data)
+
+      setToken(res.data as string)
+      window.location.href = '/dashboard'
     } catch (error) {
       console.log(error)
     }
@@ -97,7 +100,7 @@ function Login() {
         </form>
       </Form>
       <p className='my-2'>
-        Ainda não tem conta?{' '}
+        Ainda não tem conta?
         <Link className='text-blue-600 underline' to='/register'>
           Crie uma nova.
         </Link>

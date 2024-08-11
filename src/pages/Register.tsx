@@ -108,10 +108,10 @@ function Register() {
         </form>
       </Form>
       <p className='my-2'>
-        Ja tem uma conta? Faça o{' '}
-        <Link className='text-blue-600 underline' to='/'>
+        Ja tem uma conta? Faça o
+        <Link className='text-blue-600 underline' to='/login'>
           Login
-        </Link>{' '}
+        </Link>
       </p>
     </>
   )
