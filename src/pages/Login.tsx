@@ -42,7 +42,10 @@ function Login() {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='w-2/3 space-y-2'
+        >
           <FormField
             control={form.control}
             name='email'
@@ -50,7 +53,11 @@ function Login() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input className='w-full' placeholder='Email' {...field} />
+                  <Input
+                    className='w-full'
+                    placeholder='email@exemplo.pt'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -74,10 +81,17 @@ function Login() {
               </FormItem>
             )}
           />
-          <Button type='submit'>Login</Button>
+          <Button className='w-full' type='submit'>
+            Iniciar sessão
+          </Button>
         </form>
       </Form>
-      <Link to='/register'>Register</Link>
+      <p className='my-2'>
+        Ainda não tem conta?{' '}
+        <Link className='text-blue-600 underline' to='/register'>
+          Crie uma nova.
+        </Link>
+      </p>
     </>
   )
 }
