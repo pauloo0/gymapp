@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,6 +18,7 @@ import {
 } from '@/components/ui/form'
 
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 const isEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
 
@@ -30,6 +32,8 @@ const formSchema = z.object({
 })
 
 function Login() {
+  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,7 +52,13 @@ function Login() {
       setToken(res.data as string)
       window.location.href = '/dashboard'
     } catch (error) {
-      console.log(error)
+      if (axios.isAxiosError(error)) {
+        // console.log(error.response?.status)
+        // console.log(error.response?.data)
+        setErrorMessage(error.response?.data)
+      } else {
+        console.error('An unexpected error occurred:', error)
+      }
     }
   }
 
@@ -64,10 +74,12 @@ function Login() {
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
+                  Email
+                </FormLabel>
                 <FormControl>
                   <Input
-                    className='w-full'
+                    className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
                     placeholder='email@exemplo.pt'
                     {...field}
                   />
@@ -81,11 +93,13 @@ function Login() {
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
+                  Password
+                </FormLabel>
                 <FormControl>
                   <Input
                     type='password'
-                    className='w-full'
+                    className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
                     placeholder='Palavra-passe'
                     {...field}
                   />
@@ -94,6 +108,12 @@ function Login() {
               </FormItem>
             )}
           />
+
+          {errorMessage && (
+            <FormDescription className='text-red-500'>
+              {errorMessage}
+            </FormDescription>
+          )}
           <Button className='w-full' type='submit'>
             Iniciar sessão
           </Button>
