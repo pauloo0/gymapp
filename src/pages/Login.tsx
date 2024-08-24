@@ -50,7 +50,7 @@ function Login() {
       )
 
       setToken(res.data as string)
-      window.location.href = '/dashboard'
+      window.location.href = '/'
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // console.log(error.response?.status)
