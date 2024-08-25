@@ -4,6 +4,8 @@ import { useUser } from '@/utils/userWrapper'
 import ClientDashboard from './ClientDashboard'
 import TrainerDashboard from './TrainerDashboard'
 
+import Navbar from '@/components/Navbar'
+
 function Dashboard() {
   const token = useToken()
   const user = useUser()
@@ -12,7 +14,12 @@ function Dashboard() {
     window.location.href = '/login'
   }
 
-  return user.userRole === 'client' ? <ClientDashboard /> : <TrainerDashboard />
+  return (
+    <>
+      <Navbar />
+      {user.userRole === 'client' ? <ClientDashboard /> : <TrainerDashboard />}
+    </>
+  )
 }
 
 export default Dashboard
