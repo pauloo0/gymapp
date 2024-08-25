@@ -1,5 +1,11 @@
+import ListedSchedules from '@/components/dashboard/ListedSchedules'
+
 function TrainerDashboard() {
-  return <div>TrainerDashboard</div>
+  return (
+    <div>
+      <ListedSchedules />
+    </div>
+  )
 }
 
 export default TrainerDashboard
