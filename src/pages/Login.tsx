@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { setToken } from '@/utils/tokenWrapper'
+import { setToken, useToken } from '@/utils/tokenWrapper'
+import { setUser } from '@/utils/userWrapper'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -32,6 +33,12 @@ const formSchema = z.object({
 })
 
 function Login() {
+  const token = useToken()
+
+  if (token) {
+    window.location.href = '/'
+  }
+
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,12 +56,12 @@ function Login() {
         values
       )
 
-      setToken(res.data as string)
+      setToken(res.data.token as string)
+      setUser({ userId: res.data.user, role: res.data.role })
+
       window.location.href = '/'
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // console.log(error.response?.status)
-        // console.log(error.response?.data)
         setErrorMessage(error.response?.data)
       } else {
         console.error('An unexpected error occurred:', error)

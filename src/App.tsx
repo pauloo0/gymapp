@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
-import Dashboard from './pages/Dashboard'
+import Dashboard from './pages/Dashboard/Dashboard'
 
 function App() {
   return (
