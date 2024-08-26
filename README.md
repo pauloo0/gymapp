@@ -1,50 +1,36 @@
-# React + TypeScript + Vite
+# Personal Trainer companion
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This application is being developed with the goal of helping Personal Trainers manage their client base.
+Also every client will also have access to the application, but only if they have been invited by a trainer.
 
-Currently, two official plugins are available:
+# MVP Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Personal Trainers
 
-## Expanding the ESLint configuration
+- Invite clients and see their profile
+- Create workouts for their clients
+- Schedule sessions
+- Add measurements for a client to track their progress
+- View upcomming scheduled sessions
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Clients
 
-- Configure the top-level `parserOptions` property like this:
+- View their profiles
+- View their training schedule
+- View their workout plans
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+# Future features
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Personal Trainers
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- Send scheduled sessions via SMS
+- Manage client payments and subscription plans
+- View data from workouts
+- ...
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Clients
+
+- Record their sets and weights lifted during workouts
+- View workout history
+- View evolution history
+- ...
