@@ -40,9 +40,13 @@ function ListedSchedules() {
         },
       })
 
-      //TODO: Show only the schedules for today
-      const sortedSchedules = res.data.schedule.sort(
-        (scheduleA: Schedule, scheduleB: Schedule) => {
+      const sortedSchedules = res.data.schedule
+        .filter(
+          (schedule: Schedule) =>
+            schedule.date ===
+            new Date(new Date().setHours(1, 0, 0, 0)).toISOString()
+        )
+        .sort((scheduleA: Schedule, scheduleB: Schedule) => {
           const dateA = new Date(scheduleA.date)
           const dateB = new Date(scheduleB.date)
           const timeA = new Date(`1970-01-01T${scheduleA.time}`)
@@ -51,8 +55,7 @@ function ListedSchedules() {
             dateA.getTime() - dateB.getTime() ||
             timeA.getTime() - timeB.getTime()
           )
-        }
-      )
+        })
 
       setSchedules(sortedSchedules)
     } catch (error) {
