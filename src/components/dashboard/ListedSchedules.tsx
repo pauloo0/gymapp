@@ -34,49 +34,49 @@ function ListedSchedules() {
 
   const [schedules, setSchedules] = useState<Schedule[]>(emptySchedules)
 
-  const fetchSchedules = async () => {
-    try {
-      const res = await axios.get('http://localhost:3000/api/schedule', {
-        headers: {
-          'Auth-Token': token,
-        },
-      })
-
-      const today = new Date()
-      const currentTime = today.getHours() + ':' + today.getMinutes()
-
-      const sortedSchedules = res.data.schedule
-        .filter(
-          (schedule: Schedule) =>
-            schedule.date ===
-              new Date(new Date().setHours(1, 0, 0, 0)).toISOString() &&
-            schedule.time >= currentTime
-        )
-        .sort((scheduleA: Schedule, scheduleB: Schedule) => {
-          const dateA = new Date(scheduleA.date)
-          const dateB = new Date(scheduleB.date)
-          const timeA = new Date(`1970-01-01T${scheduleA.time}`)
-          const timeB = new Date(`1970-01-01T${scheduleB.time}`)
-          return (
-            dateA.getTime() - dateB.getTime() ||
-            timeA.getTime() - timeB.getTime()
-          )
+  useEffect(() => {
+    const fetchSchedules = async () => {
+      try {
+        const res = await axios.get('http://localhost:3000/api/schedule', {
+          headers: {
+            'Auth-Token': token,
+          },
         })
 
-      setSchedules(sortedSchedules)
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log(error.response?.status)
-        console.log(error.response?.data)
-      } else {
-        console.error('An unexpected error occurred:', error)
+        const today = new Date()
+        const currentTime = today.getHours() + ':' + today.getMinutes()
+
+        const sortedSchedules = res.data.schedule
+          .filter(
+            (schedule: Schedule) =>
+              schedule.date ===
+                new Date(new Date().setHours(1, 0, 0, 0)).toISOString() &&
+              schedule.time >= currentTime
+          )
+          .sort((scheduleA: Schedule, scheduleB: Schedule) => {
+            const dateA = new Date(scheduleA.date)
+            const dateB = new Date(scheduleB.date)
+            const timeA = new Date(`1970-01-01T${scheduleA.time}`)
+            const timeB = new Date(`1970-01-01T${scheduleB.time}`)
+            return (
+              dateA.getTime() - dateB.getTime() ||
+              timeA.getTime() - timeB.getTime()
+            )
+          })
+
+        setSchedules(sortedSchedules)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.log(error.response?.status)
+          console.log(error.response?.data)
+        } else {
+          console.error('An unexpected error occurred:', error)
+        }
       }
     }
-  }
 
-  useEffect(() => {
     fetchSchedules()
-  }, [])
+  }, [token])
 
   const navigateToSchedule = (id: string) => {
     window.location.href = `/schedule/${id}`

@@ -51,36 +51,39 @@ function UnpaidInvoicesNextWeek() {
 
   const [invoices, setInvoices] = useState(emptyInvoices)
 
-  const fetchInvoices = async () => {
-    try {
-      const res = await axios.get('http://localhost:3000/api/invoices/unpaid', {
-        headers: {
-          'Auth-Token': token,
-        },
-      })
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const res = await axios.get(
+          'http://localhost:3000/api/invoices/unpaid',
+          {
+            headers: {
+              'Auth-Token': token,
+            },
+          }
+        )
 
-      const unpaidInvoicesDueNextWeek = res.data.invoices.sort(
-        (invoiceA: Invoice, invoiceB: Invoice) => {
-          const dateA = new Date(invoiceA.due_date)
-          const dateB = new Date(invoiceB.due_date)
-          return dateA.getTime() - dateB.getTime()
+        const unpaidInvoicesDueNextWeek = res.data.invoices.sort(
+          (invoiceA: Invoice, invoiceB: Invoice) => {
+            const dateA = new Date(invoiceA.due_date)
+            const dateB = new Date(invoiceB.due_date)
+            return dateA.getTime() - dateB.getTime()
+          }
+        )
+
+        setInvoices(unpaidInvoicesDueNextWeek)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(error.response?.status)
+          console.error(error.response?.data)
+        } else {
+          console.error('An unexpected error occurred:', error)
         }
-      ) //.filter().sort()
-
-      setInvoices(unpaidInvoicesDueNextWeek)
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error.response?.status)
-        console.error(error.response?.data)
-      } else {
-        console.error('An unexpected error occurred:', error)
       }
     }
-  }
 
-  useEffect(() => {
     fetchInvoices()
-  }, [])
+  }, [token])
 
   return (
     <Card>
