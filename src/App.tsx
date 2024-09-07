@@ -12,7 +12,7 @@ import Profile from './pages/Profile/Profile'
 
 function App() {
   return (
-    <div className='flex flex-col items-center justify-center w-screen h-screen'>
+    <div className='p-4 pt-12'>
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
