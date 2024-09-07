@@ -3,6 +3,8 @@ import { useToken } from '@/utils/tokenWrapper'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
 interface Schedule {
   id: string
   date: string
@@ -72,17 +74,33 @@ function ListedSchedules() {
     fetchSchedules()
   }, [])
 
+  const navigateToSchedule = (id: string) => {
+    window.location.href = `/schedule/${id}`
+  }
+
   return (
-    <div>
-      {schedules.map((schedule: Schedule) => (
-        <div key={schedule.id}>
-          {schedule.clients.firstname + ' ' + schedule.clients.lastname}
-          <div>
-            {new Date(schedule.date).toLocaleDateString()} - {schedule.time}
+    <Card>
+      <CardHeader>
+        <CardTitle>Agendamentos</CardTitle>
+      </CardHeader>
+      <CardContent className='grid grid-cols-1 gap-2 p-2'>
+        {schedules.map((schedule: Schedule) => (
+          <div
+            className='flex flex-row items-center justify-between px-4 py-2 border rounded-xl hover:cursor-pointer hover:bg-slate-100'
+            key={schedule.id}
+            onClick={() => navigateToSchedule(schedule.id)}
+          >
+            <div>
+              {schedule.clients.firstname + ' ' + schedule.clients.lastname}
+            </div>
+            <div className='flex flex-col items-end justify-center text-sm text-slate-500'>
+              <span>{schedule.time}</span>
+              <span>{new Date(schedule.date).toLocaleDateString('pt-PT')}</span>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </CardContent>
+    </Card>
   )
 }
 
