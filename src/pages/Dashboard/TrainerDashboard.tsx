@@ -3,7 +3,7 @@ import UnpaidInvoicesNextWeek from '@/components/dashboard/UnpaidInvoicesNextWee
 
 function TrainerDashboard() {
   return (
-    <div>
+    <div className='flex flex-col gap-4'>
       <ListedSchedules />
       <UnpaidInvoicesNextWeek />
     </div>
