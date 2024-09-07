@@ -42,11 +42,15 @@ function ListedSchedules() {
         },
       })
 
+      const today = new Date()
+      const currentTime = today.getHours() + ':' + today.getMinutes()
+
       const sortedSchedules = res.data.schedule
         .filter(
           (schedule: Schedule) =>
             schedule.date ===
-            new Date(new Date().setHours(1, 0, 0, 0)).toISOString()
+              new Date(new Date().setHours(1, 0, 0, 0)).toISOString() &&
+            schedule.time >= currentTime
         )
         .sort((scheduleA: Schedule, scheduleB: Schedule) => {
           const dateA = new Date(scheduleA.date)
