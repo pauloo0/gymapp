@@ -10,6 +10,8 @@ import Workouts from './pages/Workouts'
 import Measurements from './pages/Measurements'
 import Profile from './pages/Profile/Profile'
 
+import ClientProfile from './pages/Client Profile/ClientProfile'
+
 function App() {
   return (
     <div className='p-4 pt-12'>
@@ -25,6 +27,8 @@ function App() {
         <Route path='/treinos' element={<Workouts />} />
         <Route path='/avaliacoes' element={<Measurements />} />
         <Route path='/perfil' element={<Profile />} />
+
+        <Route path='/cliente/:id' element={<ClientProfile />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>

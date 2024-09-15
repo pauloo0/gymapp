@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-interface Client {
+export interface Client {
   id: string
   firstname: string
   lastname: string

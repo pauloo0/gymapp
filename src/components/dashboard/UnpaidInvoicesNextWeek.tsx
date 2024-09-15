@@ -4,7 +4,7 @@ import { useToken } from '@/utils/tokenWrapper'
 import axios from 'axios'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 
-interface Invoice {
+export interface Invoice {
   id: string
   issue_date: string
   due_date: string
