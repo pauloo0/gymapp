@@ -1,28 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useToken } from '@/utils/tokenWrapper'
-
+import { Invoice } from '@/utils/interfaces'
 import axios from 'axios'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-
-export interface Invoice {
-  id: string
-  issue_date: string
-  due_date: string
-  amount: number
-  status: string
-  subscriptions: {
-    id: string
-    start_date: string
-    active: boolean
-    package_id: string
-    clients: {
-      id: string
-      firstname: string
-      lastname: string
-      active: boolean
-    }
-  }
-}
 
 const emptyInvoices: Invoice[] = [
   {

@@ -1,6 +1,6 @@
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-
+import { Client } from '@/utils/interfaces'
 import Navbar from '@/components/Navbar'
 
 import axios from 'axios'
@@ -14,21 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-
-export interface Client {
-  id: string
-  firstname: string
-  lastname: string
-  join_date: string
-  birthday: string
-  goal: string
-  trainer_id: string
-  active: boolean
-  users: {
-    id: string
-    email: string
-  }
-}
 
 const emptyClient: Client[] = [
   {

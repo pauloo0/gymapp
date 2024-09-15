@@ -1,81 +1,17 @@
 import { useParams } from 'react-router'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { Client } from '../Clients'
-import { Invoice } from '@/components/dashboard/UnpaidInvoicesNextWeek'
-import { Schedule } from '@/components/dashboard/ListedSchedules'
+
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-
-interface Measurement {
-  id: string
-  client_id: string
-  date: string
-  weight: number
-  height: number
-  body_fat_pct: number
-  body_fat: number
-  muscle_mass_pct: number
-  muscle_mass: number
-  water_pct: number
-  bmi: number
-  visceral_fat: number
-  chest: number
-  waist: number
-  hip: number
-  leftthigh: number
-  rightthigh: number
-  leftarm: number
-  rightarm: number
-  leftcalf: number
-  rightcalf: number
-}
-
-interface Workout {
-  id: string
-  name: string
-  active: boolean
-  public: boolean
-  workout_exercises: [
-    {
-      exercises: {
-        id: string
-        name: string
-        description: string
-        equipment: {
-          id: string
-          name: string
-        }
-        bodyparts: {
-          id: string
-          name: string
-        }
-        media: [
-          {
-            id: string
-            type: string
-            url: string
-          }
-        ]
-      }
-      reps: number
-      sets: number
-    }
-  ]
-}
-
-interface Subscription {
-  id: string
-  start_date: string
-  active: boolean
-  packages: {
-    id: string
-    name: string
-    price: number
-    days_per_week: number
-    active: boolean
-  }
-}
+import {
+  Client,
+  Measurement,
+  Schedule,
+  Workout,
+  Invoice,
+  Subscription,
+} from '@/utils/interfaces'
 
 const emptyClient: Client = {
   id: '',
