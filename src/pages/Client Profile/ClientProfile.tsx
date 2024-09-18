@@ -12,6 +12,22 @@ import {
   Invoice,
   Subscription,
 } from '@/utils/interfaces'
+import { getAge } from '@/utils/functions'
+
+import Navbar from '@/components/Navbar'
+
+import { ArrowLeft } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Avatar,
+  AvatarFallback,
+  //AvatarImage
+} from '@/components/ui/avatar'
+import ClientMeasurements from './ClientMeasurements'
+import ClientWorkouts from './ClientWorkouts'
+import ClientSchedules from './ClientSchedules'
+import ClientInvoices from './ClientInvoices'
+import ClientSubscriptions from './ClientSubsriptions'
 
 const emptyClient: Client = {
   id: '',
@@ -217,9 +233,62 @@ function ClientProfile() {
     fetchClientInfo()
   }, [token, id])
 
-  //TODO Create basic user profile and tabs for each section
+  return (
+    <div className='flex flex-col items-start justify-center'>
+      <Navbar />
+      <ArrowLeft
+        className='w-6 h-6'
+        onClick={() => (window.location.href = '/clients')}
+      />
+      <div id='client-header' className='flex flex-row w-full mt-10 mb-12'>
+        <Avatar className='w-14 h-14'>
+          {/* TODO Add image to avatar */}
+          {/* <AvatarImage src={client.image} /> */}
+          <AvatarFallback>
+            {client.firstname[0] + client.lastname[0]}
+          </AvatarFallback>
+        </Avatar>
 
-  return <div>ClientProfile</div>
+        <div id='client-info' className='flex flex-col w-full ml-4'>
+          <h1 className='text-xl'>
+            {client.firstname} {client.lastname}
+          </h1>
+
+          <div className='flex flex-row items-center justify-between'>
+            <p className='text-sm'>{getAge(client.birthday)} anos</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 
+        //TODO Style the tabs so they don't overflow 
+      */}
+      <Tabs id='client-sections' defaultValue='measurements'>
+        <TabsList>
+          <TabsTrigger value='measurements'>Medições</TabsTrigger>
+          <TabsTrigger value='workouts'>Planos</TabsTrigger>
+          <TabsTrigger value='schedule'>Marcações</TabsTrigger>
+          <TabsTrigger value='invoicing'>Faturação</TabsTrigger>
+          <TabsTrigger value='subscription'>Subscrições</TabsTrigger>
+        </TabsList>
+        <TabsContent value='measurements'>
+          <ClientMeasurements measurements={measurements} />
+        </TabsContent>
+        <TabsContent value='workouts'>
+          <ClientWorkouts workouts={workouts} />
+        </TabsContent>
+        <TabsContent value='schedule'>
+          <ClientSchedules schedules={schedules} />
+        </TabsContent>
+        <TabsContent value='invoicing'>
+          <ClientInvoices invoices={invoices} />
+        </TabsContent>
+        <TabsContent value='subscription'>
+          <ClientSubscriptions subscriptions={subscriptions} />
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
 }
 
 export default ClientProfile

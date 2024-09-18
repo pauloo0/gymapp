@@ -1,6 +1,8 @@
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
 import { Client } from '@/utils/interfaces'
+import { getAge } from '@/utils/functions'
+
 import Navbar from '@/components/Navbar'
 
 import axios from 'axios'
@@ -71,10 +73,6 @@ function Clients() {
 
     fetchClients()
   }, [token])
-
-  const getAge = (birthday: string) => {
-    return new Date().getFullYear() - new Date(birthday).getFullYear()
-  }
 
   const goToClientPage = (id: string) => {
     window.location.href = `/cliente/${id}`
