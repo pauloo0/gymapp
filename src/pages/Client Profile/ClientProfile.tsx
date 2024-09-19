@@ -17,7 +17,13 @@ import { getAge } from '@/utils/functions'
 import Navbar from '@/components/Navbar'
 
 import { ArrowLeft } from 'lucide-react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+
 import {
   Avatar,
   AvatarFallback,
@@ -233,6 +239,10 @@ function ClientProfile() {
     fetchClientInfo()
   }, [token, id])
 
+  // Tailwind classes in a variable
+  const label_group = 'flex flex-col items-start justify-center gap-1'
+  const label = 'text-sm font-semibold leading-none'
+
   return (
     <div className='flex flex-col items-start justify-center'>
       <Navbar />
@@ -240,7 +250,10 @@ function ClientProfile() {
         className='w-6 h-6'
         onClick={() => (window.location.href = '/clients')}
       />
-      <div id='client-header' className='flex flex-row w-full mt-10 mb-12'>
+      <div
+        id='client-header'
+        className='flex flex-row items-center justify-between w-full mt-10 mb-12'
+      >
         <Avatar className='w-14 h-14'>
           {/* TODO Add image to avatar */}
           {/* <AvatarImage src={client.image} /> */}
@@ -249,44 +262,94 @@ function ClientProfile() {
           </AvatarFallback>
         </Avatar>
 
-        <div id='client-info' className='flex flex-col w-full ml-4'>
+        <div className='flex flex-col w-full ml-4'>
           <h1 className='text-xl'>
             {client.firstname} {client.lastname}
           </h1>
-
-          <div className='flex flex-row items-center justify-between'>
-            <p className='text-sm'>{getAge(client.birthday)} anos</p>
-          </div>
         </div>
       </div>
 
-      {/* 
-        //TODO Style the tabs so they don't overflow 
-      */}
-      <Tabs id='client-sections' defaultValue='measurements'>
-        <TabsList>
-          <TabsTrigger value='measurements'>Medições</TabsTrigger>
-          <TabsTrigger value='workouts'>Planos</TabsTrigger>
-          <TabsTrigger value='schedule'>Marcações</TabsTrigger>
-          <TabsTrigger value='invoicing'>Faturação</TabsTrigger>
-          <TabsTrigger value='subscription'>Subscrições</TabsTrigger>
-        </TabsList>
-        <TabsContent value='measurements'>
-          <ClientMeasurements measurements={measurements} />
-        </TabsContent>
-        <TabsContent value='workouts'>
-          <ClientWorkouts workouts={workouts} />
-        </TabsContent>
-        <TabsContent value='schedule'>
-          <ClientSchedules schedules={schedules} />
-        </TabsContent>
-        <TabsContent value='invoicing'>
-          <ClientInvoices invoices={invoices} />
-        </TabsContent>
-        <TabsContent value='subscription'>
-          <ClientSubscriptions subscriptions={subscriptions} />
-        </TabsContent>
-      </Tabs>
+      <Accordion
+        id='client-sections'
+        type='single'
+        collapsible
+        className='w-full'
+        defaultValue='profile'
+      >
+        <AccordionItem value='profile'>
+          <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+            Informação
+          </AccordionTrigger>
+          <AccordionContent className='px-4'>
+            <div className='grid grid-cols-2 gap-2'>
+              <div className={label_group}>
+                <p className={label}>Data de nascimento</p>
+                <p>{new Date(client.birthday).toLocaleDateString('pt-PT')}</p>
+              </div>
+              <div className={label_group}>
+                <p className={label}>Idade</p>
+                <p>{getAge(client.birthday)}</p>
+              </div>
+              <div className={label_group}>
+                <p className={label}>Email</p>
+                <p>{client.users.email}</p>
+              </div>
+              <div className={label_group}>
+                <p className={label}>Data Entrada</p>
+                <p>{new Date(client.join_date).toLocaleDateString('pt-PT')}</p>
+              </div>
+              <div className={label_group}>
+                <p className={label}>Ativo ?</p>
+                <p>{client.active ? 'Sim' : 'Não'}</p>
+              </div>
+              <div className={`${label_group} col-span-2`}>
+                <p className={label}>Objetivo</p>
+                <p>{client.goal}</p>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value='measurements'>
+          <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+            Medições
+          </AccordionTrigger>
+          <AccordionContent className='px-4'>
+            <ClientMeasurements measurements={measurements} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value='workouts'>
+          <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+            Planos
+          </AccordionTrigger>
+          <AccordionContent className='px-4'>
+            <ClientWorkouts workouts={workouts} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value='schedule'>
+          <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+            Marcações
+          </AccordionTrigger>
+          <AccordionContent className='px-4'>
+            <ClientSchedules schedules={schedules} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value='invoicing'>
+          <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+            Faturação
+          </AccordionTrigger>
+          <AccordionContent className='px-4'>
+            <ClientInvoices invoices={invoices} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value='subscription'>
+          <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+            Subscrições
+          </AccordionTrigger>
+          <AccordionContent className='px-4'>
+            <ClientSubscriptions subscriptions={subscriptions} />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   )
 }
