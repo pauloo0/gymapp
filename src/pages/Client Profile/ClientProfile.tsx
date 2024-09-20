@@ -33,7 +33,6 @@ import ClientMeasurements from './ClientMeasurements'
 import ClientWorkouts from './ClientWorkouts'
 import ClientSchedules from './ClientSchedules'
 import ClientInvoices from './ClientInvoices'
-import ClientSubscriptions from './ClientSubsriptions'
 
 const emptyClient: Client = {
   id: '',
@@ -146,20 +145,18 @@ const emptySchedule: Schedule[] = [
   },
 ]
 
-const emptySubscription: Subscription[] = [
-  {
+const emptySubscription: Subscription = {
+  id: '',
+  start_date: '',
+  active: false,
+  packages: {
     id: '',
-    start_date: '',
+    name: '',
+    price: 0,
+    days_per_week: 0,
     active: false,
-    packages: {
-      id: '',
-      name: '',
-      price: 0,
-      days_per_week: 0,
-      active: false,
-    },
   },
-]
+}
 
 function ClientProfile() {
   const token = useToken()
@@ -174,7 +171,7 @@ function ClientProfile() {
   const [measurements, setMeasurements] = useState(emptyMeasurement)
   const [invoices, setInvoices] = useState(emptyInvoice)
   const [workouts, setWorkouts] = useState(emptyWorkout)
-  const [subscriptions, setSubscriptions] = useState(emptySubscription)
+  const [subscription, setSubscription] = useState(emptySubscription)
   const [schedules, setSchedules] = useState(emptySchedule)
 
   useEffect(() => {
@@ -201,11 +198,14 @@ function ClientProfile() {
               'Auth-Token': token,
             },
           }),
-          axios.get('http://localhost:3000/api/subscriptions/client/' + id, {
-            headers: {
-              'Auth-Token': token,
-            },
-          }),
+          axios.get(
+            'http://localhost:3000/api/subscriptions/client/' + id + '/active',
+            {
+              headers: {
+                'Auth-Token': token,
+              },
+            }
+          ),
           axios.get('http://localhost:3000/api/schedule/client/' + id, {
             headers: {
               'Auth-Token': token,
@@ -217,14 +217,14 @@ function ClientProfile() {
         const measurements = res2.data.measurements
         const invoices = res3.data.invoices
         const workouts = res4.data.workouts
-        const subscriptions = res5.data.subscriptions
+        const subscription = res5.data.subscription
         const schedules = res6.data.schedule
 
         setClient(client)
         setMeasurements(measurements)
         setInvoices(invoices)
         setWorkouts(workouts)
-        setSubscriptions(subscriptions)
+        setSubscription(subscription)
         setSchedules(schedules)
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -281,7 +281,7 @@ function ClientProfile() {
             Informação
           </AccordionTrigger>
           <AccordionContent className='px-4'>
-            <div className='grid grid-cols-2 gap-2'>
+            <div className='grid grid-cols-2 gap-x-2 gap-y-4'>
               <div className={label_group}>
                 <p className={label}>Data de nascimento</p>
                 <p>{new Date(client.birthday).toLocaleDateString('pt-PT')}</p>
@@ -297,6 +297,10 @@ function ClientProfile() {
               <div className={label_group}>
                 <p className={label}>Data Entrada</p>
                 <p>{new Date(client.join_date).toLocaleDateString('pt-PT')}</p>
+              </div>
+              <div className={label_group}>
+                <p className={label}>Pacote Subscrito</p>
+                <p>{subscription.packages.name}</p>
               </div>
               <div className={label_group}>
                 <p className={label}>Ativo ?</p>
@@ -339,14 +343,6 @@ function ClientProfile() {
           </AccordionTrigger>
           <AccordionContent className='px-4'>
             <ClientInvoices invoices={invoices} />
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value='subscription'>
-          <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
-            Subscrições
-          </AccordionTrigger>
-          <AccordionContent className='px-4'>
-            <ClientSubscriptions subscriptions={subscriptions} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
