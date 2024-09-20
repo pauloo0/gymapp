@@ -44,10 +44,12 @@ function Clients() {
 
   const [clients, setClients] = useState<Client[]>(emptyClient)
 
+  const apiUrl: string = import.meta.env.VITE_API_URL || ''
+
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/clients', {
+        const res = await axios.get(`${apiUrl}/clients`, {
           headers: {
             'Auth-Token': token,
           },
@@ -72,7 +74,7 @@ function Clients() {
     }
 
     fetchClients()
-  }, [token])
+  }, [token, apiUrl])
 
   const goToClientPage = (id: string) => {
     window.location.href = `/cliente/${id}`

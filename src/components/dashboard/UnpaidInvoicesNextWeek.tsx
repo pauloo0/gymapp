@@ -31,17 +31,16 @@ function UnpaidInvoicesNextWeek() {
 
   const [invoices, setInvoices] = useState(emptyInvoices)
 
+  const apiUrl: string = import.meta.env.VITE_API_URL || ''
+
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        const res = await axios.get(
-          'http://localhost:3000/api/invoices/unpaid',
-          {
-            headers: {
-              'Auth-Token': token,
-            },
-          }
-        )
+        const res = await axios.get(`${apiUrl}/invoices/unpaid`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
 
         const unpaidInvoicesDueNextWeek = res.data.invoices.sort(
           (invoiceA: Invoice, invoiceB: Invoice) => {
@@ -63,7 +62,7 @@ function UnpaidInvoicesNextWeek() {
     }
 
     fetchInvoices()
-  }, [token])
+  }, [token, apiUrl])
 
   return (
     <Card>

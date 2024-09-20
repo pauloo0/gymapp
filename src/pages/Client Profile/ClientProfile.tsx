@@ -174,39 +174,38 @@ function ClientProfile() {
   const [subscription, setSubscription] = useState(emptySubscription)
   const [schedules, setSchedules] = useState(emptySchedule)
 
+  const apiUrl: string = import.meta.env.VITE_API_URL || ''
+
   useEffect(() => {
     const fetchClientInfo = async () => {
       try {
         const [res1, res2, res3, res4, res5, res6] = await Promise.all([
-          axios.get('http://localhost:3000/api/clients/' + id, {
+          axios.get(`${apiUrl}/clients/${id}`, {
             headers: {
               'Auth-Token': token,
             },
           }),
-          axios.get('http://localhost:3000/api/measurements/client/' + id, {
+          axios.get(`${apiUrl}/measurements/client/${id}`, {
             headers: {
               'Auth-Token': token,
             },
           }),
-          axios.get('http://localhost:3000/api/invoices/client/' + id, {
+          axios.get(`${apiUrl}/invoices/client/${id}`, {
             headers: {
               'Auth-Token': token,
             },
           }),
-          axios.get('http://localhost:3000/api/workouts/client/' + id, {
+          axios.get(`${apiUrl}/workouts/client/${id}`, {
             headers: {
               'Auth-Token': token,
             },
           }),
-          axios.get(
-            'http://localhost:3000/api/subscriptions/client/' + id + '/active',
-            {
-              headers: {
-                'Auth-Token': token,
-              },
-            }
-          ),
-          axios.get('http://localhost:3000/api/schedule/client/' + id, {
+          axios.get(`${apiUrl}/subscriptions/client/${id}/active`, {
+            headers: {
+              'Auth-Token': token,
+            },
+          }),
+          axios.get(`${apiUrl}/schedule/client/${id}`, {
             headers: {
               'Auth-Token': token,
             },
@@ -237,7 +236,7 @@ function ClientProfile() {
     }
 
     fetchClientInfo()
-  }, [token, id])
+  }, [token, id, apiUrl])
 
   // Tailwind classes in a variable
   const label_group = 'flex flex-col items-start justify-center gap-1'

@@ -24,10 +24,12 @@ function ListedSchedules() {
 
   const [schedules, setSchedules] = useState<Schedule[]>(emptySchedules)
 
+  const apiUrl: string = import.meta.env.VITE_API_URL || ''
+
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/schedule', {
+        const res = await axios.get(`${apiUrl}/schedule`, {
           headers: {
             'Auth-Token': token,
           },
@@ -66,7 +68,7 @@ function ListedSchedules() {
     }
 
     fetchSchedules()
-  }, [token])
+  }, [token, apiUrl])
 
   const navigateToSchedule = (id: string) => {
     window.location.href = `/marcacao/${id}`

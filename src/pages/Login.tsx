@@ -41,6 +41,8 @@ function Login() {
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
 
+  const apiUrl: string = import.meta.env.VITE_API_URL || ''
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,10 +53,7 @@ function Login() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await axios.post(
-        'http://localhost:3000/api/user/login',
-        values
-      )
+      const res = await axios.post(`${apiUrl}/user/login`, values)
 
       setToken(res.data.token as string)
       setUser({ userId: res.data.user, role: res.data.role })
