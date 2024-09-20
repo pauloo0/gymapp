@@ -30,7 +30,7 @@ function ClientInvoices({ invoices }: { invoices: Invoice[] }) {
         case 'overdue':
           invoice.status = 'Vencido'
           break
-        case 'partial_paid':
+        case 'partial_payment':
           invoice.status = 'Parcial'
           break
         case 'issued':
