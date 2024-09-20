@@ -8,8 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
 
 function ClientWorkouts({ workouts }: { workouts: Workout[] }) {
   const navigateTo = (path: string) => {
@@ -22,7 +20,6 @@ function ClientWorkouts({ workouts }: { workouts: Workout[] }) {
         <TableRow>
           <TableHead className='p-2'>Nome</TableHead>
           <TableHead className='p-2'>Ativo</TableHead>
-          <TableHead className='p-2'></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -34,11 +31,6 @@ function ClientWorkouts({ workouts }: { workouts: Workout[] }) {
             <TableCell className='p-2'>{workout.name}</TableCell>
             <TableCell className='p-2'>
               {workout.active ? 'Sim' : 'Não'}
-            </TableCell>
-            <TableCell className='p-2'>
-              <Button className='bg-transparent text-slate-400'>
-                <ArrowRight></ArrowRight>
-              </Button>
             </TableCell>
           </TableRow>
         ))}

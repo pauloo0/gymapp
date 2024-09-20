@@ -8,8 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
 
 function ClientMeasurements({ measurements }: { measurements: Measurement[] }) {
   const navigateTo = (path: string) => {
@@ -20,21 +18,17 @@ function ClientMeasurements({ measurements }: { measurements: Measurement[] }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Data</TableHead>
+          <TableHead className='p-2'>Data</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {measurements.map((measurement) => (
-          <TableRow>
-            <TableCell
-              key={measurement.id}
-              onClick={() => navigateTo(`/avaliacoes/${measurement.id}`)}
-              className='flex items-center justify-between cursor-pointer'
-            >
+          <TableRow
+            key={measurement.id}
+            onClick={() => navigateTo(`/avaliacoes/${measurement.id}`)}
+          >
+            <TableCell className='p-2'>
               {new Date(measurement.date).toLocaleDateString('pt-PT')}
-              <Button className='bg-transparent text-slate-400'>
-                <ArrowRight />
-              </Button>
             </TableCell>
           </TableRow>
         ))}
