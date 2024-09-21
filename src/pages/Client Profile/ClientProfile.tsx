@@ -16,7 +16,7 @@ import { getAge } from '@/utils/functions'
 
 import Navbar from '@/components/Navbar'
 
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, LoaderCircle } from 'lucide-react'
 import {
   Accordion,
   AccordionContent,
@@ -167,6 +167,9 @@ function ClientProfile() {
   }
 
   const { id } = useParams()
+
+  const [isLoading, setIsLoading] = useState(true)
+
   const [client, setClient] = useState(emptyClient)
   const [measurements, setMeasurements] = useState(emptyMeasurement)
   const [invoices, setInvoices] = useState(emptyInvoice)
@@ -225,6 +228,8 @@ function ClientProfile() {
         setWorkouts(workouts)
         setSubscription(subscription)
         setSchedules(schedules)
+
+        setIsLoading(false)
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.data)
@@ -241,6 +246,14 @@ function ClientProfile() {
   // Tailwind classes in a variable
   const label_group = 'flex flex-col items-start justify-center gap-1'
   const label = 'text-sm font-semibold leading-none'
+
+  if (isLoading) {
+    return (
+      <div className='absolute flex flex-col items-center justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-slate-700'>
+        <LoaderCircle className='w-12 h-12 animate-spin' /> Loading ...
+      </div>
+    )
+  }
 
   return (
     <div className='flex flex-col items-start justify-center'>
