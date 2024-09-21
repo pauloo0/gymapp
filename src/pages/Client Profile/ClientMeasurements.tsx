@@ -14,6 +14,10 @@ function ClientMeasurements({ measurements }: { measurements: Measurement[] }) {
     window.location.href = path
   }
 
+  if (measurements.length === 0) {
+    return <p>Nenhuma avaliação registada.</p>
+  }
+
   return (
     <Table>
       <TableHeader>

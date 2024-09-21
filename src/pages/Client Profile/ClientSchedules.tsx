@@ -25,25 +25,29 @@ function ClientSchedules({ schedules }: { schedules: Schedule[] }) {
       >
         <Plus className='w-5 h-5 mr-1' /> Adicionar
       </Button>
-      <Table>
-        <TableHeader>
-          <TableRow></TableRow>
-          <TableRow>
-            <TableHead className='p-2'>Data</TableHead>
-            <TableHead className='p-2'>Hora</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {schedules.map((schedule) => (
-            <TableRow key={schedule.id}>
-              <TableCell className='p-2'>
-                {new Date(schedule.date).toLocaleDateString('pt-PT')}
-              </TableCell>
-              <TableCell className='p-2'>{schedule.time}</TableCell>
+      {schedules.length === 0 ? (
+        <p>Nenhum treino marcado.</p>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow></TableRow>
+            <TableRow>
+              <TableHead className='p-2'>Data</TableHead>
+              <TableHead className='p-2'>Hora</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {schedules.map((schedule) => (
+              <TableRow key={schedule.id}>
+                <TableCell className='p-2'>
+                  {new Date(schedule.date).toLocaleDateString('pt-PT')}
+                </TableCell>
+                <TableCell className='p-2'>{schedule.time}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </>
   )
 }

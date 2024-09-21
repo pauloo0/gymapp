@@ -44,6 +44,10 @@ function ClientInvoices({ invoices }: { invoices: Invoice[] }) {
       return invoice
     })
 
+  if (invoices.length === 0) {
+    return <p>Nenhuma fatura encontrada.</p>
+  }
+
   return (
     <Table>
       <TableHeader>

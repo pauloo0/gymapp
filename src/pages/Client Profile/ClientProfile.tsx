@@ -215,12 +215,15 @@ function ClientProfile() {
           }),
         ])
 
-        const client = res1.data.client
-        const measurements = res2.data.measurements
-        const invoices = res3.data.invoices
-        const workouts = res4.data.workouts
-        const subscription = res5.data.subscription
-        const schedules = res6.data.schedule
+        const client = res1.status === 204 ? emptyClient : res1.data.client
+        const measurements =
+          res2.status === 204 ? emptyMeasurement : res2.data.measurements
+        const invoices = res3.status === 204 ? emptyInvoice : res3.data.invoices
+        const workouts = res4.status === 204 ? emptyWorkout : res4.data.workouts
+        const subscription =
+          res5.status === 204 ? emptySubscription : res5.data.subscription
+        const schedules =
+          res6.status === 204 ? emptySchedule : res6.data.schedule
 
         setClient(client)
         setMeasurements(measurements)
@@ -228,8 +231,6 @@ function ClientProfile() {
         setWorkouts(workouts)
         setSubscription(subscription)
         setSchedules(schedules)
-
-        setIsLoading(false)
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.data)
@@ -238,6 +239,7 @@ function ClientProfile() {
           console.error('An unexpected error occurred:', error)
         }
       }
+      setIsLoading(false)
     }
 
     fetchClientInfo()
@@ -246,6 +248,11 @@ function ClientProfile() {
   // Tailwind classes in a variable
   const label_group = 'flex flex-col items-start justify-center gap-1'
   const label = 'text-sm font-semibold leading-none'
+
+  // Return to client list if client is not found
+  if (!isLoading && client.id === '') {
+    window.location.href = '/clientes'
+  }
 
   if (isLoading) {
     return (
@@ -312,7 +319,11 @@ function ClientProfile() {
               </div>
               <div className={label_group}>
                 <p className={label}>Pacote Subscrito</p>
-                <p>{subscription.packages.name}</p>
+                <p>
+                  {subscription.id === ''
+                    ? 'Sem subscrição ativa'
+                    : subscription.packages.name}
+                </p>
               </div>
               <div className={label_group}>
                 <p className={label}>Ativo ?</p>

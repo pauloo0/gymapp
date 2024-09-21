@@ -14,6 +14,10 @@ function ClientWorkouts({ workouts }: { workouts: Workout[] }) {
     window.location.href = path
   }
 
+  if (workouts.length === 0) {
+    return <p>Nenhum plano de treino criado.</p>
+  }
+
   return (
     <Table>
       <TableHeader>
