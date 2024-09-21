@@ -1,69 +1,8 @@
-import { useState, useEffect } from 'react'
-import { useToken } from '@/utils/tokenWrapper'
 import { Invoice } from '@/utils/interfaces'
-import axios from 'axios'
+
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 
-const emptyInvoices: Invoice[] = [
-  {
-    id: '',
-    issue_date: '',
-    due_date: '',
-    amount: 0,
-    status: '',
-    subscriptions: {
-      id: '',
-      start_date: '',
-      active: false,
-      package_id: '',
-      clients: {
-        id: '',
-        firstname: '',
-        lastname: '',
-        active: false,
-      },
-    },
-  },
-]
-
-function UnpaidInvoicesNextWeek() {
-  const token = useToken()
-
-  const [invoices, setInvoices] = useState(emptyInvoices)
-
-  const apiUrl: string = import.meta.env.VITE_API_URL || ''
-
-  useEffect(() => {
-    const fetchInvoices = async () => {
-      try {
-        const res = await axios.get(`${apiUrl}/invoices/unpaid`, {
-          headers: {
-            'Auth-Token': token,
-          },
-        })
-
-        const unpaidInvoicesDueNextWeek = res.data.invoices.sort(
-          (invoiceA: Invoice, invoiceB: Invoice) => {
-            const dateA = new Date(invoiceA.due_date)
-            const dateB = new Date(invoiceB.due_date)
-            return dateA.getTime() - dateB.getTime()
-          }
-        )
-
-        setInvoices(unpaidInvoicesDueNextWeek)
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error(error.response?.status)
-          console.error(error.response?.data)
-        } else {
-          console.error('An unexpected error occurred:', error)
-        }
-      }
-    }
-
-    fetchInvoices()
-  }, [token, apiUrl])
-
+function UnpaidInvoicesNextWeek({ invoices }: { invoices: Invoice[] }) {
   return (
     <Card>
       <CardHeader>

@@ -1,75 +1,9 @@
-import { useToken } from '@/utils/tokenWrapper'
 import { Schedule } from '@/utils/interfaces'
-import axios from 'axios'
-import { useState, useEffect } from 'react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-const emptySchedules: Schedule[] = [
-  {
-    id: '',
-    date: '',
-    time: '',
-    clients: {
-      id: '',
-      firstname: '',
-      lastname: '',
-    },
-  },
-]
-
-function ListedSchedules() {
-  const token = useToken()
-
-  const [schedules, setSchedules] = useState<Schedule[]>(emptySchedules)
-
-  const apiUrl: string = import.meta.env.VITE_API_URL || ''
-
-  useEffect(() => {
-    const fetchSchedules = async () => {
-      try {
-        const res = await axios.get(`${apiUrl}/schedule`, {
-          headers: {
-            'Auth-Token': token,
-          },
-        })
-
-        const today = new Date()
-        const currentTime = today.getHours() + ':' + today.getMinutes()
-
-        const sortedSchedules = res.data.schedule
-          .filter(
-            (schedule: Schedule) =>
-              schedule.date ===
-                new Date(new Date().setHours(1, 0, 0, 0)).toISOString() &&
-              schedule.time >= currentTime
-          )
-          .sort((scheduleA: Schedule, scheduleB: Schedule) => {
-            const dateA = new Date(scheduleA.date)
-            const dateB = new Date(scheduleB.date)
-            const timeA = new Date(`1970-01-01T${scheduleA.time}`)
-            const timeB = new Date(`1970-01-01T${scheduleB.time}`)
-            return (
-              dateA.getTime() - dateB.getTime() ||
-              timeA.getTime() - timeB.getTime()
-            )
-          })
-
-        setSchedules(sortedSchedules)
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.log(error.response?.status)
-          console.log(error.response?.data)
-        } else {
-          console.error('An unexpected error occurred:', error)
-        }
-      }
-    }
-
-    fetchSchedules()
-  }, [token, apiUrl])
-
+function ListedSchedules({ schedules }: { schedules: Schedule[] }) {
   const navigateToSchedule = (id: string) => {
     window.location.href = `/marcacao/${id}`
   }
