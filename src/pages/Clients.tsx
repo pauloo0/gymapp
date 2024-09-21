@@ -4,6 +4,7 @@ import { Client } from '@/utils/interfaces'
 import { getAge } from '@/utils/functions'
 
 import Navbar from '@/components/Navbar'
+import Loading from '@/components/reusable/Loading'
 
 import axios from 'axios'
 import { useEffect, useState } from 'react'
@@ -43,6 +44,7 @@ function Clients() {
   }
 
   const [clients, setClients] = useState<Client[]>(emptyClient)
+  const [isLoading, setIsLoading] = useState(true)
 
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -71,6 +73,8 @@ function Clients() {
           console.error('An unexpected error occurred:', error)
         }
       }
+
+      setIsLoading(false)
     }
 
     fetchClients()
@@ -81,6 +85,10 @@ function Clients() {
   }
 
   // TODO Add filters and sorting to the table
+
+  if (isLoading) {
+    return <Loading />
+  }
 
   return (
     <>
