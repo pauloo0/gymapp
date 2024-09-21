@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar'
 import Loading from '@/components/reusable/Loading'
 
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
   Table,
@@ -17,6 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 const emptyClient: Client[] = [
   {
@@ -44,7 +46,35 @@ function Clients() {
   }
 
   const [clients, setClients] = useState<Client[]>(emptyClient)
+  const [filteredClients, setFilteredClients] = useState<Client[]>(emptyClient)
   const [isLoading, setIsLoading] = useState(true)
+  const [searchFilters, setSearchFilters] = useState({
+    name: '',
+  })
+
+  const filterClient = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Reset filtered clients array
+    setFilteredClients(clients)
+
+    const element = e.target.name
+
+    const searchTerm = e.target.value
+    setSearchFilters((prevFilters) => {
+      return { ...prevFilters, [element]: searchTerm }
+    })
+
+    setFilteredClients((prevClients) => {
+      if (searchTerm === '') {
+        return clients
+      }
+
+      return prevClients.filter((client) => {
+        return (client.firstname + ' ' + client.lastname)
+          .toLowerCase()
+          .includes(searchFilters.name.toLowerCase())
+      })
+    })
+  }
 
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -66,6 +96,7 @@ function Clients() {
         )
 
         setClients(clients)
+        setFilteredClients(clients)
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.data)
@@ -84,8 +115,6 @@ function Clients() {
     window.location.href = `/cliente/${id}`
   }
 
-  // TODO Add filters and sorting to the table
-
   if (isLoading) {
     return <Loading />
   }
@@ -94,6 +123,22 @@ function Clients() {
     <>
       <Navbar />
       <h1 className='mb-10 text-2xl'>Os meus clientes</h1>
+
+      {/* FILTERS */}
+      <div className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 border rounded-lg'>
+        <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
+          <Label htmlFor='name'>Nome</Label>
+          <Input
+            id='name'
+            name='name'
+            className='h-8'
+            placeholder='Nome do cliente'
+            type='text'
+            value={searchFilters.name}
+            onChange={(e) => filterClient(e)}
+          />
+        </div>
+      </div>
 
       <Table>
         <TableHeader>
@@ -105,8 +150,8 @@ function Clients() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {clients ? (
-            clients.map((client) => (
+          {filteredClients ? (
+            filteredClients.map((client) => (
               <TableRow
                 key={client.id}
                 onClick={() => goToClientPage(client.id)}
