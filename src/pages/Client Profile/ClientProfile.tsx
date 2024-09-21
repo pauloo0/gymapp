@@ -16,7 +16,7 @@ import { getAge } from '@/utils/functions'
 
 import Navbar from '@/components/Navbar'
 
-import { ArrowLeft, LoaderCircle } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import {
   Accordion,
   AccordionContent,
@@ -29,10 +29,13 @@ import {
   AvatarFallback,
   //AvatarImage
 } from '@/components/ui/avatar'
+
 import ClientMeasurements from './ClientMeasurements'
 import ClientWorkouts from './ClientWorkouts'
 import ClientSchedules from './ClientSchedules'
 import ClientInvoices from './ClientInvoices'
+
+import Loading from '@/components/reusable/Loading'
 
 const emptyClient: Client = {
   id: '',
@@ -255,11 +258,7 @@ function ClientProfile() {
   }
 
   if (isLoading) {
-    return (
-      <div className='absolute flex flex-col items-center justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-slate-700'>
-        <LoaderCircle className='w-12 h-12 animate-spin' /> Loading ...
-      </div>
-    )
+    return <Loading />
   }
 
   return (
