@@ -247,7 +247,7 @@ function ClientProfile() {
       <Navbar />
       <ArrowLeft
         className='w-6 h-6'
-        onClick={() => (window.location.href = '/clients')}
+        onClick={() => (window.location.href = '/clientes')}
       />
       <div
         id='client-header'
