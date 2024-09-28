@@ -16,7 +16,7 @@ import { getAge } from '@/utils/functions'
 
 import Navbar from '@/components/Navbar'
 
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Pencil } from 'lucide-react'
 import {
   Accordion,
   AccordionContent,
@@ -36,6 +36,7 @@ import ClientSchedules from './ClientSchedules'
 import ClientInvoices from './ClientInvoices'
 
 import Loading from '@/components/reusable/Loading'
+import { Button } from '@/components/ui/button'
 
 const emptyClient: Client = {
   id: '',
@@ -252,6 +253,10 @@ function ClientProfile() {
   const label_group = 'flex flex-col items-start justify-center gap-1'
   const label = 'text-sm font-semibold leading-none'
 
+  const editClient = (client: Client) => {
+    window.location.href = `/cliente/${client.id}/editar`
+  }
+
   // Return to client list if client is not found
   if (!isLoading && client.id === '') {
     window.location.href = '/clientes'
@@ -285,6 +290,15 @@ function ClientProfile() {
             {client.firstname} {client.lastname}
           </h1>
         </div>
+
+        <Button
+          size={'sm'}
+          className='px-3 bg-amber-400 text-slate-800 hover:bg-amber-500 transition-colors duration-200 flex flex-row items-center justify-center gap-1'
+          onClick={() => editClient(client)}
+        >
+          <Pencil className='w-4 h-4' />
+          Editar
+        </Button>
       </div>
 
       <Accordion

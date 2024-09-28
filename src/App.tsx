@@ -11,6 +11,7 @@ import Measurements from './pages/Measurements'
 import Profile from './pages/Profile/Profile'
 
 import ClientProfile from './pages/Client Profile/ClientProfile'
+import ClientEdit from './pages/Client Edit/ClientEdit'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path='/perfil' element={<Profile />} />
 
         <Route path='/cliente/:id' element={<ClientProfile />} />
+        <Route path='/cliente/:id/editar' element={<ClientEdit />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
