@@ -325,6 +325,14 @@ function ClientProfile() {
                 <p>{getAge(client.birthday)}</p>
               </div>
               <div className={label_group}>
+                <p className={label}>Género</p>
+                <p>{client.gender}</p>
+              </div>
+              <div className={label_group}>
+                <p className={label}>Telemóvel</p>
+                <p>{client.phone_number}</p>
+              </div>
+              <div className={label_group}>
                 <p className={label}>Email</p>
                 <p>{client.users.email}</p>
               </div>
