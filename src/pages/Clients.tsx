@@ -25,6 +25,8 @@ const emptyClient: Client[] = [
     id: '',
     firstname: '',
     lastname: '',
+    gender: '',
+    phone_number: '',
     join_date: '',
     birthday: '',
     goal: '',

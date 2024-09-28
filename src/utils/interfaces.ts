@@ -2,6 +2,8 @@ export interface Client {
   id: string
   firstname: string
   lastname: string
+  gender: string
+  phone_number: string
   join_date: string
   birthday: string
   goal: string
