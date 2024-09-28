@@ -113,3 +113,11 @@ export interface Invoice {
     }
   }
 }
+
+export interface Package {
+  id: string
+  name: string
+  price: number
+  days_per_week: number
+  active: boolean
+}
