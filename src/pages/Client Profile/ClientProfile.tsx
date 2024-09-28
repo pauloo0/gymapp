@@ -42,6 +42,8 @@ const emptyClient: Client = {
   id: '',
   firstname: '',
   lastname: '',
+  gender: '',
+  phone_number: '',
   join_date: '',
   birthday: '',
   goal: '',
@@ -293,7 +295,7 @@ function ClientProfile() {
 
         <Button
           size={'sm'}
-          className='px-3 bg-amber-400 text-slate-800 hover:bg-amber-500 transition-colors duration-200 flex flex-row items-center justify-center gap-1'
+          className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-amber-400 text-slate-800 hover:bg-amber-500'
           onClick={() => editClient(client)}
         >
           <Pencil className='w-4 h-4' />
