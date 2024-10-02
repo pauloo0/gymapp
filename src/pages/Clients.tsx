@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 const emptyClient: Client[] = [
   {
@@ -140,6 +142,12 @@ function Clients() {
             onChange={(e) => filterClient(e)}
           />
         </div>
+        <Button
+          size={'sm'}
+          onClick={() => (window.location.href = '/clientes/novo')}
+        >
+          <Plus className='w-5 h-5 mr-1' /> Novo cliente
+        </Button>
       </div>
 
       <Table>

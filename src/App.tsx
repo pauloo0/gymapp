@@ -12,6 +12,7 @@ import Profile from './pages/Profile/Profile'
 
 import ClientProfile from './pages/Client Profile/ClientProfile'
 import ClientEdit from './pages/Client Edit/ClientEdit'
+import ClientCreate from './pages/Client Create/ClientCreate'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
 
         <Route path='/cliente/:id' element={<ClientProfile />} />
         <Route path='/cliente/:id/editar' element={<ClientEdit />} />
+        <Route path='/clientes/novo' element={<ClientCreate />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
