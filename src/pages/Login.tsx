@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/form'
 
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const isEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
 
@@ -40,6 +40,16 @@ function Login() {
   }
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [passwordUpdateRequired, setPasswordUpdateRequired] = useState<
+    boolean | undefined
+  >(undefined)
+  const [userInfo, setUserInfo] = useState({
+    message: '',
+    isOTP: false,
+    token: '',
+    user: '',
+    role: '',
+  })
 
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -55,10 +65,8 @@ function Login() {
     try {
       const res = await axios.post(`${apiUrl}/user/login`, values)
 
-      setToken(res.data.token as string)
-      setUser({ userId: res.data.user, role: res.data.role })
-
-      window.location.href = '/'
+      setPasswordUpdateRequired(res.data.isOTP)
+      setUserInfo(res.data)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data)
@@ -68,8 +76,22 @@ function Login() {
     }
   }
 
+  useEffect(() => {
+    if (passwordUpdateRequired == false) {
+      setToken(userInfo.token as string)
+      setUser({ userId: userInfo.user, role: userInfo.role })
+
+      window.location.href = '/'
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passwordUpdateRequired])
+
   return (
     <>
+      <h1>Login</h1>
+      {passwordUpdateRequired && (
+        <p className='text-red-500'>Password update required</p>
+      )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
