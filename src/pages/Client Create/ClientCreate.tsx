@@ -123,6 +123,9 @@ function ClientCreate() {
       setIsLoading(false)
 
       // TODO: Send email to client with link to website and One-Time-Password sent by the API
+      alert(
+        `Cliente criado com sucesso! Password temporária: ${res.data.password}`
+      )
       window.location.href = `/clientes`
     } catch (error) {
       if (axios.isAxiosError(error)) {
