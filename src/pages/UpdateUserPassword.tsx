@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import axios from 'axios'
-import { setToken, useToken } from '@/utils/tokenWrapper'
+import { setToken } from '@/utils/tokenWrapper'
 import { setUser } from '@/utils/userWrapper'
 
 import { z } from 'zod'
@@ -11,63 +12,68 @@ import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 
-import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import UpdateUserPassword from './UpdateUserPassword'
+const formSchema = z
+  .object({
+    password: z.string().min(6, {
+      message: 'A palavra-passe deve ter mais que 6 caracteres.',
+    }),
+    password_confirm: z.string().min(6, {
+      message: 'A palavra-passe deve ter mais que 6 caracteres.',
+    }),
+  })
+  .superRefine(({ password, password_confirm: passwordConfirm }, ctx) => {
+    if (password !== passwordConfirm) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'As palavras-passe não correspondem.',
+        path: ['passwordConfirm'],
+      })
+    }
+  })
 
-const isEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
+interface UserInfo {
+  message: string
+  isOTP: boolean
+  token: string
+  role: string
+  user: string
+}
 
-const formSchema = z.object({
-  email: z.string().regex(isEmail, {
-    message: 'Endereço de email inválido.',
-  }),
-  password: z.string().min(6, {
-    message: 'A palavra-passe deve ter mais que 6 caracteres.',
-  }),
-})
-
-function Login() {
-  const token = useToken()
-
-  if (token) {
-    window.location.href = '/'
-  }
+function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
+  const { token, user, role } = userInfo
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
-  const [passwordUpdateRequired, setPasswordUpdateRequired] = useState<
-    boolean | undefined
-  >(undefined)
-  const [userInfo, setUserInfo] = useState({
-    message: '',
-    isOTP: false,
-    token: '',
-    user: '',
-    role: '',
-  })
 
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
       password: '',
+      password_confirm: '',
     },
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await axios.post(`${apiUrl}/user/login`, values)
+      const res = await axios.put(`${apiUrl}/user/update-password`, values, {
+        headers: {
+          'Auth-Token': token,
+        },
+      })
 
-      setPasswordUpdateRequired(res.data.isOTP)
-      setUserInfo(res.data)
+      if (res.status === 200) {
+        setToken(token)
+        setUser({ userId: user, role: role })
+
+        window.location.href = '/'
+      }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data)
@@ -77,19 +83,6 @@ function Login() {
     }
   }
 
-  useEffect(() => {
-    if (passwordUpdateRequired == false) {
-      setToken(userInfo.token as string)
-      setUser({ userId: userInfo.user, role: userInfo.role })
-
-      window.location.href = '/'
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passwordUpdateRequired])
-
-  if (passwordUpdateRequired) {
-    return <UpdateUserPassword userInfo={userInfo} />
-  }
   return (
     <>
       <Form {...form}>
@@ -99,16 +92,17 @@ function Login() {
         >
           <FormField
             control={form.control}
-            name='email'
+            name='password'
             render={({ field }) => (
               <FormItem>
                 <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Email
+                  Palavra-Passe
                 </FormLabel>
                 <FormControl>
                   <Input
+                    type='password'
                     className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
-                    placeholder='email@exemplo.pt'
+                    placeholder='Palavra-Passe'
                     {...field}
                   />
                 </FormControl>
@@ -118,17 +112,17 @@ function Login() {
           />
           <FormField
             control={form.control}
-            name='password'
+            name='password_confirm'
             render={({ field }) => (
               <FormItem>
                 <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Password
+                  Confirmar Palavra-Passe
                 </FormLabel>
                 <FormControl>
                   <Input
                     type='password'
                     className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
-                    placeholder='Palavra-passe'
+                    placeholder='Confirmar Palavra-Passe'
                     {...field}
                   />
                 </FormControl>
@@ -136,25 +130,13 @@ function Login() {
               </FormItem>
             )}
           />
-
-          {errorMessage && (
-            <FormDescription className='text-red-500'>
-              {errorMessage}
-            </FormDescription>
-          )}
           <Button className='w-full' type='submit'>
-            Iniciar sessão
+            Gravar
           </Button>
         </form>
       </Form>
-      <p className='my-2'>
-        Ainda não tem conta?
-        <Link className='text-blue-600 underline' to='/register'>
-          Crie uma nova.
-        </Link>
-      </p>
     </>
   )
 }
 
-export default Login
+export default UpdateUserPassword
