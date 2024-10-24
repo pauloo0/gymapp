@@ -37,6 +37,7 @@ function App() {
         <Route path='/clientes/novo' element={<ClientCreate />} />
 
         <Route path='/marcacao/novo' element={<ScheduleCreate />} />
+        <Route path='/marcacao/novo/:client_id' element={<ScheduleCreate />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>

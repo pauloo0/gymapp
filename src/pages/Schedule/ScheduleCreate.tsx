@@ -44,6 +44,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import { useParams } from 'react-router'
+
 const formSchema = z.object({
   client_id: z.string(),
   date: z.date(),
@@ -60,6 +62,9 @@ function ScheduleCreate() {
     window.location.href = '/login'
   }
 
+  // Client Id from URL
+  const { client_id } = useParams()
+
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [clients, setClients] = useState<Client[] | null>(null)
@@ -67,7 +72,7 @@ function ScheduleCreate() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      client_id: '',
+      client_id: client_id ? client_id : '',
       date: new Date(),
       time: '',
     },

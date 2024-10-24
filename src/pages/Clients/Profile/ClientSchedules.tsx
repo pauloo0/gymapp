@@ -13,7 +13,7 @@ import { Plus } from 'lucide-react'
 
 function ClientSchedules({ schedules }: { schedules: Schedule[] }) {
   const createSchedule = (client_id: string) => {
-    window.location.href = '/marcacoes/nova?client_id=' + client_id
+    window.location.href = '/marcacao/novo/' + client_id
   }
 
   return (
