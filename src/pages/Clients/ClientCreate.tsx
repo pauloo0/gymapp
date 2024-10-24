@@ -4,14 +4,14 @@ import { useUser } from '@/utils/userWrapper'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { format } from 'date-fns'
 import { pt } from 'date-fns/locale'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-import { Client } from '@/utils/interfaces'
+import { Client, Package } from '@/utils/interfaces'
 
 import Navbar from '@/components/Navbar'
 import { Save, X } from 'lucide-react'
@@ -41,6 +41,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import Loading from '@/components/reusable/Loading'
 
 const emptyClient: Client = {
   id: '',
@@ -71,6 +72,16 @@ const emptyClient: Client = {
   },
 }
 
+const emptyPackages: Package[] = [
+  {
+    id: '',
+    name: '',
+    price: 0,
+    days_per_week: 0,
+    active: false,
+  },
+]
+
 const formSchema = z.object({
   firstname: z.string().max(60, { message: 'Nome muito extenso.' }),
   lastname: z.string().max(60, { message: 'Nome muito extenso.' }),
@@ -81,6 +92,7 @@ const formSchema = z.object({
     .max(30, { message: 'Número de telefone muito extenso.' }),
   email: z.string().email({ message: 'Email inválido.' }),
   goal: z.string().max(255, { message: 'Objetivo muito extenso.' }),
+  package_id: z.string(),
 })
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -93,7 +105,9 @@ function ClientCreate() {
     window.location.href = '/login'
   }
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [trainerPackages, setTrainerPackages] =
+    useState<Package[]>(emptyPackages)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -105,6 +119,7 @@ function ClientCreate() {
       phone_number: emptyClient.phone_number,
       email: emptyClient.users.email,
       goal: emptyClient.goal,
+      package_id: emptyClient.subscriptions.packages.id,
     },
   })
 
@@ -148,6 +163,33 @@ function ClientCreate() {
       }
     }
   }
+
+  useEffect(() => {
+    const fetchTrainerPackages = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/packages`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
+
+        setTrainerPackages(res.data.packages)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(error.response?.status)
+          console.error(error.response?.data)
+        } else {
+          console.error('An unexpected error occurred:', error)
+        }
+      }
+
+      setIsLoading(false)
+    }
+
+    fetchTrainerPackages()
+  }, [token])
+
+  if (isLoading) return <Loading />
 
   return (
     <div>
@@ -289,6 +331,40 @@ function ClientCreate() {
                   <FormControl>
                     <Textarea {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className='col-span-2'>
+            <FormField
+              control={form.control}
+              name='package_id'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pacote</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {trainerPackages &&
+                        trainerPackages.map((trainerPackage) => (
+                          <SelectItem
+                            key={trainerPackage.id}
+                            value={trainerPackage.id}
+                          >
+                            {trainerPackage.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
