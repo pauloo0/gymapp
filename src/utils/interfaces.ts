@@ -13,6 +13,7 @@ export interface Client {
     id: string
     email: string
   }
+  subscriptions: Subscription
 }
 
 export interface Schedule {
@@ -87,13 +88,7 @@ export interface Subscription {
   id: string
   start_date: string
   active: boolean
-  packages: {
-    id: string
-    name: string
-    price: number
-    days_per_week: number
-    active: boolean
-  }
+  packages: Package
 }
 
 export interface Invoice {
