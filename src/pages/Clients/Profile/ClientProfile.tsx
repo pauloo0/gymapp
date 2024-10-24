@@ -315,7 +315,7 @@ function ClientProfile() {
             Informação
           </AccordionTrigger>
           <AccordionContent className='px-4'>
-            <div className='grid grid-cols-2 gap-x-2 gap-y-4'>
+            <div className='grid grid-cols-2 gap-x-16 gap-y-4'>
               <div className={label_group}>
                 <p className={label}>Data de nascimento</p>
                 <p>{new Date(client.birthday).toLocaleDateString('pt-PT')}</p>
