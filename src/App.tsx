@@ -4,15 +4,15 @@ import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import Dashboard from './pages/Dashboard/Dashboard'
 
-import Clients from './pages/Clients'
+import Clients from './pages/Clients/Clients'
 import Schedules from './pages/Schedule/Schedules'
 import Workouts from './pages/Workouts'
 import Measurements from './pages/Measurements'
 import Profile from './pages/Profile/Profile'
 
-import ClientProfile from './pages/Client Profile/ClientProfile'
-import ClientEdit from './pages/Client Edit/ClientEdit'
-import ClientCreate from './pages/Client Create/ClientCreate'
+import ClientProfile from './pages/Clients/Profile/ClientProfile'
+import ClientEdit from './pages/Clients/ClientEdit'
+import ClientCreate from './pages/Clients/ClientCreate'
 
 import ScheduleCreate from './pages/Schedule/ScheduleCreate'
 
