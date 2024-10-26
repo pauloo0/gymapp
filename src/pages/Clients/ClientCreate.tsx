@@ -45,6 +45,16 @@ import Loading from '@/components/reusable/Loading'
 
 import { v4 as uuid } from 'uuid'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { DialogClose } from '@radix-ui/react-dialog'
+
 const emptyClient: Client = {
   id: '',
   firstname: '',
@@ -110,6 +120,8 @@ function ClientCreate() {
   const [isLoading, setIsLoading] = useState(true)
   const [trainerPackages, setTrainerPackages] =
     useState<Package[]>(emptyPackages)
+  const [otp, setOtp] = useState<string | undefined>(undefined)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -164,8 +176,6 @@ function ClientCreate() {
         throw new Error('Erro a criar cliente')
       }
 
-      alert(resClient.data.password)
-
       const resSubscription = await axios.post(
         `${apiUrl}/subscriptions`,
         subscriptionInfo,
@@ -183,10 +193,7 @@ function ClientCreate() {
       setIsLoading(false)
 
       // TODO: Send email to client with link to website and One-Time-Password sent by the API
-      alert(
-        `Cliente criado com sucesso! Password temporária: ${resClient.data.password}`
-      )
-      window.location.href = `/clientes`
+      setOtp(resClient.data.password)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data)
@@ -222,12 +229,44 @@ function ClientCreate() {
     fetchTrainerPackages()
   }, [token])
 
+  useEffect(() => {
+    if (otp) setIsDialogOpen(true)
+  }, [otp])
+
+  const handleRedirect = () => {
+    window.location.href = `/clientes`
+  }
+
   if (isLoading) return <Loading />
 
   return (
     <div>
       <Navbar />
       <h1 className='mb-6 text-xl'>Criar novo cliente</h1>
+
+      {otp && (
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(open) => !open && handleRedirect()}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Password temporária</DialogTitle>
+              <DialogDescription>
+                O cliente deve entrar pela primeira vez com esta password.
+              </DialogDescription>
+            </DialogHeader>
+            {otp}
+          </DialogContent>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type='button' variant='secondary'>
+                Fechar
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </Dialog>
+      )}
 
       <Form {...form}>
         <form
