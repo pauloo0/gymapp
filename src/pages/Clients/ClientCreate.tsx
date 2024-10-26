@@ -43,6 +43,8 @@ import {
 } from '@/components/ui/popover'
 import Loading from '@/components/reusable/Loading'
 
+import { v4 as uuid } from 'uuid'
+
 const emptyClient: Client = {
   id: '',
   firstname: '',
@@ -130,28 +132,59 @@ function ClientCreate() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
 
+    const client_id: string = uuid()
+
     const clientInfo = {
-      ...values,
+      id: client_id,
+      firstname: values.firstname,
+      lastname: values.lastname,
+      gender: values.gender,
+      phone_number: values.phone_number,
+      email: values.email,
       birthday: format(values.birthday, 'yyyy-MM-dd'),
       join_date: format(new Date(), 'yyyy-MM-dd'),
+      goal: values.goal,
+    }
+
+    const subscriptionInfo = {
+      client_id: client_id,
+      package_id: values.package_id,
+      start_date: format(new Date(), 'yyyy-MM-dd'),
+      active: true,
     }
 
     try {
-      const res = await axios.post(`${apiUrl}/clients`, clientInfo, {
+      const resClient = await axios.post(`${apiUrl}/clients`, clientInfo, {
         headers: {
           'Auth-Token': token,
         },
       })
 
-      if (res.status !== 201) {
+      if (resClient.status !== 201) {
         throw new Error('Erro a criar cliente')
+      }
+
+      alert(resClient.data.password)
+
+      const resSubscription = await axios.post(
+        `${apiUrl}/subscriptions`,
+        subscriptionInfo,
+        {
+          headers: {
+            'Auth-Token': token,
+          },
+        }
+      )
+
+      if (resSubscription.status !== 201) {
+        throw new Error('Erro a criar subscrições para o cliente')
       }
 
       setIsLoading(false)
 
       // TODO: Send email to client with link to website and One-Time-Password sent by the API
       alert(
-        `Cliente criado com sucesso! Password temporária: ${res.data.password}`
+        `Cliente criado com sucesso! Password temporária: ${resClient.data.password}`
       )
       window.location.href = `/clientes`
     } catch (error) {
