@@ -4,7 +4,7 @@ import { useParams } from 'react-router'
 import { useState, useEffect } from 'react'
 
 import axios from 'axios'
-import { Client } from '@/utils/interfaces'
+import { Client, Package } from '@/utils/interfaces'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -61,19 +61,31 @@ const emptyClient: Client = {
     id: '',
     email: '',
   },
-  subscriptions: {
-    id: '',
-    start_date: '',
-    active: false,
-    packages: {
+  subscriptions: [
+    {
       id: '',
-      name: '',
-      days_per_week: 0,
-      price: 0,
+      start_date: '',
       active: false,
+      packages: {
+        id: '',
+        name: '',
+        days_per_week: 0,
+        price: 0,
+        active: false,
+      },
     },
-  },
+  ],
 }
+
+const emptyPackages: Package[] = [
+  {
+    id: '',
+    name: '',
+    price: 0,
+    days_per_week: 0,
+    active: false,
+  },
+]
 
 const formSchema = z.object({
   firstname: z.string().max(60, { message: 'Nome muito extenso.' }),
@@ -86,6 +98,7 @@ const formSchema = z.object({
   join_date: z.date(),
   goal: z.string().max(255, { message: 'Objetivo muito extenso.' }),
   active: z.boolean(),
+  package_id: z.string(),
 })
 
 const ClientEdit = () => {
@@ -99,6 +112,8 @@ const ClientEdit = () => {
   const { id } = useParams()
 
   const [isLoading, setIsLoading] = useState(true)
+  const [trainerPackages, setTrainerPackages] =
+    useState<Package[]>(emptyPackages)
   const [client, setClient] = useState(emptyClient)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -112,12 +127,32 @@ const ClientEdit = () => {
       join_date: new Date(client.join_date),
       goal: client.goal,
       active: client.active,
+      package_id: client.subscriptions[0].packages.id,
     },
   })
 
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
   useEffect(() => {
+    const fetchTrainerPackages = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/packages`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
+
+        setTrainerPackages(res.data.packages)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(error.response?.status)
+          console.error(error.response?.data)
+        } else {
+          console.error('An unexpected error occurred:', error)
+        }
+      }
+    }
+
     const fetchClientInfo = async () => {
       try {
         const res = await axios.get(`${apiUrl}/clients/${id}`, {
@@ -126,13 +161,18 @@ const ClientEdit = () => {
           },
         })
 
-        const client = res.status === 204 ? emptyClient : res.data.client
+        const client: Client =
+          res.status === 204 ? emptyClient : res.data.client
 
         setClient(client)
         form.reset({
           ...client,
           birthday: new Date(client.birthday),
           join_date: new Date(client.join_date),
+          package_id:
+            client.subscriptions.length > 0
+              ? client.subscriptions[0].packages.id
+              : '',
         })
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -145,6 +185,7 @@ const ClientEdit = () => {
       setIsLoading(false)
     }
 
+    fetchTrainerPackages()
     fetchClientInfo()
   }, [token, id, apiUrl, form])
 
@@ -382,6 +423,44 @@ const ClientEdit = () => {
               )}
             />
           </div>
+
+          <div className='col-span-2'>
+            <FormField
+              control={form.control}
+              name='package_id'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pacote</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {trainerPackages &&
+                        trainerPackages.map((trainerPackage) => (
+                          <SelectItem
+                            key={trainerPackage.id}
+                            value={trainerPackage.id}
+                          >
+                            {trainerPackage.name}
+                          </SelectItem>
+                        ))}
+                      {/* <SelectItem value='35aac01e-69a9-4bac-8a07-6927d620721e'>
+                        2 times a week
+                      </SelectItem> */}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <div className='grid grid-cols-2 col-span-2 gap-2'>
             <Button
               type='submit'
