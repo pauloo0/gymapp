@@ -195,21 +195,71 @@ const ClientEdit = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const clientInfo = {
-      ...values,
+      id: id,
+      firstname: values.firstname,
+      lastname: values.lastname,
+      gender: values.gender,
+      phone_number: values.phone_number,
+      active: values.active,
       birthday: format(values.birthday, 'yyyy-MM-dd'),
       join_date: format(values.join_date, 'yyyy-MM-dd'),
+      goal: values.goal,
+    }
+
+    const subscriptionInfo = {
+      client_id: id,
+      package_id: client.subscriptions[0].packages.id,
+      start_date: client.subscriptions[0].start_date,
+      active: false,
+    }
+
+    const newSubscriptionInfo = {
+      client_id: id,
+      package_id: values.package_id,
+      start_date: format(new Date(), 'yyyy-MM-dd'),
+      active: true,
     }
 
     try {
-      const res = await axios.put(`${apiUrl}/clients/${id}`, clientInfo, {
+      const resClient = await axios.put(`${apiUrl}/clients/${id}`, clientInfo, {
         headers: {
           'Auth-Token': token,
         },
       })
 
-      if (res.status === 200) {
-        window.location.href = `/cliente/${id}`
+      const resChangeSubscription = await axios.put(
+        `${apiUrl}/subscriptions/${client.subscriptions[0].id}`,
+        subscriptionInfo,
+        {
+          headers: {
+            'Auth-Token': token,
+          },
+        }
+      )
+
+      const resNewSubscription = await axios.post(
+        `${apiUrl}/subscriptions`,
+        newSubscriptionInfo,
+        {
+          headers: {
+            'Auth-Token': token,
+          },
+        }
+      )
+
+      if (resChangeSubscription.status !== 200) {
+        throw new Error('Erro ao inativar subscrição antiga.')
       }
+
+      if (resNewSubscription.status !== 201) {
+        throw new Error('Erro ao subscrever ao novo pacote.')
+      }
+
+      if (resClient.status !== 200) {
+        throw new Error('Erro ao editar cliente.')
+      }
+
+      window.location.href = `/cliente/${id}`
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data)
