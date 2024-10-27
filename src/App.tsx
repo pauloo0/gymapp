@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard/Dashboard'
 
 import Clients from './pages/Clients/Clients'
 import Schedules from './pages/Schedule/Schedules'
-import Workouts from './pages/Workouts'
+import Workouts from './pages/Workouts/Workouts'
 import Measurements from './pages/Measurements'
 import Profile from './pages/Profile/Profile'
 
