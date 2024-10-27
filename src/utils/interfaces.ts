@@ -13,7 +13,7 @@ export interface Client {
     id: string
     email: string
   }
-  subscriptions: Subscription
+  subscriptions: Subscription[]
 }
 
 export interface Schedule {

@@ -38,18 +38,20 @@ const emptyClient: Client[] = [
       id: '',
       email: '',
     },
-    subscriptions: {
-      id: '',
-      start_date: '',
-      active: false,
-      packages: {
+    subscriptions: [
+      {
         id: '',
-        name: '',
-        days_per_week: 0,
-        price: 0,
+        start_date: '',
         active: false,
+        packages: {
+          id: '',
+          name: '',
+          days_per_week: 0,
+          price: 0,
+          active: false,
+        },
       },
-    },
+    ],
   },
 ]
 
