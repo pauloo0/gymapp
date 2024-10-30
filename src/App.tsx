@@ -4,16 +4,16 @@ import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import Dashboard from './pages/Dashboard/Dashboard'
 
-import Clients from './pages/Clients/Clients'
-import Schedules from './pages/Schedule/Schedules'
 import Workouts from './pages/Workouts/Workouts'
 import Measurements from './pages/Measurements'
 import Profile from './pages/Profile/Profile'
 
+import Clients from './pages/Clients/Clients'
 import ClientProfile from './pages/Clients/Profile/ClientProfile'
 import ClientEdit from './pages/Clients/ClientEdit'
 import ClientCreate from './pages/Clients/ClientCreate'
 
+import Schedules from './pages/Schedule/Schedules'
 import ScheduleCreate from './pages/Schedule/ScheduleCreate'
 
 function App() {
@@ -26,16 +26,16 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/' element={<Dashboard />} />
 
-        <Route path='/clientes' element={<Clients />} />
-        <Route path='/marcacoes' element={<Schedules />} />
         <Route path='/treinos' element={<Workouts />} />
         <Route path='/avaliacoes' element={<Measurements />} />
         <Route path='/perfil' element={<Profile />} />
 
+        <Route path='/clientes' element={<Clients />} />
         <Route path='/cliente/:id' element={<ClientProfile />} />
         <Route path='/cliente/:id/editar' element={<ClientEdit />} />
         <Route path='/clientes/novo' element={<ClientCreate />} />
 
+        <Route path='/marcacoes' element={<Schedules />} />
         <Route path='/marcacao/novo' element={<ScheduleCreate />} />
         <Route path='/marcacao/novo/:client_id' element={<ScheduleCreate />} />
 
