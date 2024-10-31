@@ -4,7 +4,6 @@ import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import Dashboard from './pages/Dashboard/Dashboard'
 
-import Workouts from './pages/Workouts/Workouts'
 import Measurements from './pages/Measurements'
 import Profile from './pages/Profile/Profile'
 
@@ -16,6 +15,9 @@ import ClientCreate from './pages/Clients/ClientCreate'
 import Schedules from './pages/Schedule/Schedules'
 import ScheduleCreate from './pages/Schedule/ScheduleCreate'
 
+import Workouts from './pages/Workouts/Workouts'
+import WorkoutCreate from './pages/Workouts/WorkoutCreate'
+
 function App() {
   return (
     <div className='p-4 pt-12'>
@@ -26,7 +28,6 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/' element={<Dashboard />} />
 
-        <Route path='/treinos' element={<Workouts />} />
         <Route path='/avaliacoes' element={<Measurements />} />
         <Route path='/perfil' element={<Profile />} />
 
@@ -38,6 +39,9 @@ function App() {
         <Route path='/marcacoes' element={<Schedules />} />
         <Route path='/marcacao/novo' element={<ScheduleCreate />} />
         <Route path='/marcacao/novo/:client_id' element={<ScheduleCreate />} />
+
+        <Route path='/treinos' element={<Workouts />} />
+        <Route path='/treinos/novo' element={<WorkoutCreate />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>

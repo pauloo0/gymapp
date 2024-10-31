@@ -61,16 +61,16 @@ export interface Workout {
       exercises: {
         id: string
         name: string
-        description: string
-        equipment: {
+        description?: string
+        equipment?: {
           id: string
           name: string
         }
-        bodyparts: {
+        bodyparts?: {
           id: string
           name: string
         }
-        media: [
+        media?: [
           {
             id: string
             type: string
@@ -117,4 +117,23 @@ export interface Package {
   price: number
   days_per_week: number
   active: boolean
+}
+
+export interface Exercise {
+  id: string
+  name: string
+  description?: string
+  media: {
+    id: string
+    type: string
+    url: string
+  }[]
+  bodyparts: {
+    id: string
+    name: string
+  }
+  equipment: {
+    id: string
+    name: string
+  }
 }

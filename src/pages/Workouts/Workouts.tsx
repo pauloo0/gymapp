@@ -152,7 +152,12 @@ function Workouts() {
         id='filters_and_buttons'
         className='flex flex-row items-center justify-between my-4'
       >
-        <Button type='button' variant='default' size='sm'>
+        <Button
+          type='button'
+          variant='default'
+          size='sm'
+          onClick={() => (window.location.href = '/treinos/novo')}
+        >
           <Plus className='w-5 h-5 mr-1' /> Criar novo
         </Button>
 
