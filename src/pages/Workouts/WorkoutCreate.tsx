@@ -288,45 +288,6 @@ function WorkoutCreate() {
                 </FormItem>
               )}
             />
-          </div>
-
-          <FormField
-            control={form.control}
-            name='active'
-            render={({ field }) => (
-              <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
-                <FormControl>
-                  <Checkbox
-                    checked={form.getValues('active')}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className='space-y-1 leading-none'>
-                  <FormLabel>Ativo</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='public'
-            render={({ field }) => (
-              <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
-                <FormControl>
-                  <Checkbox
-                    checked={form.getValues('public')}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className='space-y-1 leading-none'>
-                  <FormLabel>Público</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
-
-          <div className='col-span-2'>
             <FormField
               control={form.control}
               name='client_id'
@@ -350,7 +311,7 @@ function WorkoutCreate() {
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className='z-50'>
                       {clients &&
                         clients.map((client) => (
                           <SelectItem key={client.id} value={client.id}>
@@ -364,7 +325,40 @@ function WorkoutCreate() {
               )}
             />
           </div>
-
+          <FormField
+            control={form.control}
+            name='active'
+            render={({ field }) => (
+              <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
+                <FormControl>
+                  <Checkbox
+                    checked={form.getValues('active')}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className='space-y-1 leading-none'>
+                  <FormLabel>Ativo</FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='public'
+            render={({ field }) => (
+              <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
+                <FormControl>
+                  <Checkbox
+                    checked={form.getValues('public')}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className='space-y-1 leading-none'>
+                  <FormLabel>Público</FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
           <Drawer
             open={exercisesDrawerOpen}
             onOpenChange={() => handleAddExercises()}
@@ -379,7 +373,6 @@ function WorkoutCreate() {
                 <DrawerTitle>Adicionar Exercícios</DrawerTitle>
                 <DrawerDescription></DrawerDescription>
               </DrawerHeader>
-
               <WorkoutAddExercises
                 dbExercises={dbExercises}
                 addedExercises={addedExercises}
@@ -390,7 +383,6 @@ function WorkoutCreate() {
               />
             </DrawerContent>
           </Drawer>
-
           {addedExercises.length > 0 && (
             <div className='col-span-2 flex flex-col gap-2 max-h-96 overflow-y-auto'>
               {fields.map((exerciseField, index) => (
@@ -443,7 +435,7 @@ function WorkoutCreate() {
             </div>
           )}
 
-          <div className='grid grid-cols-2 col-span-2 gap-2 absolute bottom-0 left-0 right-0 bg-white p-2 pb-20'>
+          <div className='grid grid-cols-2 col-span-2 gap-2'>
             <Button
               type='submit'
               size={'sm'}
