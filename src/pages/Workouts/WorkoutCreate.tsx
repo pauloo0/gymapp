@@ -416,6 +416,8 @@ function WorkoutCreate() {
             <div className='col-span-2 flex flex-col gap-2 max-h-96 overflow-y-auto'>
               {fields.map((field, index) => {
                 const exercise = form.getValues(`exercises.${index}`)
+                const isFirst = index === 0
+                const isLast = index === fields.length - 1
 
                 return (
                   <div
@@ -436,20 +438,24 @@ function WorkoutCreate() {
                           <Ellipsis className='w-4 h-4' />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem
-                            className='flex flex-row items-center justify-start'
-                            onClick={() => moveExercise(index, 'up')}
-                          >
-                            <ChevronUp className='w-4 h-4 mr-1' />
-                            Mover para cima
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className='flex flex-row items-center justify-start'
-                            onClick={() => moveExercise(index, 'down')}
-                          >
-                            <ChevronDown className='w-4 h-4 mr-1' />
-                            Mover para baixo
-                          </DropdownMenuItem>
+                          {!isFirst && (
+                            <DropdownMenuItem
+                              className='flex flex-row items-center justify-start'
+                              onClick={() => moveExercise(index, 'up')}
+                            >
+                              <ChevronUp className='w-4 h-4 mr-1' />
+                              Mover para cima
+                            </DropdownMenuItem>
+                          )}
+                          {!isLast && (
+                            <DropdownMenuItem
+                              className='flex flex-row items-center justify-start'
+                              onClick={() => moveExercise(index, 'down')}
+                            >
+                              <ChevronDown className='w-4 h-4 mr-1' />
+                              Mover para baixo
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem
                             className='flex flex-row items-center justify-start'
                             onClick={() =>
