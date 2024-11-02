@@ -56,7 +56,7 @@ function Navbar() {
   }
 
   return (
-    <div className='fixed bottom-0 left-0 flex flex-row items-center justify-around w-screen py-5 text-white bg-slate-900'>
+    <div className='fixed z-50 bottom-0 left-0 flex flex-row items-center justify-around w-screen py-5 text-white bg-slate-900'>
       <Home
         className={`hover:cursor-pointer ${
           activeScreen.id === 'dashboard' && 'text-opacity-100 text-teal-400'
