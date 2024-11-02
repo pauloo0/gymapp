@@ -288,6 +288,7 @@ function WorkoutCreate() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name='client_id'
@@ -325,6 +326,7 @@ function WorkoutCreate() {
               )}
             />
           </div>
+
           <FormField
             control={form.control}
             name='active'
@@ -342,6 +344,7 @@ function WorkoutCreate() {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='public'
@@ -359,6 +362,7 @@ function WorkoutCreate() {
               </FormItem>
             )}
           />
+
           <Drawer
             open={exercisesDrawerOpen}
             onOpenChange={() => handleAddExercises()}
@@ -383,6 +387,7 @@ function WorkoutCreate() {
               />
             </DrawerContent>
           </Drawer>
+
           {addedExercises.length > 0 && (
             <div className='col-span-2 flex flex-col gap-2 max-h-96 overflow-y-auto'>
               {fields.map((exerciseField, index) => (
