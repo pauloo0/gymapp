@@ -194,7 +194,7 @@ function WorkoutCreate() {
     },
   })
 
-  const { fields, remove } = useFieldArray({
+  const { fields, remove, swap } = useFieldArray({
     control: form.control,
     name: 'exercises',
   })
@@ -257,6 +257,19 @@ function WorkoutCreate() {
   const removeExercise = (id: string, index: number) => {
     remove(index) // Removes from form fields
     setAddedExercises(addedExercises.filter((exercise) => exercise.id !== id)) // Removes from state variable
+  }
+
+  const moveExercise = (index: number, direction: 'up' | 'down') => {
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+
+    swap(index, newIndex) // Updates form field's order
+
+    // Update state variable's order
+    const newOrderedExercises = [...addedExercises]
+    const temp = newOrderedExercises[index]
+    newOrderedExercises[index] = newOrderedExercises[newIndex]
+    newOrderedExercises[newIndex] = temp
+    setAddedExercises(newOrderedExercises)
   }
 
   const handleAddExercises = () => {
@@ -424,17 +437,15 @@ function WorkoutCreate() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuItem
-                            className={`${
-                              index === 0 ? 'hidden' : ''
-                            } flex flex-row items-center justify-start`}
+                            className='flex flex-row items-center justify-start'
+                            onClick={() => moveExercise(index, 'up')}
                           >
                             <ChevronUp className='w-4 h-4 mr-1' />
                             Mover para cima
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className={`${
-                              index === fields.length - 1 ? 'hidden' : ''
-                            } flex flex-row items-center justify-start`}
+                            className='flex flex-row items-center justify-start'
+                            onClick={() => moveExercise(index, 'down')}
                           >
                             <ChevronDown className='w-4 h-4 mr-1' />
                             Mover para baixo
