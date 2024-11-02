@@ -31,6 +31,10 @@ function WorkoutAddExercises({
   const [exercisesToAdd, setExercisesToAdd] =
     useState<Exercise[]>(addedExercises)
 
+  dbExercises = dbExercises.filter(
+    (exercise) => !addedExercises.find((e) => exercise.id === e.id)
+  )
+
   const [filteredExercises, setFilteredExercises] =
     useState<Exercise[]>(dbExercises)
   const [searchFilters, setSearchFilters] = useState({

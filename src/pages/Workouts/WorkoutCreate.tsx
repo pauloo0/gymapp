@@ -256,8 +256,6 @@ function WorkoutCreate() {
 
   const handleAddExercises = () => {
     setExercisesDrawerOpen(!exercisesDrawerOpen)
-
-    if (!exercisesDrawerOpen) setAddedExercises([])
   }
 
   if (isLoading) return <Loading />
