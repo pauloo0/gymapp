@@ -194,7 +194,7 @@ function WorkoutCreate() {
     },
   })
 
-  const { fields } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control: form.control,
     name: 'exercises',
   })
@@ -252,6 +252,11 @@ function WorkoutCreate() {
         console.error('An unexpected error ocurred:', error)
       }
     }
+  }
+
+  const removeExercise = (id: string, index: number) => {
+    remove(index) // Removes from form fields
+    setAddedExercises(addedExercises.filter((exercise) => exercise.id !== id)) // Removes from state variable
   }
 
   const handleAddExercises = () => {
@@ -434,7 +439,12 @@ function WorkoutCreate() {
                             <ChevronDown className='w-4 h-4 mr-1' />
                             Mover para baixo
                           </DropdownMenuItem>
-                          <DropdownMenuItem className='flex flex-row items-center justify-start'>
+                          <DropdownMenuItem
+                            className='flex flex-row items-center justify-start'
+                            onClick={() =>
+                              removeExercise(exercise.exercise_id, index)
+                            }
+                          >
                             <X className='w-4 h-4 mr-1' />
                             Remover
                           </DropdownMenuItem>
