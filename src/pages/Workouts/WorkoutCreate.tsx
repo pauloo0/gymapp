@@ -6,9 +6,9 @@ import { useUser } from '@/utils/userWrapper'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 
-import { Client, Exercise } from '@/utils/interfaces'
+import { Bodypart, Client, Equipment, Exercise } from '@/utils/interfaces'
 
 import Navbar from '@/components/Navbar'
 import Loading from '@/components/reusable/Loading'
@@ -38,27 +38,36 @@ import { Plus, Save, X } from 'lucide-react'
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import WorkoutAddExercises from './WorkoutAddExercises'
+import { Input } from '@/components/ui/input'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 const formSchema = z.object({
-  client_id: z.string(),
-  name: z.string().max(30, {
+  client_id: z.string().nonempty('O cliente é obrigatório.'),
+  name: z.string().trim().nonempty('O nome é obrigatório.').max(30, {
     message: 'O nome deve ter no maúximo 30 caracteres.',
   }),
   active: z.boolean().default(true),
   public: z.boolean().default(false),
-  exercises: z.array(
-    z.object({
-      exercise_id: z.string(),
-      sets: z.number(),
-      reps: z.number(),
-    })
-  ),
+  exercises: z
+    .array(
+      z.object({
+        exercise_id: z.string(),
+        sets: z.number().min(1, {
+          message: 'O valor deve ser maior que 0.',
+        }),
+        reps: z.number().min(1, {
+          message: 'O valor deve ser maior que 0.',
+        }),
+      })
+    )
+    .min(1, { message: 'O plano deve ter pelo menos um exercício.' }),
 })
 
 function WorkoutCreate() {
@@ -73,10 +82,13 @@ function WorkoutCreate() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [dbExercises, setDbExercises] = useState<Exercise[]>([])
   const [clients, setClients] = useState<Client[]>([])
+  const [bodyparts, setBodyparts] = useState<Bodypart[]>([])
+  const [equipment, setEquipment] = useState<Equipment[]>([])
 
   const [addedExercises, setAddedExercises] = useState<Exercise[]>([])
   const [exercisesDrawerOpen, setExercisesDrawerOpen] = useState<boolean>(false)
 
+  // Fetch data from DB
   useEffect(() => {
     const fetchDbExercises = async () => {
       try {
@@ -96,6 +108,7 @@ function WorkoutCreate() {
         }
       }
     }
+
     const fetchClients = async () => {
       try {
         setIsLoading(true)
@@ -118,8 +131,42 @@ function WorkoutCreate() {
       }
     }
 
+    const fetchBodyparts = async () => {
+      try {
+        setIsLoading(true)
+
+        const res = await axios.get(`${apiUrl}/bodyparts`)
+        const bodyparts: Bodypart[] = res.data.bodyparts
+        setBodyparts(bodyparts)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          setErrorMessage(error.response?.data)
+        } else {
+          console.error('An unexpected error ocurred:', error)
+        }
+      }
+    }
+
+    const fetchEquipment = async () => {
+      try {
+        setIsLoading(true)
+
+        const res = await axios.get(`${apiUrl}/equipment`)
+        const equipment: Equipment[] = res.data.equipment
+        setEquipment(equipment)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          setErrorMessage(error.response?.data)
+        } else {
+          console.error('An unexpected error ocurred:', error)
+        }
+      }
+    }
+
     fetchDbExercises()
     fetchClients()
+    fetchBodyparts()
+    fetchEquipment()
   }, [token])
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -139,6 +186,22 @@ function WorkoutCreate() {
     },
   })
 
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: 'exercises',
+  })
+
+  // Sync addedExercises with form's exercises array
+  useEffect(() => {
+    const newExercises = addedExercises.map((exercise) => ({
+      exercise_id: exercise.id,
+      sets: 1,
+      reps: 1,
+    }))
+
+    form.setValue('exercises', newExercises)
+  }, [addedExercises, form])
+
   const cancelCreate = () => {
     window.location.href = '/treinos'
   }
@@ -148,16 +211,39 @@ function WorkoutCreate() {
 
     const workoutInfo = {
       ...values,
-      exercises: addedExercises.map((exercise) => ({
-        exercise_id: exercise.id,
-        sets: values.exercises.filter((ex) => ex.exercise_id === exercise.id)[0]
-          .sets,
-        reps: values.exercises.filter((ex) => ex.exercise_id === exercise.id)[0]
-          .reps,
+      exercises: values.exercises.map((exercise) => ({
+        exercise_id: exercise.exercise_id,
+        sets: exercise.sets,
+        reps: exercise.reps,
       })),
     }
 
     console.log(workoutInfo)
+
+    try {
+      const resNewWorkout = await axios.post(
+        `${apiUrl}/workouts`,
+        workoutInfo,
+        {
+          headers: {
+            'Auth-Token': token,
+          },
+        }
+      )
+
+      setIsLoading(false)
+
+      if (resNewWorkout.status === 201) {
+        window.location.href = '/treinos'
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.status)
+        console.error(error.response?.data)
+      } else {
+        console.error('An unexpected error ocurred:', error)
+      }
+    }
   }
 
   const handleAddExercises = () => {
@@ -176,41 +262,28 @@ function WorkoutCreate() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='grid grid-cols-2 gap-4'
+          className='grid grid-cols-2 gap-2'
         >
           <div className='col-span-2'>
             <FormField
               control={form.control}
-              name='client_id'
+              name='name'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={`${errorMessage ? 'text-red-500' : ''}`}
                   >
-                    Cliente
+                    Nome do plano
                   </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        className={`w-full ${
-                          errorMessage ? 'border-red-500' : ''
-                        }`}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {clients &&
-                        clients.map((client) => (
-                          <SelectItem key={client.id} value={client.id}>
-                            {client.firstname + ' ' + client.lastname}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input
+                      className={`w-full ${
+                        errorMessage ? 'border-red-500' : ''
+                      }`}
+                      type='text'
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -253,6 +326,45 @@ function WorkoutCreate() {
             )}
           />
 
+          <div className='col-span-2'>
+            <FormField
+              control={form.control}
+              name='client_id'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage ? 'text-red-500' : ''}`}
+                  >
+                    Cliente
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger
+                        className={`w-full ${
+                          errorMessage ? 'border-red-500' : ''
+                        }`}
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {clients &&
+                        clients.map((client) => (
+                          <SelectItem key={client.id} value={client.id}>
+                            {client.firstname + ' ' + client.lastname}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <Drawer
             open={exercisesDrawerOpen}
             onOpenChange={() => handleAddExercises()}
@@ -264,16 +376,74 @@ function WorkoutCreate() {
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>Exercícios</DrawerTitle>
+                <DrawerTitle>Adicionar Exercícios</DrawerTitle>
+                <DrawerDescription></DrawerDescription>
               </DrawerHeader>
 
-              {dbExercises.map((exercise) => (
-                <div key={exercise.id}>{exercise.name}</div>
-              ))}
+              <WorkoutAddExercises
+                dbExercises={dbExercises}
+                addedExercises={addedExercises}
+                setAddedExercises={setAddedExercises}
+                handleOpenClose={handleAddExercises}
+                bodyparts={bodyparts}
+                equipment={equipment}
+              />
             </DrawerContent>
           </Drawer>
 
-          <div className='grid grid-cols-2 col-span-2 gap-2'>
+          {addedExercises.length > 0 && (
+            <div className='col-span-2 flex flex-col gap-2 max-h-96 overflow-y-auto'>
+              {fields.map((exerciseField, index) => (
+                <div key={exerciseField.id} className='flex flex-col gap-2'>
+                  <span>{addedExercises[index].name}</span>
+                  <div className='flex gap-2'>
+                    <FormField
+                      control={form.control}
+                      name={`exercises.${index}.sets`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Sets</FormLabel>
+                          <FormControl>
+                            <Input
+                              type='number'
+                              placeholder='Sets'
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`exercises.${index}.reps`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Reps</FormLabel>
+                          <FormControl>
+                            <Input
+                              type='number'
+                              placeholder='Reps'
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className='grid grid-cols-2 col-span-2 gap-2 absolute bottom-0 left-0 right-0 bg-white p-2 pb-20'>
             <Button
               type='submit'
               size={'sm'}
