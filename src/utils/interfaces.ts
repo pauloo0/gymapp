@@ -137,3 +137,13 @@ export interface Exercise {
     name: string
   }
 }
+
+export interface Bodypart {
+  id: string
+  name: string
+}
+
+export interface Equipment {
+  id: string
+  name: string
+}
