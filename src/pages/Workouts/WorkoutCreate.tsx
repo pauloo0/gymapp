@@ -394,93 +394,101 @@ function WorkoutCreate() {
             </DrawerContent>
           </Drawer>
 
-          {addedExercises.length > 0 && (
+          {fields.length > 0 && (
             <div className='col-span-2 flex flex-col gap-2 max-h-96 overflow-y-auto'>
-              {fields.map((exerciseField, index) => (
-                <div
-                  key={exerciseField.id}
-                  className='flex flex-col border rounded-md py-2 px-3'
-                >
-                  <div className='flex flex-row items-center justify-between'>
-                    <span className='font-bold'>
-                      {addedExercises[index].name}
-                    </span>
+              {fields.map((field, index) => {
+                const exercise = form.getValues(`exercises.${index}`)
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <Ellipsis className='w-4 h-4' />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          className={`${
-                            index === 0 ? 'hidden' : ''
-                          } flex flex-row items-center justify-start`}
-                        >
-                          <ChevronUp className='w-4 h-4 mr-1' />
-                          Mover para cima
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className={`${
-                            index === fields.length - 1 ? 'hidden' : ''
-                          } flex flex-row items-center justify-start`}
-                        >
-                          <ChevronDown className='w-4 h-4 mr-1' />
-                          Mover para baixo
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className='flex flex-row items-center justify-start'>
-                          <X className='w-4 h-4 mr-1' />
-                          Remover
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                return (
+                  <div
+                    key={field.id}
+                    className='flex flex-col border rounded-md py-2 px-3'
+                  >
+                    <div className='flex flex-row items-center justify-between'>
+                      <span className='font-bold'>
+                        {
+                          addedExercises.find(
+                            (ex) => ex.id === exercise.exercise_id
+                          )?.name
+                        }
+                      </span>
 
-                  <div className='grid grid-cols-2 gap-1'>
-                    <FormField
-                      control={form.control}
-                      name={`exercises.${index}.sets`}
-                      render={({ field }) => (
-                        <FormItem className='flex flex-row items-center justify-start space-x-2'>
-                          <FormLabel>Sets</FormLabel>
-                          <FormControl>
-                            <Input
-                              type='number'
-                              placeholder='Sets'
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(Number(e.target.value))
-                              }
-                              className='h-8 w-20'
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`exercises.${index}.reps`}
-                      render={({ field }) => (
-                        <FormItem className='flex flex-row items-center justify-start space-x-2'>
-                          <FormLabel>Reps</FormLabel>
-                          <FormControl>
-                            <Input
-                              type='number'
-                              placeholder='Reps'
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(Number(e.target.value))
-                              }
-                              className='h-8 w-20'
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Ellipsis className='w-4 h-4' />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            className={`${
+                              index === 0 ? 'hidden' : ''
+                            } flex flex-row items-center justify-start`}
+                          >
+                            <ChevronUp className='w-4 h-4 mr-1' />
+                            Mover para cima
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className={`${
+                              index === fields.length - 1 ? 'hidden' : ''
+                            } flex flex-row items-center justify-start`}
+                          >
+                            <ChevronDown className='w-4 h-4 mr-1' />
+                            Mover para baixo
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className='flex flex-row items-center justify-start'>
+                            <X className='w-4 h-4 mr-1' />
+                            Remover
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
+                    <div className='grid grid-cols-2 gap-1'>
+                      <FormField
+                        control={form.control}
+                        name={`exercises.${index}.sets`}
+                        render={({ field }) => (
+                          <FormItem className='flex flex-row items-center justify-start space-x-2'>
+                            <FormLabel>Sets</FormLabel>
+                            <FormControl>
+                              <Input
+                                type='number'
+                                placeholder='Sets'
+                                {...field}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value))
+                                }
+                                className='h-8 w-20'
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`exercises.${index}.reps`}
+                        render={({ field }) => (
+                          <FormItem className='flex flex-row items-center justify-start space-x-2'>
+                            <FormLabel>Reps</FormLabel>
+                            <FormControl>
+                              <Input
+                                type='number'
+                                placeholder='Reps'
+                                {...field}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value))
+                                }
+                                className='h-8 w-20'
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
 
