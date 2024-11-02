@@ -12,6 +12,10 @@ import { Bodypart, Client, Equipment, Exercise } from '@/utils/interfaces'
 
 import Navbar from '@/components/Navbar'
 import Loading from '@/components/reusable/Loading'
+import WorkoutAddExercises from '@/pages/Workouts/WorkoutAddExercises'
+
+import { cn } from '@/lib/utils'
+import { ChevronDown, ChevronUp, Ellipsis, Plus, Save, X } from 'lucide-react'
 
 import {
   Form,
@@ -30,11 +34,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-
-import { cn } from '@/lib/utils'
-import { Plus, Save, X } from 'lucide-react'
 import {
   Drawer,
   DrawerContent,
@@ -43,7 +42,16 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import WorkoutAddExercises from './WorkoutAddExercises'
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -391,14 +399,50 @@ function WorkoutCreate() {
           {addedExercises.length > 0 && (
             <div className='col-span-2 flex flex-col gap-2 max-h-96 overflow-y-auto'>
               {fields.map((exerciseField, index) => (
-                <div key={exerciseField.id} className='flex flex-col gap-2'>
-                  <span>{addedExercises[index].name}</span>
-                  <div className='flex gap-2'>
+                <div
+                  key={exerciseField.id}
+                  className='flex flex-col border rounded-md py-2 px-3'
+                >
+                  <div className='flex flex-row items-center justify-between'>
+                    <span className='font-bold'>
+                      {addedExercises[index].name}
+                    </span>
+
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Ellipsis className='w-4 h-4' />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          className={`${
+                            index === 0 ? 'hidden' : ''
+                          } flex flex-row items-center justify-start`}
+                        >
+                          <ChevronUp className='w-4 h-4 mr-1' />
+                          Mover para cima
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className={`${
+                            index === fields.length - 1 ? 'hidden' : ''
+                          } flex flex-row items-center justify-start`}
+                        >
+                          <ChevronDown className='w-4 h-4 mr-1' />
+                          Mover para baixo
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className='flex flex-row items-center justify-start'>
+                          <X className='w-4 h-4 mr-1' />
+                          Remover
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  <div className='grid grid-cols-2 gap-1'>
                     <FormField
                       control={form.control}
                       name={`exercises.${index}.sets`}
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className='flex flex-row items-center justify-start space-x-2'>
                           <FormLabel>Sets</FormLabel>
                           <FormControl>
                             <Input
@@ -408,6 +452,7 @@ function WorkoutCreate() {
                               onChange={(e) =>
                                 field.onChange(Number(e.target.value))
                               }
+                              className='h-8 w-20'
                             />
                           </FormControl>
                           <FormMessage />
@@ -418,7 +463,7 @@ function WorkoutCreate() {
                       control={form.control}
                       name={`exercises.${index}.reps`}
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className='flex flex-row items-center justify-start space-x-2'>
                           <FormLabel>Reps</FormLabel>
                           <FormControl>
                             <Input
@@ -428,6 +473,7 @@ function WorkoutCreate() {
                               onChange={(e) =>
                                 field.onChange(Number(e.target.value))
                               }
+                              className='h-8 w-20'
                             />
                           </FormControl>
                           <FormMessage />
