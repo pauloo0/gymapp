@@ -82,6 +82,11 @@ export interface Workout {
       sets: number
     }
   ]
+  clients: {
+    id: string
+    firstname: string
+    lastname: string
+  }
 }
 
 export interface Subscription {

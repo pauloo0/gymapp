@@ -127,6 +127,11 @@ const emptyWorkout: Workout[] = [
         sets: 6,
       },
     ],
+    clients: {
+      id: '',
+      firstname: '',
+      lastname: '',
+    },
   },
 ]
 
