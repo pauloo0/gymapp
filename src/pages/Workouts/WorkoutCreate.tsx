@@ -427,7 +427,7 @@ function WorkoutCreate() {
                     <div className='flex flex-row items-center justify-between'>
                       <span className='font-bold'>
                         {
-                          addedExercises.find(
+                          dbExercises.find(
                             (ex) => ex.id === exercise.exercise_id
                           )?.name
                         }
