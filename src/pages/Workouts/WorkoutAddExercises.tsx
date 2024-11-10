@@ -78,7 +78,7 @@ function WorkoutAddExercises({
   }, [dbExercises, searchFilters])
 
   const handleAddExercise = (newExercises: Exercise[]) => {
-    setAddedExercises((prevExercises) => [...prevExercises, ...newExercises])
+    setAddedExercises([...newExercises])
     handleOpenClose()
   }
 
@@ -156,7 +156,7 @@ function WorkoutAddExercises({
         ))}
       </div>
 
-      <div className='absolute left-6 right-6 bottom-6 flex flex-col items-center justify-center gap-2'>
+      <div className='absolute flex flex-col items-center justify-center gap-2 left-6 right-6 bottom-6'>
         <Button
           variant={'default'}
           size={'sm'}
