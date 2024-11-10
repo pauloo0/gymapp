@@ -18,6 +18,7 @@ import ScheduleCreate from './pages/Schedule/ScheduleCreate'
 import Workouts from './pages/Workouts/Workouts'
 import WorkoutCreate from './pages/Workouts/WorkoutCreate'
 import WorkoutPage from './pages/Workouts/WorkoutPage'
+import WorkoutEdit from './pages/Workouts/WorkoutEdit'
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
 
         <Route path='/treinos' element={<Workouts />} />
         <Route path='/treino/:workout_id' element={<WorkoutPage />} />
+        <Route path='/treino/:workout_id/editar' element={<WorkoutEdit />} />
         <Route path='/treinos/novo' element={<WorkoutCreate />} />
 
         <Route path='*' element={<NotFound />} />

@@ -56,37 +56,37 @@ export interface Workout {
   name: string
   active: boolean
   public: boolean
-  workout_exercises: [
-    {
-      exercises: {
-        id: string
-        name: string
-        description?: string
-        equipment?: {
-          id: string
-          name: string
-        }
-        bodyparts?: {
-          id: string
-          name: string
-        }
-        media?: [
-          {
-            id: string
-            type: string
-            url: string
-          }
-        ]
-      }
-      reps: number
-      sets: number
-    }
-  ]
+  workout_exercises: WorkoutExercise[]
   clients: {
     id: string
     firstname: string
     lastname: string
   }
+}
+
+export interface WorkoutExercise {
+  exercises: {
+    id: string
+    name: string
+    description?: string
+    equipment?: {
+      id: string
+      name: string
+    }
+    bodyparts?: {
+      id: string
+      name: string
+    }
+    media?: [
+      {
+        id: string
+        type: string
+        url: string
+      }
+    ]
+  }
+  reps: number
+  sets: number
 }
 
 export interface Subscription {
