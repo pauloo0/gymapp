@@ -1,4 +1,9 @@
+import { useState, useEffect } from 'react'
+
 import { Routes, Route } from 'react-router'
+
+import { testDBConnection } from './utils/functions'
+
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
@@ -20,7 +25,46 @@ import WorkoutCreate from './pages/Workouts/WorkoutCreate'
 import WorkoutPage from './pages/Workouts/WorkoutPage'
 import WorkoutEdit from './pages/Workouts/WorkoutEdit'
 
+interface DbStatus {
+  status: number
+  message: string
+}
+
 function App() {
+  const [dbStatus, setDbStatus] = useState<DbStatus | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const result = await testDBConnection()
+        setDbStatus(result)
+      } catch (error) {
+        console.error('Failed to check database connection:', error)
+        setDbStatus({
+          status: 500,
+          message: 'Erro ao verificar conexão com a base de dados',
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    checkConnection()
+  }, [])
+
+  if (isLoading) {
+    return <p className='text-4xl font-bold'>A verificar conexão...</p>
+  }
+
+  if (!dbStatus || dbStatus.status !== 200) {
+    return (
+      <p className='text-4xl font-bold'>
+        {dbStatus?.message || 'Erro desconhecido'}
+      </p>
+    )
+  }
+
   return (
     <div className='p-4 pt-12'>
       <Routes>
