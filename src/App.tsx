@@ -25,6 +25,8 @@ import WorkoutCreate from './pages/Workouts/WorkoutCreate'
 import WorkoutPage from './pages/Workouts/WorkoutPage'
 import WorkoutEdit from './pages/Workouts/WorkoutEdit'
 
+import DBConnectionError from './pages/DBConnectionError'
+
 interface DbStatus {
   status: number
   message: string
@@ -34,22 +36,24 @@ function App() {
   const [dbStatus, setDbStatus] = useState<DbStatus | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        const result = await testDBConnection()
-        setDbStatus(result)
-      } catch (error) {
-        console.error('Failed to check database connection:', error)
-        setDbStatus({
-          status: 500,
-          message: 'Erro ao verificar conexão com a base de dados',
-        })
-      } finally {
-        setIsLoading(false)
-      }
-    }
+  const checkConnection = async () => {
+    try {
+      setIsLoading(true)
 
+      const result = await testDBConnection()
+      setDbStatus(result)
+    } catch (error) {
+      console.error('Failed to check database connection:', error)
+      setDbStatus({
+        status: 500,
+        message: 'Erro ao verificar conexão com a base de dados',
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
     checkConnection()
   }, [])
 
@@ -58,11 +62,7 @@ function App() {
   }
 
   if (!dbStatus || dbStatus.status !== 200) {
-    return (
-      <p className='text-4xl font-bold'>
-        {dbStatus?.message || 'Erro desconhecido'}
-      </p>
-    )
+    return <DBConnectionError checkConnection={checkConnection} />
   }
 
   return (
