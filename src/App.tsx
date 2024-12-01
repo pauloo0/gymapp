@@ -18,6 +18,7 @@ import ClientEdit from './pages/Clients/ClientEdit'
 import ClientCreate from './pages/Clients/ClientCreate'
 
 import Schedules from './pages/Schedule/Schedules'
+import SchedulePage from './pages/Schedule/SchedulePage'
 import ScheduleCreate from './pages/Schedule/ScheduleCreate'
 
 import Workouts from './pages/Workouts/Workouts'
@@ -83,6 +84,7 @@ function App() {
         <Route path='/clientes/novo' element={<ClientCreate />} />
 
         <Route path='/marcacoes' element={<Schedules />} />
+        <Route path='/marcacao/:schedule_id' element={<SchedulePage />} />
         <Route path='/marcacao/novo' element={<ScheduleCreate />} />
         <Route path='/marcacao/novo/:client_id' element={<ScheduleCreate />} />
 
