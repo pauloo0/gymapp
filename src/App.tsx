@@ -20,6 +20,7 @@ import ClientCreate from './pages/Clients/ClientCreate'
 import Schedules from './pages/Schedule/Schedules'
 import SchedulePage from './pages/Schedule/SchedulePage'
 import ScheduleCreate from './pages/Schedule/ScheduleCreate'
+import ScheduleEdit from './pages/Schedule/ScheduleEdit'
 
 import Workouts from './pages/Workouts/Workouts'
 import WorkoutCreate from './pages/Workouts/WorkoutCreate'
@@ -85,6 +86,10 @@ function App() {
 
         <Route path='/marcacoes' element={<Schedules />} />
         <Route path='/marcacao/:schedule_id' element={<SchedulePage />} />
+        <Route
+          path='/marcacao/:schedule_id/editar'
+          element={<ScheduleEdit />}
+        />
         <Route path='/marcacao/novo' element={<ScheduleCreate />} />
         <Route path='/marcacao/novo/:client_id' element={<ScheduleCreate />} />
 
