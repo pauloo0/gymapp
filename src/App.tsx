@@ -27,6 +27,7 @@ import WorkoutPage from './pages/Workouts/WorkoutPage'
 import WorkoutEdit from './pages/Workouts/WorkoutEdit'
 
 import Measurements from './pages/Measurements/Measurements'
+import MeasurementPage from './pages/Measurements/MeasurementPage'
 
 import DBConnectionError from './pages/DBConnectionError'
 
@@ -99,6 +100,10 @@ function App() {
         <Route path='/treinos/novo' element={<WorkoutCreate />} />
 
         <Route path='/avaliacoes' element={<Measurements />} />
+        <Route
+          path='/avaliacao/:measurement_id'
+          element={<MeasurementPage />}
+        />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
