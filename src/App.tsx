@@ -9,7 +9,6 @@ import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import Dashboard from './pages/Dashboard/Dashboard'
 
-import Measurements from './pages/Measurements'
 import Profile from './pages/Profile/Profile'
 
 import Clients from './pages/Clients/Clients'
@@ -26,6 +25,8 @@ import Workouts from './pages/Workouts/Workouts'
 import WorkoutCreate from './pages/Workouts/WorkoutCreate'
 import WorkoutPage from './pages/Workouts/WorkoutPage'
 import WorkoutEdit from './pages/Workouts/WorkoutEdit'
+
+import Measurements from './pages/Measurements/Measurements'
 
 import DBConnectionError from './pages/DBConnectionError'
 
@@ -76,7 +77,6 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/' element={<Dashboard />} />
 
-        <Route path='/avaliacoes' element={<Measurements />} />
         <Route path='/perfil' element={<Profile />} />
 
         <Route path='/clientes' element={<Clients />} />
@@ -97,6 +97,8 @@ function App() {
         <Route path='/treino/:workout_id' element={<WorkoutPage />} />
         <Route path='/treino/:workout_id/editar' element={<WorkoutEdit />} />
         <Route path='/treinos/novo' element={<WorkoutCreate />} />
+
+        <Route path='/avaliacoes' element={<Measurements />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
