@@ -159,7 +159,7 @@ function ScheduleEdit() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='grid gap-4 grid-col-2'
+          className='grid grid-cols-2 gap-4'
         >
           <FormField
             control={form.control}

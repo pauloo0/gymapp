@@ -159,7 +159,7 @@ function MeasurementPage() {
 
       <div
         id='measurement-info'
-        className='grid gap-2 overflow-y-auto mb-14 grid-col-2'
+        className='grid grid-cols-2 gap-2 overflow-y-auto mb-14'
       >
         <section className='col-span-2 mb-4 font-semibold'>
           <p>Dados gerais</p>
