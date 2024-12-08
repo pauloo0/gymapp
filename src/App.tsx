@@ -28,6 +28,7 @@ import WorkoutEdit from './pages/Workouts/WorkoutEdit'
 
 import Measurements from './pages/Measurements/Measurements'
 import MeasurementPage from './pages/Measurements/MeasurementPage'
+import MeasurementCreate from './pages/Measurements/MeasurementCreate'
 import MeasurementEdit from './pages/Measurements/MeasurementEdit'
 
 import DBConnectionError from './pages/DBConnectionError'
@@ -105,6 +106,7 @@ function App() {
           path='/avaliacao/:measurement_id'
           element={<MeasurementPage />}
         />
+        <Route path='/avaliacoes/novo' element={<MeasurementCreate />} />
         <Route
           path='/avaliacao/:measurement_id/editar'
           element={<MeasurementEdit />}
