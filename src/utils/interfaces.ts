@@ -152,3 +152,30 @@ export interface Equipment {
   id: string
   name: string
 }
+
+export interface User {
+  id: string
+  username: string
+  email: string
+  clients?: [
+    {
+      id: string
+      firstname: string
+      lastname: string
+      gender: string
+      phone_number: string
+      join_date: string
+      birthday: string
+      goal: string
+      active: boolean
+      trainer_id: string
+    }
+  ]
+  trainers?: [
+    {
+      id: string
+      firstname: string
+      lastname: string
+    }
+  ]
+}
