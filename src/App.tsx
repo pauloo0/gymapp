@@ -32,6 +32,7 @@ import MeasurementCreate from './pages/Measurements/MeasurementCreate'
 import MeasurementEdit from './pages/Measurements/MeasurementEdit'
 
 import TrainerPackages from './pages/TrainerPackages/TrainerPackages'
+import PackagePage from './pages/TrainerPackages/PackagesPage'
 
 import DBConnectionError from './pages/DBConnectionError'
 
@@ -115,6 +116,7 @@ function App() {
         />
 
         <Route path='/pacotes' element={<TrainerPackages />} />
+        <Route path='/pacote/:package_id' element={<PackagePage />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
