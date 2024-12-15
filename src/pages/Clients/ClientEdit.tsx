@@ -278,6 +278,7 @@ const ClientEdit = () => {
   if (isLoading) {
     return <Loading />
   }
+  if (!trainerPackages) window.location.href = `/cliente/${client.id}`
 
   return (
     <>
