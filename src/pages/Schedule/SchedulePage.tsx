@@ -66,7 +66,7 @@ function SchedulePage() {
     return (
       <div className='flex flex-col items-start justify-center'>
         <Navbar />
-        <div className='flex flex-row items-center w-full gap-2 justify-vetween'>
+        <div className='flex flex-row items-center justify-between w-full gap-2'>
           <ArrowLeft
             className='w-6 h-6'
             onClick={() => {
