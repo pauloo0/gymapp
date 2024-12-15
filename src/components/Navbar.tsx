@@ -8,10 +8,20 @@ import {
 } from 'lucide-react'
 
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router'
 
 interface Screen {
   id: string
   path: string
+}
+
+const useBasePath = () => {
+  const location = useLocation()
+  const { pathname } = location
+  const pathSegments = pathname.split('/')
+
+  // Return the base path: the first segment with a leading slash
+  return `/${pathSegments[1] || ''}`
 }
 
 function Navbar() {
@@ -20,24 +30,29 @@ function Navbar() {
     path: '/',
   })
 
+  const screenPath = useBasePath()
+
   useEffect(() => {
-    const screenPath = window.location.pathname
-    let screenId = activeScreen.id
+    let screenId = ''
 
     switch (screenPath) {
       case '/':
         screenId = 'dashboard'
         break
       case '/clientes':
+      case '/cliente':
         screenId = 'clients'
         break
       case '/marcacoes':
+      case '/marcacao':
         screenId = 'schedules'
         break
       case '/treinos':
+      case '/treino':
         screenId = 'workouts'
         break
       case '/avaliacoes':
+      case '/avaliacao':
         screenId = 'measurements'
         break
       case '/perfil':
@@ -49,14 +64,14 @@ function Navbar() {
     }
 
     setActiveScreen({ id: screenId, path: screenPath })
-  }, [])
+  }, [screenPath])
 
   const navigateTo = (path: string) => {
     window.location.href = path
   }
 
   return (
-    <div className='fixed z-50 bottom-0 left-0 flex flex-row items-center justify-around w-screen py-5 text-white bg-slate-900'>
+    <div className='fixed bottom-0 left-0 z-50 flex flex-row items-center justify-around w-screen py-5 text-white bg-slate-900'>
       <Home
         className={`hover:cursor-pointer ${
           activeScreen.id === 'dashboard' && 'text-opacity-100 text-teal-400'
