@@ -59,8 +59,9 @@ function Profile() {
   const label = 'text-sm font-semibold leading-none'
 
   const redirectPackages = () => {
-    console.log('redirect to packages page.')
+    window.location.href = '/pacotes'
   }
+
   const logout = () => {
     setIsLoading(true)
 

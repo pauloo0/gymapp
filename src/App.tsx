@@ -31,6 +31,8 @@ import MeasurementPage from './pages/Measurements/MeasurementPage'
 import MeasurementCreate from './pages/Measurements/MeasurementCreate'
 import MeasurementEdit from './pages/Measurements/MeasurementEdit'
 
+import TrainerPackages from './pages/TrainerPackages/TrainerPackages'
+
 import DBConnectionError from './pages/DBConnectionError'
 
 interface DbStatus {
@@ -111,6 +113,8 @@ function App() {
           path='/avaliacao/:measurement_id/editar'
           element={<MeasurementEdit />}
         />
+
+        <Route path='/pacotes' element={<TrainerPackages />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
