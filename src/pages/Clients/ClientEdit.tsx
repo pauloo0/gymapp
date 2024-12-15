@@ -500,9 +500,6 @@ const ClientEdit = () => {
                             {trainerPackage.name}
                           </SelectItem>
                         ))}
-                      {/* <SelectItem value='35aac01e-69a9-4bac-8a07-6927d620721e'>
-                        2 times a week
-                      </SelectItem> */}
                     </SelectContent>
                   </Select>
                   <FormMessage />
