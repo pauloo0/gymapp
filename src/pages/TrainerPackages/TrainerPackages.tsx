@@ -65,6 +65,17 @@ function TrainerPackages() {
       <Navbar />
       <h1 className='mb-6 text-2xl'>Os meus pacotes</h1>
 
+      <div className='flex flex-row items-center justify-between my-4'>
+        <Button
+          type='button'
+          variant='default'
+          size='sm'
+          onClick={() => (window.location.href = '/pacotes/novo')}
+        >
+          <Plus className='mr-1' /> Criar novo
+        </Button>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>
