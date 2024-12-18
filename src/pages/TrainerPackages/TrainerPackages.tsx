@@ -99,7 +99,7 @@ function TrainerPackages() {
               </TableRow>
             ))
           ) : (
-            <TableRow className='flex flex-col items-center justify-c'>
+            <TableRow className='flex flex-col items-center justify-center'>
               <p>Sem pacotes</p>
               <Button onClick={() => (window.location.href = '/pacotes/novo')}>
                 <Plus className='mr-1' />
