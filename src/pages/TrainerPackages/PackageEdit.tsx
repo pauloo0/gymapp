@@ -146,7 +146,7 @@ function PackageEdit() {
       )
 
       if (res.status === 201) {
-        window.location.href = `/marcacao/${package_id}`
+        window.location.href = `/pacote/${package_id}`
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
