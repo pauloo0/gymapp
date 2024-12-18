@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 
-import { ArrowLeft, Pencil } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import Navbar from '@/components/Navbar'
@@ -25,6 +25,8 @@ function PackagesPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [currentPackage, setCurrentPackage] = useState<Package | null>(null)
+  const [associatedSubscriptions, setAssociatedSubscriptions] =
+    useState<number>(0)
 
   useEffect(() => {
     const fetchPackage = async () => {
@@ -52,8 +54,38 @@ function PackagesPage() {
     fetchPackage()
   }, [token, package_id])
 
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/packages/${package_id}/subs`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
+
+        const count: number = res.data.packageSubscriptions
+        setAssociatedSubscriptions(count)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(error.response?.status)
+          console.error(error.response?.data)
+        } else {
+          console.error('An unexpected error occurred.', error)
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchSubscriptions()
+  }, [token, package_id])
+
   const editPackage = (pkg: Package) => {
     window.location.href = `/pacote/${pkg.id}/editar`
+  }
+
+  const deletePackage = (pkg: Package) => {
+    console.log('Delete package ' + pkg.id)
   }
 
   if (isLoading) return <Loading />
@@ -73,15 +105,24 @@ function PackagesPage() {
 
         <div
           id='package-header'
-          className='flex flex-row items-center justify-end w-full mt-10 mb-12'
-          onClick={() => editPackage(currentPackage)}
+          className='flex flex-row items-center justify-end w-full gap-2 mt-10 mb-12'
         >
           <Button
             size={'sm'}
             className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-amber-400 text-slate-900 hover:bg-amber-500'
+            onClick={() => editPackage(currentPackage)}
           >
             <Pencil className='w-4 h-4' /> Editar
           </Button>
+          {associatedSubscriptions === 0 && (
+            <Button
+              size={'sm'}
+              className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-red-500 text-slate-200 hover:bg-red-600'
+              onClick={() => deletePackage(currentPackage)}
+            >
+              <Trash2 className='w-4 h-4' /> Apagar
+            </Button>
+          )}
         </div>
 
         <div
