@@ -84,8 +84,31 @@ function PackagesPage() {
     window.location.href = `/pacote/${pkg.id}/editar`
   }
 
-  const deletePackage = (pkg: Package) => {
-    console.log('Delete package ' + pkg.id)
+  const deletePackage = async (pkg: Package) => {
+    if (associatedSubscriptions > 0) {
+      alert('Este pacote tem subscrições associadas')
+    } else {
+      setIsLoading(true)
+
+      try {
+        const res = await axios.delete(`${apiUrl}/packages/${pkg.id}`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
+
+        if (res.status === 200) window.location.href = '/pacotes'
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(error.response?.status)
+          console.error(error.response?.data)
+        } else {
+          console.error('An unexpected error occurred:', error)
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
   }
 
   if (isLoading) return <Loading />
