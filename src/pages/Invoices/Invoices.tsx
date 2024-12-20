@@ -125,8 +125,6 @@ function Invoices() {
         }
       })
 
-      console.log({ filteredInvoices, filter })
-
       return filteredInvoices
     })
   }, [filter, invoices, selectedClientId])
