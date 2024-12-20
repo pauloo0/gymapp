@@ -37,6 +37,7 @@ import PackageCreate from './pages/TrainerPackages/PackageCreate'
 import PackageEdit from './pages/TrainerPackages/PackageEdit'
 
 import Invoices from './pages/Invoices/Invoices'
+import InvoicePage from './pages/Invoices/InvoicePage'
 
 import DBConnectionError from './pages/DBConnectionError'
 
@@ -125,6 +126,7 @@ function App() {
         <Route path='/pacotes/novo' element={<PackageCreate />} />
 
         <Route path='/faturas' element={<Invoices />} />
+        <Route path='/fatura/:invoice_id' element={<InvoicePage />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
