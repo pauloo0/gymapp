@@ -116,6 +116,13 @@ export interface Invoice {
   }
 }
 
+export interface Payment {
+  id: string
+  payment_date: string
+  amount: number
+  cancelled: boolean
+}
+
 export interface Package {
   id: string
   name: string
