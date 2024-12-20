@@ -36,6 +36,8 @@ import PackagePage from './pages/TrainerPackages/PackagesPage'
 import PackageCreate from './pages/TrainerPackages/PackageCreate'
 import PackageEdit from './pages/TrainerPackages/PackageEdit'
 
+import Invoices from './pages/Invoices/Invoices'
+
 import DBConnectionError from './pages/DBConnectionError'
 
 interface DbStatus {
@@ -121,6 +123,8 @@ function App() {
         <Route path='/pacote/:package_id' element={<PackagePage />} />
         <Route path='/pacote/:package_id/editar' element={<PackageEdit />} />
         <Route path='/pacotes/novo' element={<PackageCreate />} />
+
+        <Route path='/faturas' element={<Invoices />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>

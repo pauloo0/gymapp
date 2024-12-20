@@ -61,6 +61,9 @@ function Profile() {
   const redirectPackages = () => {
     window.location.href = '/pacotes'
   }
+  const redirectInvoices = () => {
+    window.location.href = '/faturas'
+  }
 
   const logout = () => {
     setIsLoading(true)
@@ -113,6 +116,14 @@ function Profile() {
               onClick={redirectPackages}
             >
               Os meus pacotes
+            </Button>
+            <Button
+              size={'lg'}
+              variant={'secondary'}
+              className='w-full'
+              onClick={redirectInvoices}
+            >
+              Faturas
             </Button>
             <Button
               size={'lg'}
