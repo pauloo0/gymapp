@@ -1,6 +1,6 @@
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { useParams } from 'react-router'
+import { useParams, useNavigate } from 'react-router'
 
 import { useState, useEffect } from 'react'
 
@@ -21,12 +21,43 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { ArrowLeft, Plus } from 'lucide-react'
+
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+
+import { ArrowLeft, Plus, Save, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
+const formSchema = z.object({
+  amount: z.number().min(1, 'O valor é obrigatório.'),
+})
+
 interface InvoiceInfo {
   id: string
+  clientId: string
   clientName: string
   issue_date: string
   due_date: string
@@ -45,10 +76,20 @@ function InvoicePage() {
     window.location.href = '/login'
   }
 
+  const navigate = useNavigate()
   const { invoice_id } = useParams()
 
+  const [errorMessage, setErrorMessage] = useState<null | string>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [invoiceInfo, setInvoiceInfo] = useState<InvoiceInfo>()
+  const [paymentFormOpen, setPaymentFormOpen] = useState<boolean>(false)
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      amount: 0,
+    },
+  })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,6 +134,7 @@ function InvoicePage() {
 
         const invoiceInfo: InvoiceInfo = {
           id: invoice.id,
+          clientId: invoice.subscriptions.clients.id,
           clientName:
             invoice.subscriptions.clients.firstname +
             ' ' +
@@ -105,6 +147,10 @@ function InvoicePage() {
           pendingAmount: invoice.amount - paidAmount,
           payments: payments,
         }
+
+        form.reset({
+          amount: invoiceInfo.pendingAmount,
+        })
 
         setInvoiceInfo(invoiceInfo)
       } catch (error) {
@@ -120,10 +166,49 @@ function InvoicePage() {
     }
 
     fetchData()
-  }, [token, invoice_id])
+  }, [token, invoice_id, form])
 
-  const handleNewPayment = () => {
-    console.log('Adding new payment')
+  const cancelAddPayment = () => {
+    setPaymentFormOpen(false)
+  }
+
+  const onSubmitPayment = async (values: z.infer<typeof formSchema>) => {
+    if (!invoiceInfo) window.location.href = '/faturas'
+
+    try {
+      setIsLoading(true)
+
+      const paymentInfo = {
+        invoice_id: invoiceInfo!.id,
+        amount: Number(values.amount),
+        payment_date: format(new Date(), 'yyyy-MM-dd'),
+        cancelled: false,
+      }
+
+      const resNewPayment = await axios.post(
+        `${apiUrl}/payments/client/${invoiceInfo!.clientId}`,
+        paymentInfo,
+        {
+          headers: {
+            'Auth-Token': token,
+          },
+        }
+      )
+
+      if (resNewPayment.status === 201) {
+        navigate(0)
+      } else {
+        setErrorMessage(resNewPayment.data.message)
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data)
+      } else {
+        console.error('An unexpected error ocurred:', error)
+      }
+    } finally {
+      setIsLoading(true)
+    }
   }
 
   if (isLoading) return <Loading />
@@ -210,14 +295,77 @@ function InvoicePage() {
               {invoiceInfo.pendingAmount > 0 && (
                 <TableRow>
                   <TableCell colSpan={3}>
-                    <Button
-                      size='sm'
-                      className='w-full'
-                      onClick={handleNewPayment}
-                    >
-                      <Plus className='w-4 h-6 mr-1' />
-                      Adicionar Pagamento
-                    </Button>
+                    <Drawer open={paymentFormOpen}>
+                      <DrawerTrigger asChild className='w-full'>
+                        <Button
+                          size='sm'
+                          className='w-full'
+                          onClick={() => setPaymentFormOpen(true)}
+                        >
+                          <Plus className='w-4 h-6 mr-1' />
+                          Adicionar Pagamento
+                        </Button>
+                      </DrawerTrigger>
+                      <DrawerContent>
+                        <DrawerHeader>
+                          <DrawerTitle>Adicionar Pagamento</DrawerTitle>
+                          <DrawerDescription />
+                        </DrawerHeader>
+                        <Form {...form}>
+                          <form
+                            onSubmit={form.handleSubmit(onSubmitPayment)}
+                            className='px-6'
+                          >
+                            <FormField
+                              name='amount'
+                              control={form.control}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Valor recebido</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      className={`w-full ${
+                                        errorMessage ? 'border-red-500' : ''
+                                      }`}
+                                      type='text'
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <DrawerFooter className='grid grid-cols-2 gap-2 mb-6'>
+                              <Button
+                                type='submit'
+                                size={'sm'}
+                                className={cn(
+                                  'flex items-center justify-center px-3 bg-green-600 hover:bg-green-700',
+                                  isLoading
+                                    ? 'cursor-not-allowed'
+                                    : 'cursor-pointer'
+                                )}
+                              >
+                                <Save className='w-4 h-4 mr-1' />
+                                Guardar
+                              </Button>
+                              <Button
+                                type='reset'
+                                size={'sm'}
+                                className='flex items-center justify-center px-3'
+                                variant='secondary'
+                                disabled={isLoading}
+                                onClick={cancelAddPayment}
+                              >
+                                <X className='w-4 h-4 mr-1' />
+                                Cancelar
+                              </Button>
+                            </DrawerFooter>
+                          </form>
+                        </Form>
+                      </DrawerContent>
+                    </Drawer>
                   </TableCell>
                 </TableRow>
               )}
