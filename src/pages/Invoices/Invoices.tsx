@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/table'
 
 import { format } from 'date-fns'
+import { SquareCheck, SquareMinus, SquareSlash, SquareDot } from 'lucide-react'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -180,8 +181,9 @@ function Invoices() {
           <TableHeader>
             <TableRow>
               <TableHead>Cliente</TableHead>
-              <TableHead>Dt. Venc.</TableHead>
+              <TableHead>Vencimento</TableHead>
               <TableHead>Valor</TableHead>
+              <TableHead>Est.</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -202,13 +204,38 @@ function Invoices() {
                     {format(invoice.due_date, 'yyyy/MM/dd')}
                   </TableCell>
                   <TableCell className='text-center'>
-                    {invoice.amount} €
+                    {invoice.amount}
+                  </TableCell>
+                  <TableCell className='flex items-center justify-center'>
+                    {invoice.status === 'paid' ? (
+                      <SquareCheck
+                        strokeWidth={3}
+                        className='w-4 h-4 text-green-500'
+                      />
+                    ) : invoice.status === 'overdue' ? (
+                      <SquareDot
+                        strokeWidth={3}
+                        className='w-4 h-4 text-red-500'
+                      />
+                    ) : invoice.status === 'partial_payment' ? (
+                      <SquareSlash
+                        strokeWidth={3}
+                        className='w-4 h-4 text-amber-500'
+                      />
+                    ) : (
+                      <SquareMinus
+                        strokeWidth={3}
+                        className='w-4 h-4 text-slate-500'
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))
             ) : (
-              <TableRow className='flex flex-col items-center justify-center'>
-                <TableCell>Não encontrei faturas para este cliente.</TableCell>
+              <TableRow>
+                <TableCell colSpan={4} className='text-center'>
+                  Não encontrei faturas para este filtro.
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
