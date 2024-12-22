@@ -66,25 +66,30 @@ function Measurements() {
   }, [token])
 
   useEffect(() => {
-    if (selectedClientId === '') {
-      return
+    let endpointUrl = `${apiUrl}/measurements/`
+    if (selectedClientId !== '') {
+      endpointUrl += `client/${selectedClientId}/`
     }
 
     const fetchMeasurements = async () => {
       try {
-        setIsLoading(true)
+        const res = await axios.get(endpointUrl, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
 
-        const res = await axios.get(
-          `${apiUrl}/measurements/client/${selectedClientId}`,
-          {
-            headers: {
-              'Auth-Token': token,
-            },
+        const sortedMeasurements: Measurement[] = res.data.measurements.sort(
+          (measurementA: Measurement, measurementB: Measurement) => {
+            const dateA = new Date(measurementA.date)
+            const dateB = new Date(measurementB.date)
+
+            return dateB.getTime() - dateA.getTime()
           }
         )
 
-        const measurements = res.data.measurements
-        setMeasurements(measurements)
+        setMeasurements(sortedMeasurements)
+        // setFilteredMeasurements(sortedMeasurements)
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.status)
@@ -92,8 +97,6 @@ function Measurements() {
         } else {
           console.error('An unexpected error ocurred:', error)
         }
-      } finally {
-        setIsLoading(false)
       }
     }
 
