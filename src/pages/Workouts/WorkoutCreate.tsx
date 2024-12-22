@@ -226,8 +226,6 @@ function WorkoutCreate() {
       })),
     }
 
-    console.log(workoutInfo)
-
     try {
       const resNewWorkout = await axios.post(
         `${apiUrl}/workouts`,
@@ -413,7 +411,7 @@ function WorkoutCreate() {
           </Drawer>
 
           {fields.length > 0 && (
-            <div className='col-span-2 flex flex-col gap-2 max-h-96 overflow-y-auto'>
+            <div className='flex flex-col col-span-2 gap-2 overflow-y-auto max-h-96'>
               {fields.map((field, index) => {
                 const exercise = form.getValues(`exercises.${index}`)
                 const isFirst = index === 0
@@ -422,7 +420,7 @@ function WorkoutCreate() {
                 return (
                   <div
                     key={field.id}
-                    className='flex flex-col border rounded-md py-2 px-3'
+                    className='flex flex-col px-3 py-2 border rounded-md'
                   >
                     <div className='flex flex-row items-center justify-between'>
                       <span className='font-bold'>
@@ -484,7 +482,7 @@ function WorkoutCreate() {
                                 onChange={(e) =>
                                   field.onChange(Number(e.target.value))
                                 }
-                                className='h-8 w-20'
+                                className='w-20 h-8'
                               />
                             </FormControl>
                             <FormMessage />
@@ -505,7 +503,7 @@ function WorkoutCreate() {
                                 onChange={(e) =>
                                   field.onChange(Number(e.target.value))
                                 }
-                                className='h-8 w-20'
+                                className='w-20 h-8'
                               />
                             </FormControl>
                             <FormMessage />
