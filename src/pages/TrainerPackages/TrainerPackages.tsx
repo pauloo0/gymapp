@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 
-import { Plus } from 'lucide-react'
+import { Plus, ArrowLeft } from 'lucide-react'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -63,9 +63,15 @@ function TrainerPackages() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-6 text-2xl'>Os meus pacotes</h1>
+      <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
+        <ArrowLeft
+          className='w-6 h-6'
+          onClick={() => (window.location.href = '/perfil')}
+        />
+        <h1 className='text-2xl font-semibold'>Os meus pacotes</h1>
+      </div>
 
-      <div className='flex flex-row items-center justify-between my-4'>
+      <div className='flex flex-row items-center justify-between mb-4'>
         <Button
           type='button'
           variant='default'

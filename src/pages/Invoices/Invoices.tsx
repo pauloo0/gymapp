@@ -27,7 +27,13 @@ import {
 } from '@/components/ui/table'
 
 import { format } from 'date-fns'
-import { SquareCheck, SquareMinus, SquareSlash, SquareDot } from 'lucide-react'
+import {
+  SquareCheck,
+  SquareMinus,
+  SquareSlash,
+  SquareDot,
+  ArrowLeft,
+} from 'lucide-react'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -135,7 +141,13 @@ function Invoices() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-6 text-xl'>Faturas</h1>
+      <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
+        <ArrowLeft
+          className='w-6 h-6'
+          onClick={() => (window.location.href = '/perfil')}
+        />
+        <h1 className='text-2xl font-semibold'>Faturas</h1>
+      </div>
 
       <div className='p-3 border rounded-lg'>
         <Label className='mb-8'>Nome do cliente</Label>

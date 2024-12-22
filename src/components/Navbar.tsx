@@ -56,6 +56,10 @@ function Navbar() {
         screenId = 'measurements'
         break
       case '/perfil':
+      case '/pacotes':
+      case '/pacote':
+      case '/faturas':
+      case '/fatura':
         screenId = 'profile'
         break
       default:
