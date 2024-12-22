@@ -108,7 +108,14 @@ function InvoicePage() {
         ])
 
         const invoice: Invoice = resInvoice.data.invoice
-        const payments: Payment[] = resPayments.data.payments
+        const payments: Payment[] = resPayments.data.payments.sort(
+          (paymentA: Payment, paymentB: Payment) => {
+            const dateA = new Date(paymentA.payment_date)
+            const dateB = new Date(paymentB.payment_date)
+
+            return dateB.getTime() - dateA.getTime()
+          }
+        )
 
         const paidAmount: number = payments.reduce(
           (runningTotal: number, payment: Payment) =>
