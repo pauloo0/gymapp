@@ -227,8 +227,6 @@ function InvoicePage() {
         invoiceInfo!.id
       }/${payment_id}`
 
-      console.log({ endpoint, token })
-
       const resCancelPayment = await axios.put(endpoint, null, {
         headers: {
           'Auth-Token': token,

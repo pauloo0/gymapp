@@ -132,8 +132,6 @@ function ScheduleEdit() {
         }
       )
 
-      console.log(resUpdatedSchedule)
-
       if (resUpdatedSchedule.status === 201) {
         window.location.href = `/marcacao/${schedule_id}`
       }
