@@ -233,6 +233,8 @@ function MeasurementEdit() {
     } finally {
       setIsLoading(false)
     }
+
+    console.log(updatedMeasurementInfo)
   }
 
   // Tailwind classes in a variable

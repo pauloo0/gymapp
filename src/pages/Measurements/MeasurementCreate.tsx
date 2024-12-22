@@ -148,6 +148,8 @@ function MeasurementCreate() {
       date: format(values.date, 'yyyy-MM-dd'),
     }
 
+    console.log(measurementInfo)
+
     try {
       const res = await axios.post(`${apiUrl}/measurements`, measurementInfo, {
         headers: {
