@@ -74,8 +74,8 @@ function PackageEdit() {
 
         form.reset({
           name: packageInfo.name,
-          price: packageInfo.price,
-          days_per_week: packageInfo.days_per_week,
+          price: Number(packageInfo.price),
+          days_per_week: Number(packageInfo.days_per_week),
         })
 
         setCurrentPackage(packageInfo)
