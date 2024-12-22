@@ -320,7 +320,7 @@ function InvoicePage() {
                     <TableCell>
                       {payment.cancelled ? 'Cancelado' : 'Válido'}
                     </TableCell>
-                    {invoiceInfo.pendingAmount > 0 && (
+                    {invoiceInfo.pendingAmount > 0 && !payment.cancelled && (
                       <TableCell>
                         <CircleSlash
                           strokeWidth={3}
