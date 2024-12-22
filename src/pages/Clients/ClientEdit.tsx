@@ -169,10 +169,7 @@ const ClientEdit = () => {
           ...client,
           birthday: new Date(client.birthday),
           join_date: new Date(client.join_date),
-          package_id:
-            client.subscriptions.length > 0
-              ? client.subscriptions[0].packages.id
-              : '',
+          package_id: client.subscriptions[0].packages.id,
         })
       } catch (error) {
         if (axios.isAxiosError(error)) {
