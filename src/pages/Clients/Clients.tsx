@@ -164,39 +164,41 @@ function Clients() {
         </Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>Idade</TableHead>
-            <TableHead>Objetivo</TableHead>
-            <TableHead>Data Entrada</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredClients ? (
-            filteredClients.map((client) => (
-              <TableRow
-                key={client.id}
-                onClick={() => goToClientPage(client.id)}
-              >
-                <TableCell>
-                  {client.firstname} {client.lastname}
-                </TableCell>
-                <TableCell className='text-center'>
-                  {client.birthday ? getAge(client.birthday) : '0'}
-                </TableCell>
-                <TableCell>{client.goal}</TableCell>
-                <TableCell>
-                  {new Date(client.join_date).toLocaleDateString('pt-PT')}
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <p>Sem clients</p>
-          )}
-        </TableBody>
-      </Table>
+      <section id='client-list' className='overflow-y-auto max-h-[32rem]'>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>Idade</TableHead>
+              <TableHead>Objetivo</TableHead>
+              <TableHead>Data Entrada</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredClients ? (
+              filteredClients.map((client) => (
+                <TableRow
+                  key={client.id}
+                  onClick={() => goToClientPage(client.id)}
+                >
+                  <TableCell>
+                    {client.firstname} {client.lastname}
+                  </TableCell>
+                  <TableCell className='text-center'>
+                    {client.birthday ? getAge(client.birthday) : '0'}
+                  </TableCell>
+                  <TableCell>{client.goal}</TableCell>
+                  <TableCell>
+                    {new Date(client.join_date).toLocaleDateString('pt-PT')}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <p>Sem clients</p>
+            )}
+          </TableBody>
+        </Table>
+      </section>
     </>
   )
 }

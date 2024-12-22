@@ -187,7 +187,7 @@ function Invoices() {
 
       <section
         id='client_invoices'
-        className='flex flex-col items-center justify-center gap-4'
+        className='flex flex-col items-center justify-center gap-4 overflow-y-auto max-h-[32rem]'
       >
         <Table>
           <TableHeader>

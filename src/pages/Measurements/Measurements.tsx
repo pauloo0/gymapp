@@ -136,7 +136,7 @@ function Measurements() {
 
       <section
         id='client_measurements'
-        className='flex flex-col items-center justify-center gap-4'
+        className='flex flex-col items-center justify-center gap-4 overflow-y-auto max-h-[32rem]'
       >
         {measurements.length > 0
           ? measurements.map((measurement: Measurement) => (

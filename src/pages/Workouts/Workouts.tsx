@@ -179,7 +179,7 @@ function Workouts() {
 
       <section
         id='client_workouts'
-        className='flex flex-col items-center gap-4 jusftify-center'
+        className='flex flex-col items-center gap-4 jusftify-center overflow-y-auto max-h-[32rem]'
       >
         {filteredWorkouts.length > 0 ? (
           filteredWorkouts.map((workout: Workout) => (

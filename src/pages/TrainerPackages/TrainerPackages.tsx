@@ -82,39 +82,43 @@ function TrainerPackages() {
         </Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>Preço</TableHead>
-            <TableHead>Dias p/semana</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {packages ? (
-            packages.map((pkg: Package) => (
-              <TableRow
-                key={pkg.id}
-                onClick={() => (window.location.href = `/pacote/${pkg.id}`)}
-              >
-                <TableCell>{pkg.name}</TableCell>
-                <TableCell>{pkg.price} €</TableCell>
-                <TableCell className='text-center'>
-                  {pkg.days_per_week}
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow className='flex flex-col items-center justify-center'>
-              <p>Sem pacotes</p>
-              <Button onClick={() => (window.location.href = '/pacotes/novo')}>
-                <Plus className='mr-1' />
-                Adicionar
-              </Button>
+      <section id='package-list' className='overflow-y-auto max-h-[32rem]'>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>Preço</TableHead>
+              <TableHead>Dias p/semana</TableHead>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {packages ? (
+              packages.map((pkg: Package) => (
+                <TableRow
+                  key={pkg.id}
+                  onClick={() => (window.location.href = `/pacote/${pkg.id}`)}
+                >
+                  <TableCell>{pkg.name}</TableCell>
+                  <TableCell>{pkg.price} €</TableCell>
+                  <TableCell className='text-center'>
+                    {pkg.days_per_week}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className='flex flex-col items-center justify-center'>
+                <p>Sem pacotes</p>
+                <Button
+                  onClick={() => (window.location.href = '/pacotes/novo')}
+                >
+                  <Plus className='mr-1' />
+                  Adicionar
+                </Button>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </section>
     </>
   )
 }
