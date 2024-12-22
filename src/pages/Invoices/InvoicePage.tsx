@@ -46,7 +46,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { ArrowLeft, Plus, Save, X } from 'lucide-react'
+import { ArrowLeft, CircleSlash, Plus, Save, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -211,6 +211,39 @@ function InvoicePage() {
     }
   }
 
+  const cancelPayment = async (payment_id: string) => {
+    try {
+      setIsLoading(true)
+
+      const endpoint = `${apiUrl}/payments/invoice/${
+        invoiceInfo!.id
+      }/${payment_id}`
+
+      console.log({ endpoint, token })
+
+      const resCancelPayment = await axios.put(endpoint, null, {
+        headers: {
+          'Auth-Token': token,
+        },
+      })
+
+      if (resCancelPayment.status === 200) {
+        navigate(0)
+      } else {
+        setErrorMessage(resCancelPayment.data.message)
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.status)
+        console.error(error.response?.data)
+      } else {
+        console.error('An unexpected error occurred.', error)
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   if (isLoading) return <Loading />
 
   if (!invoiceInfo) {
@@ -269,7 +302,8 @@ function InvoicePage() {
               <TableRow>
                 <TableHead>Data</TableHead>
                 <TableHead>Valor</TableHead>
-                <TableHead>Cancelado</TableHead>
+                <TableHead>Estado</TableHead>
+                {invoiceInfo.pendingAmount > 0 && <TableCell></TableCell>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -282,19 +316,33 @@ function InvoicePage() {
                     <TableCell className='text-center'>
                       {payment.amount}
                     </TableCell>
-                    <TableCell>{payment.cancelled ? 'Sim' : 'Não'}</TableCell>
+                    <TableCell>
+                      {payment.cancelled ? 'Cancelado' : 'Válido'}
+                    </TableCell>
+                    {invoiceInfo.pendingAmount > 0 && (
+                      <TableCell>
+                        <CircleSlash
+                          strokeWidth={3}
+                          className='w-4 h-4 text-red-500'
+                          onClick={() => cancelPayment(payment.id)}
+                        />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={3} className='text-center'>
+                  <TableCell
+                    colSpan={invoiceInfo.pendingAmount > 0 ? 4 : 3}
+                    className='text-center'
+                  >
                     Esta fatura não tem pagementos.
                   </TableCell>
                 </TableRow>
               )}
               {invoiceInfo.pendingAmount > 0 && (
                 <TableRow>
-                  <TableCell colSpan={3}>
+                  <TableCell colSpan={invoiceInfo.pendingAmount > 0 ? 4 : 3}>
                     <Drawer open={paymentFormOpen}>
                       <DrawerTrigger asChild className='w-full'>
                         <Button
