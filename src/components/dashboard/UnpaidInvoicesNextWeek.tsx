@@ -20,13 +20,14 @@ function UnpaidInvoicesNextWeek({ invoices }: { invoices: Invoice[] }) {
                   : ''
               }`}
               key={invoice.id}
+              onClick={() => (window.location.href = `/fatura/${invoice.id}`)}
             >
               {invoice.subscriptions.clients.firstname}{' '}
               {invoice.subscriptions.clients.lastname}
               <div className='flex flex-col items-end justify-center'>
                 <span>{invoice.amount} €</span>
                 <span className='text-xs'>
-                  Expira:{' '}
+                  Vencimento:{' '}
                   {new Date(invoice.due_date).toLocaleDateString('pt-PT')}
                 </span>
               </div>
