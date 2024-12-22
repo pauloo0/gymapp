@@ -305,6 +305,7 @@ function InvoicePage() {
           id='invoice-payments'
           className='flex flex-col items-center justify-center gap-4'
         >
+          <h2 className='w-full text-lg font-semibold'>Pagamentos</h2>
           <Table>
             <TableHeader>
               <TableRow>
