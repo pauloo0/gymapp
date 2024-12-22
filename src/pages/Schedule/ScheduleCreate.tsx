@@ -47,7 +47,7 @@ import {
 import { useParams } from 'react-router'
 
 const formSchema = z.object({
-  client_id: z.string(),
+  client_id: z.string().nonempty('O cliente deve estar preenchido.'),
   date: z.date(),
   time: z.string(),
 })
