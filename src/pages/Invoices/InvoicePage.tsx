@@ -112,7 +112,8 @@ function InvoicePage() {
 
         const paidAmount: number = payments.reduce(
           (runningTotal: number, payment: Payment) =>
-            Number(runningTotal) + Number(payment.amount),
+            Number(runningTotal) +
+            (payment.cancelled ? 0 : Number(payment.amount)),
           0
         )
 
