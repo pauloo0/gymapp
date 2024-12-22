@@ -157,7 +157,7 @@ function InvoicePage() {
         }
 
         form.reset({
-          amount: invoiceInfo.pendingAmount,
+          amount: Number(invoiceInfo.pendingAmount),
         })
 
         setInvoiceInfo(invoiceInfo)
@@ -384,6 +384,9 @@ function InvoicePage() {
                                       }`}
                                       type='text'
                                       {...field}
+                                      onChange={(e) =>
+                                        field.onChange(Number(e.target.value))
+                                      }
                                     />
                                   </FormControl>
                                   <FormMessage />
