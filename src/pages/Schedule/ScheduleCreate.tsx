@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils'
 import { Client } from '@/utils/interfaces'
 
 import Navbar from '@/components/Navbar'
+import Loading from '@/components/reusable/Loading'
 import { Save, X } from 'lucide-react'
 
 import {
@@ -44,6 +45,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
 import { useParams } from 'react-router'
 
 const formSchema = z.object({
@@ -68,6 +77,7 @@ function ScheduleCreate() {
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [clients, setClients] = useState<Client[] | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -133,23 +143,40 @@ function ScheduleCreate() {
         throw new Error('Erro a criar marcação')
       }
 
-      setIsLoading(false)
-
       alert('Marcação criada com sucesso!')
       window.location.href = '/marcacoes'
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setErrorMessage(error.response?.data)
+        setErrorMessage(error.response?.data.message)
       } else {
         console.error('An unexpected error occurred:', error)
       }
+    } finally {
+      setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  if (isLoading) return <Loading />
 
   return (
     <>
       <Navbar />
       <h1 className='mb-6 text-xl'>Criar marcação</h1>
+
+      {errorMessage && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Erro</DialogTitle>
+              <DialogDescription>{errorMessage}</DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      )}
 
       <Form {...form}>
         <form
