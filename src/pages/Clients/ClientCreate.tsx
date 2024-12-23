@@ -52,8 +52,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from '@/components/ui/dialog'
-import { DialogClose } from '@radix-ui/react-dialog'
 
 const emptyClient: Client = {
   id: '',
