@@ -19,7 +19,6 @@ import { format } from 'date-fns'
 
 const emptyMeasurement: Measurement = {
   id: '',
-  client_id: '',
   date: '',
   weight: 0,
   height: 0,
@@ -39,6 +38,11 @@ const emptyMeasurement: Measurement = {
   rightarm: 0,
   leftcalf: 0,
   rightcalf: 0,
+  clients: {
+    id: '',
+    firstname: '',
+    lastname: '',
+  },
 }
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -91,7 +95,7 @@ function MeasurementPage() {
       try {
         setIsLoading(true)
         const resClient = await axios.get(
-          `${apiUrl}/clients/${measurement.client_id}`,
+          `${apiUrl}/clients/${measurement.clients.id}`,
           {
             headers: {
               'Auth-Token': token,

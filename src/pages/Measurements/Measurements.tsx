@@ -18,7 +18,15 @@ import {
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 
-import { Link } from 'react-router-dom'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+
 import { format } from 'date-fns'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -141,19 +149,41 @@ function Measurements() {
         id='client_measurements'
         className='flex flex-col items-center justify-center gap-4 overflow-y-auto max-h-[32rem]'
       >
-        {measurements.length > 0
-          ? measurements.map((measurement: Measurement) => (
-              <Link
-                to={`/avaliacao/${measurement.id}`}
-                key={measurement.id}
-                className='flex items-center justify-between w-full p-3 border rounded-lg felx-row'
-              >
-                <h2>{format(measurement.date, 'yyyy/MM/dd')}</h2>
-              </Link>
-            ))
-          : selectedClientId !== '' && (
-              <p>Não encontrei avaliações deste cliente.</p>
-            )}
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Cliente</TableHead>
+              <TableHead>Data</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {measurements.length > 0
+              ? measurements.map((measurement: Measurement) => (
+                  <TableRow
+                    key={measurement.id}
+                    onClick={() =>
+                      (window.location.href = `/avaliacao/${measurement.id}`)
+                    }
+                  >
+                    <TableCell>
+                      {measurement.clients.firstname +
+                        ' ' +
+                        measurement.clients.lastname}
+                    </TableCell>
+                    <TableCell>
+                      {format(measurement.date, 'yyyy/MM/dd')}
+                    </TableCell>
+                  </TableRow>
+                ))
+              : selectedClientId !== '' && (
+                  <TableRow>
+                    <TableCell colSpan={2} className='text-center'>
+                      Não encontrei avaliações deste cliente.
+                    </TableCell>
+                  </TableRow>
+                )}
+          </TableBody>
+        </Table>
       </section>
     </>
   )

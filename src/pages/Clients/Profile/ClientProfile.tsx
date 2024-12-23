@@ -72,7 +72,6 @@ const emptyClient: Client = {
 const emptyMeasurement: Measurement[] = [
   {
     id: '',
-    client_id: '',
     date: '',
     weight: 0,
     height: 0,
@@ -92,6 +91,11 @@ const emptyMeasurement: Measurement[] = [
     rightarm: 0,
     leftcalf: 0,
     rightcalf: 0,
+    clients: {
+      id: '',
+      firstname: '',
+      lastname: '',
+    },
   },
 ]
 

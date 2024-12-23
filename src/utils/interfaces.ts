@@ -29,7 +29,6 @@ export interface Schedule {
 
 export interface Measurement {
   id: string
-  client_id: string
   date: string
   weight: number
   height: number
@@ -49,6 +48,11 @@ export interface Measurement {
   rightarm: number
   leftcalf: number
   rightcalf: number
+  clients: {
+    id: string
+    firstname: string
+    lastname: string
+  }
 }
 
 export interface Workout {
