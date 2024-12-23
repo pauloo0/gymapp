@@ -11,9 +11,15 @@ import {
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 
-function ClientSchedules({ schedules }: { schedules: Schedule[] }) {
-  const createSchedule = (client_id: string) => {
-    window.location.href = '/marcacao/novo/' + client_id
+function ClientSchedules({
+  schedules,
+  client_id,
+}: {
+  schedules: Schedule[]
+  client_id: string
+}) {
+  const createSchedule = () => {
+    window.location.href = `/marcacao/novo/${client_id}`
   }
 
   return (
@@ -21,7 +27,7 @@ function ClientSchedules({ schedules }: { schedules: Schedule[] }) {
       <Button
         className='px-4 py-2 mb-6 font-semibold'
         size='sm'
-        onClick={() => createSchedule(schedules[0].clients.id)}
+        onClick={() => createSchedule()}
       >
         <Plus className='w-5 h-5 mr-1' /> Adicionar
       </Button>

@@ -405,7 +405,7 @@ function ClientProfile() {
               Marcações
             </AccordionTrigger>
             <AccordionContent className='px-4'>
-              <ClientSchedules schedules={schedules} />
+              <ClientSchedules schedules={schedules} client_id={client.id} />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='invoicing'>
