@@ -7,9 +7,9 @@ import Navbar from '@/components/Navbar'
 import Loading from '@/components/reusable/Loading'
 
 import axios from 'axios'
-import { format } from 'date-fns'
+import { format, isBefore } from 'date-fns'
 import { useParams } from 'react-router'
-import { ArrowLeft, Pencil } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -26,6 +26,7 @@ function SchedulePage() {
 
   const [schedule, setSchedule] = useState<Schedule | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isScheduleInPast, setIsScheduleInPast] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -38,7 +39,16 @@ function SchedulePage() {
           },
         })
 
-        setSchedule(res.data.appointment[0])
+        const schedule: Schedule = res.data.appointment[0]
+
+        setSchedule(schedule)
+
+        const scheduleDate = new Date(schedule.date)
+        const scheduleTime = schedule.time
+        const [hours, minutes] = scheduleTime.split(':').map(Number)
+        scheduleDate.setHours(hours, minutes, 0, 0)
+
+        setIsScheduleInPast(isBefore(scheduleDate, new Date()))
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.status)
@@ -56,6 +66,33 @@ function SchedulePage() {
 
   const editSchedule = (schedule: Schedule) => {
     window.location.href = `/marcacao/${schedule.id}/editar`
+  }
+
+  const deleteSchedule = async (sch: Schedule) => {
+    if (isScheduleInPast) {
+      alert('Esta marcação é no passado.')
+    } else {
+      setIsLoading(true)
+
+      try {
+        const res = await axios.delete(`${apiUrl}/schedule/${sch.id}`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
+
+        if (res.status === 200) window.location.href = '/marcacoes'
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(error.response?.status)
+          console.error(error.response?.data)
+        } else {
+          console.error('An unexpected error occurred:', error)
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
   }
 
   if (isLoading) return <Loading />
@@ -80,7 +117,7 @@ function SchedulePage() {
         </div>
         <div
           id='schedule-header'
-          className='flex flex-row items-center justify-end w-full mt-10 mb-12'
+          className='flex flex-row items-center justify-end w-full gap-2 mt-10 mb-12'
         >
           <Button
             size={'sm'}
@@ -89,6 +126,15 @@ function SchedulePage() {
           >
             <Pencil className='w-4 h-4' /> Editar
           </Button>
+          {!isScheduleInPast && (
+            <Button
+              size={'sm'}
+              className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-red-500 text-slate-200 hover:bg-red-600'
+              onClick={() => deleteSchedule(schedule)}
+            >
+              <Trash2 className='w-4 h-4' /> Apagar
+            </Button>
+          )}
         </div>
 
         <div
