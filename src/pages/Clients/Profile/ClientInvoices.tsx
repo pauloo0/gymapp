@@ -62,7 +62,7 @@ function ClientInvoices({ invoices }: { invoices: Invoice[] }) {
         {orderedInvoices.map((invoice) => (
           <TableRow
             key={invoice.id}
-            onClick={() => navigateTo(`/faturas/${invoice.id}`)}
+            onClick={() => navigateTo(`/fatura/${invoice.id}`)}
           >
             <TableCell className='p-2'>
               {new Date(invoice.issue_date).toLocaleDateString('pt-PT')}
