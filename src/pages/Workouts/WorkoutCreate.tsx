@@ -58,9 +58,12 @@ const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 const formSchema = z.object({
   client_id: z.string().nonempty('O cliente é obrigatório.'),
-  name: z.string().trim().nonempty('O nome é obrigatório.').max(30, {
-    message: 'O nome deve ter no maúximo 30 caracteres.',
-  }),
+  name: z
+    .string()
+    .trim()
+    .nonempty('O nome é obrigatório.')
+    .min(5, { message: 'O nome deve ter no mínimo 5 caracteres.' })
+    .max(30, { message: 'O nome deve ter no máximo 30 caracteres.' }),
   active: z.boolean().default(true),
   public: z.boolean().default(false),
   exercises: z
