@@ -3,6 +3,7 @@ import { useToken } from '@/utils/tokenWrapper'
 import { Schedule, Invoice } from '@/utils/interfaces'
 
 import axios from 'axios'
+import { isThisWeek } from 'date-fns'
 
 import Loading from '@/components/reusable/Loading'
 
@@ -68,16 +69,10 @@ function TrainerDashboard() {
           }),
         ])
 
-        const today = new Date()
-        const currentTime = today.getHours() + ':' + today.getMinutes()
+        const schedules: Schedule[] = resSchedules.data.schedule
 
-        const sortedSchedules = resSchedules.data.schedule
-          .filter(
-            (schedule: Schedule) =>
-              schedule.date ===
-                new Date(new Date().setHours(1, 0, 0, 0)).toISOString() &&
-              schedule.time >= currentTime
-          )
+        const sortedSchedules = schedules
+          .filter((schedule: Schedule) => isThisWeek(schedule.date))
           .sort((scheduleA: Schedule, scheduleB: Schedule) => {
             const dateA = new Date(scheduleA.date)
             const dateB = new Date(scheduleB.date)
