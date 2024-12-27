@@ -40,6 +40,7 @@ import Invoices from './pages/Invoices/Invoices'
 import InvoicePage from './pages/Invoices/InvoicePage'
 
 import DBConnectionError from './pages/DBConnectionError'
+import Loading from './components/reusable/Loading'
 
 interface DbStatus {
   status: number
@@ -71,9 +72,7 @@ function App() {
     checkConnection()
   }, [])
 
-  if (isLoading) {
-    return <p className='text-4xl font-bold'>A verificar conexão...</p>
-  }
+  if (isLoading) return <Loading />
 
   if (!dbStatus || dbStatus.status !== 200) {
     return <DBConnectionError checkConnection={checkConnection} />
