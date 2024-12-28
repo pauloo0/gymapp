@@ -18,7 +18,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import UpdateUserPassword from './UpdateUserPassword'
 
@@ -91,11 +90,12 @@ function Login() {
     return <UpdateUserPassword userInfo={userInfo} />
   }
   return (
-    <>
+    <div className='flex flex-col justify-center w-full'>
+      <h1 className='mb-6 text-2xl font-bold text-start'>Iniciar sessão</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='w-2/3 space-y-2'
+          className='flex flex-col w-full space-y-2'
         >
           <FormField
             control={form.control}
@@ -107,7 +107,7 @@ function Login() {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
+                    className={`${errorMessage ? 'border-red-500' : ''}`}
                     placeholder='email@exemplo.pt'
                     {...field}
                   />
@@ -142,18 +142,15 @@ function Login() {
               {errorMessage}
             </FormDescription>
           )}
-          <Button className='w-full' type='submit'>
-            Iniciar sessão
-          </Button>
+
+          <div className='my-4'>
+            <Button className='w-full' type='submit'>
+              Iniciar sessão
+            </Button>
+          </div>
         </form>
       </Form>
-      <p className='my-2'>
-        Ainda não tem conta?
-        <Link className='text-blue-600 underline' to='/register'>
-          Crie uma nova.
-        </Link>
-      </p>
-    </>
+    </div>
   )
 }
 

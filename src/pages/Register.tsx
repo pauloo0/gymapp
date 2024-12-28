@@ -43,11 +43,12 @@ function Register() {
   }
 
   return (
-    <>
+    <div className='flex flex-col justify-center w-full'>
+      <h1 className='mb-6 text-2xl font-bold text-start'>Registar</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='w-2/3 space-y-2'
+          className='flex flex-col w-full space-y-2'
         >
           <FormField
             control={form.control}
@@ -56,11 +57,7 @@ function Register() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    className='w-full'
-                    placeholder='email@exemplo.pt'
-                    {...field}
-                  />
+                  <Input placeholder='email@exemplo.pt' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -74,7 +71,6 @@ function Register() {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    className='w-full'
                     placeholder='Palavra-passe'
                     type='password'
                     {...field}
@@ -92,7 +88,6 @@ function Register() {
                 <FormLabel>Confirmar password</FormLabel>
                 <FormControl>
                   <Input
-                    className='w-full'
                     placeholder='Confirmar palavra-passe'
                     type='password'
                     {...field}
@@ -102,18 +97,20 @@ function Register() {
               </FormItem>
             )}
           />
-          <Button className='w-full' type='submit'>
-            Criar conta
-          </Button>
+          <div className='my-4'>
+            <Button className='w-full' type='submit'>
+              Criar conta
+            </Button>
+          </div>
+          <p>
+            Ja tem uma conta? Faça o{' '}
+            <Link className='text-blue-600 underline' to='/login'>
+              Login
+            </Link>
+          </p>
         </form>
       </Form>
-      <p className='my-2'>
-        Ja tem uma conta? Faça o
-        <Link className='text-blue-600 underline' to='/login'>
-          Login
-        </Link>
-      </p>
-    </>
+    </div>
   )
 }
 
