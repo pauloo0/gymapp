@@ -1,11 +1,16 @@
+import axios from 'axios'
+import { useState } from 'react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+
+import Loading from '@/components/reusable/Loading'
 
 import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,31 +21,79 @@ import { Link } from 'react-router-dom'
 
 const isEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
 
-const formSchema = z.object({
-  email: z.string().regex(isEmail, {
-    message: 'Endereço de email inválido.',
-  }),
-  password: z.string().min(6, {
-    message: 'A palavra-passe deve ter mais que 6 caracteres.',
-  }),
-  passwordConfirm: z.string().min(6, {
-    message: 'A palavra-passe deve ter mais que 6 caracteres.',
-  }),
-})
+const apiUrl: string = import.meta.env.VITE_API_URL || ''
+
+const formSchema = z
+  .object({
+    username: z.string().min(6, {
+      message: 'O nome de utilizador deve ter mais que 6 caracteres.',
+    }),
+    firstname: z.string().min(1, { message: 'O nome é obrigatório.' }),
+    lastname: z.string().min(1, { message: 'O sobrenome é obrigatório.' }),
+    email: z.string().regex(isEmail, {
+      message: 'Endereço de email inválido.',
+    }),
+    password: z.string().min(6, {
+      message: 'A palavra-passe deve ter mais que 6 caracteres.',
+    }),
+    passwordConfirm: z.string().min(6, {
+      message: 'A palavra-passe deve ter mais que 6 caracteres.',
+    }),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: 'As palavras-passe não coincidem.',
+    path: ['passwordConfirm'],
+  })
 
 function Register() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: '',
+      firstname: '',
+      lastname: '',
       email: '',
       password: '',
       passwordConfirm: '',
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<boolean>(false)
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true)
+
+    const userValues = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      role: 'trainer',
+      isOTP: false,
+      profile: {
+        firstname: values.firstname,
+        lastname: values.lastname,
+      },
+    }
+
+    try {
+      const res = await axios.post(`${apiUrl}/user/register`, userValues)
+
+      if (res.status === 201) {
+        window.location.href = '/login'
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data)
+      } else {
+        console.error('An unexpected error occurred:', error)
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
+
+  if (isLoading) return <Loading />
 
   return (
     <div className='flex flex-col justify-center w-full'>
@@ -52,12 +105,55 @@ function Register() {
         >
           <FormField
             control={form.control}
+            name='username'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome de utilizador</FormLabel>
+                <FormControl>
+                  <Input placeholder='Nome de utilizador' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='firstname'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome</FormLabel>
+                <FormControl>
+                  <Input placeholder='Nome' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='lastname'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sobrenome</FormLabel>
+                <FormControl>
+                  <Input placeholder='Sobrenome' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name='email'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='email@exemplo.pt' {...field} />
+                  <Input
+                    type='email'
+                    placeholder='email@exemplo.pt'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,6 +193,13 @@ function Register() {
               </FormItem>
             )}
           />
+
+          {errorMessage && (
+            <FormDescription className='text-red-500'>
+              {errorMessage}
+            </FormDescription>
+          )}
+
           <div className='my-4'>
             <Button className='w-full' type='submit'>
               Criar conta
