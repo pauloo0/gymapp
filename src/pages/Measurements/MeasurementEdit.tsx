@@ -498,7 +498,7 @@ function MeasurementEdit() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Cinta
+                  Cintura
                 </FormLabel>
                 <FormControl>
                   <Input

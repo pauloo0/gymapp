@@ -215,7 +215,7 @@ function MeasurementPage() {
           <p>{measurement.chest} cm</p>
         </div>
         <div className={label_group}>
-          <p className={label}>Cinta</p>
+          <p className={label}>Cintura</p>
           <p>{measurement.waist} cm</p>
         </div>
         <div className={label_group}>
