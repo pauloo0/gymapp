@@ -86,13 +86,18 @@ function TrainerDashboard() {
 
         setSchedules(sortedSchedules)
 
-        const unpaidInvoicesDueNextWeek = resInvoices.data.invoices.sort(
-          (invoiceA: Invoice, invoiceB: Invoice) => {
+        const unpaidInvoicesDueNextWeek = resInvoices.data.invoices
+          .filter((invoice: Invoice) => {
+            const invoiceDueDate = new Date(invoice.due_date)
+            const isOverdue = invoiceDueDate.getTime() < new Date().getTime()
+
+            return isThisWeek(invoiceDueDate) || isOverdue
+          })
+          .sort((invoiceA: Invoice, invoiceB: Invoice) => {
             const dateA = new Date(invoiceA.due_date)
             const dateB = new Date(invoiceB.due_date)
             return dateA.getTime() - dateB.getTime()
-          }
-        )
+          })
 
         setInvoices(unpaidInvoicesDueNextWeek)
       } catch (error) {
