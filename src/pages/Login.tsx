@@ -90,12 +90,12 @@ function Login() {
     return <UpdateUserPassword userInfo={userInfo} />
   }
   return (
-    <div className='flex flex-col justify-center w-full'>
-      <h1 className='mb-6 text-2xl font-bold text-start'>Iniciar sessão</h1>
+    <section className='flex flex-col items-center justify-center min-h-screen'>
+      <h1 className='mb-6 text-2xl font-bold'>Iniciar sessão</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='flex flex-col w-full space-y-2'
+          className='flex flex-col w-full gap-2 sm:w-[500px]'
         >
           <FormField
             control={form.control}
@@ -136,21 +136,19 @@ function Login() {
               </FormItem>
             )}
           />
-
           {errorMessage && (
             <FormDescription className='text-red-500'>
               {errorMessage}
             </FormDescription>
           )}
-
-          <div className='my-4'>
+          <div className='mt-4'>
             <Button className='w-full' type='submit'>
               Iniciar sessão
             </Button>
           </div>
         </form>
       </Form>
-    </div>
+    </section>
   )
 }
 

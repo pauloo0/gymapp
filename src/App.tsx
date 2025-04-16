@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-
-import { Routes, Route } from 'react-router'
+import { Routes, Route, useLocation } from 'react-router'
 
 import { testDBConnection } from './utils/functions'
 
@@ -50,6 +49,7 @@ interface DbStatus {
 function App() {
   const [dbStatus, setDbStatus] = useState<DbStatus | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const location = useLocation()
 
   const checkConnection = async () => {
     try {
@@ -78,8 +78,13 @@ function App() {
     return <DBConnectionError checkConnection={checkConnection} />
   }
 
+  const routesWithoutPadding = ['/login', '/register']
+  const shouldApplyPadding = !routesWithoutPadding.some((route) =>
+    location.pathname.startsWith(route)
+  )
+
   return (
-    <div className='p-4 pt-12'>
+    <div className={shouldApplyPadding ? 'p-4 pt-12' : ''}>
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
