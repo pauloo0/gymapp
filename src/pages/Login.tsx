@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import {
   Form,
   FormControl,
@@ -125,8 +126,7 @@ function Login() {
                   Password
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
+                  <PasswordInput
                     className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
                     placeholder='Palavra-passe'
                     {...field}

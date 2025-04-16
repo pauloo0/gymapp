@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import {
   Form,
   FormControl,
@@ -102,8 +102,7 @@ function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
                   Palavra-Passe
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
+                  <PasswordInput
                     className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
                     placeholder='Palavra-Passe'
                     {...field}
@@ -122,8 +121,7 @@ function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
                   Confirmar Palavra-Passe
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
+                  <PasswordInput
                     className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
                     placeholder='Confirmar Palavra-Passe'
                     {...field}

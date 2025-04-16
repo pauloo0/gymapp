@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Link } from 'react-router-dom'
 
 const isEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
@@ -166,11 +167,7 @@ function Register() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='Palavra-passe'
-                    type='password'
-                    {...field}
-                  />
+                  <PasswordInput placeholder='Palavra-passe' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -183,9 +180,8 @@ function Register() {
               <FormItem>
                 <FormLabel>Confirmar password</FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     placeholder='Confirmar palavra-passe'
-                    type='password'
                     {...field}
                   />
                 </FormControl>
