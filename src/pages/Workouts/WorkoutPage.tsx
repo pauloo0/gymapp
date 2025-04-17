@@ -7,7 +7,7 @@ import { useParams } from 'react-router'
 import { Workout } from '@/utils/interfaces'
 
 import { ArrowLeft, Pencil } from 'lucide-react'
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { Button } from '@/components/ui/button'
 
@@ -96,7 +96,7 @@ function WorkoutPage() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <div className='flex flex-row items-center justify-between w-full gap-2'>

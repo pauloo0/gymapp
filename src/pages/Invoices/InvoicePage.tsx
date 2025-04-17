@@ -9,7 +9,7 @@ import { Invoice, Payment } from '@/utils/interfaces'
 import axios from 'axios'
 import { format } from 'date-fns'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
 import { Button } from '@/components/ui/button'
@@ -257,7 +257,7 @@ function InvoicePage() {
   } else {
     return (
       <>
-        <Navbar />
+        <TrainerNavbar />
 
         <main className='min-h-[calc(100vh_-_64px)]'>
           <div className='flex flex-row items-center justify-between w-full gap-2'>

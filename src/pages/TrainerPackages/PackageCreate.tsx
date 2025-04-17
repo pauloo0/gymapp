@@ -8,7 +8,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { Save, X } from 'lucide-react'
 
@@ -89,7 +89,7 @@ function PackageCreate() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-6 text-xl'>Criar pacote</h1>

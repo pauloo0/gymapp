@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 
 import { Ellipsis, Files, Pencil, Plus } from 'lucide-react'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
 import { Label } from '@/components/ui/label'
@@ -129,7 +129,7 @@ function Workouts() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-10 text-2xl'>Planos de treino</h1>

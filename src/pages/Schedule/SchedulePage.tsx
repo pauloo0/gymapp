@@ -3,7 +3,7 @@ import { useUser } from '@/utils/userWrapper'
 import { Schedule } from '@/utils/interfaces'
 import { useState, useEffect } from 'react'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
 import axios from 'axios'
@@ -102,7 +102,7 @@ function SchedulePage() {
   } else {
     return (
       <>
-        <Navbar />
+        <TrainerNavbar />
 
         <main className='min-h-[calc(100vh_-_64px)]'>
           <div className='flex flex-row items-center justify-between w-full gap-2'>

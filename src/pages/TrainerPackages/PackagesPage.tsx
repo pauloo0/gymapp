@@ -8,7 +8,7 @@ import { useParams } from 'react-router'
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -118,7 +118,7 @@ function PackagesPage() {
   } else {
     return (
       <>
-        <Navbar />
+        <TrainerNavbar />
 
         <main className='min-h-[calc(100vh_-_64px)]'>
           <div className='flex flex-row items-center justify-between w-full gap-2'>

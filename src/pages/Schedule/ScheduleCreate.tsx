@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils'
 
 import { Client } from '@/utils/interfaces'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { Save, X } from 'lucide-react'
 
@@ -164,7 +164,7 @@ function ScheduleCreate() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-6 text-xl'>Criar marcação</h1>

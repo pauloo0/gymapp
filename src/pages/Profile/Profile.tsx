@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 
 import { User } from '@/utils/interfaces'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
 import { Button } from '@/components/ui/button'
@@ -76,7 +76,7 @@ function Profile() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-6 text-xl'>Meu Perfil</h1>

@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 
 import { Client, Package } from '@/utils/interfaces'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import { Save, X } from 'lucide-react'
 
 import {
@@ -241,7 +241,7 @@ function ClientCreate() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-6 text-xl'>Criar novo cliente</h1>

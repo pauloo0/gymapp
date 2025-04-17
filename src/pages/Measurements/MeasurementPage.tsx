@@ -8,7 +8,7 @@ import { Client, Measurement } from '@/utils/interfaces'
 
 import axios from 'axios'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
 import { ArrowLeft, Pencil } from 'lucide-react'
@@ -133,7 +133,7 @@ function MeasurementPage() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <div className='flex flex-row justify-between w-full gap-2 items-cnter'>

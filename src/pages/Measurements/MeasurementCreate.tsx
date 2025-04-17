@@ -40,7 +40,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { Save, X, Calendar as CalendarIcon } from 'lucide-react'
 
@@ -175,7 +175,7 @@ function MeasurementCreate() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-6 text-xl'>Nova Avaliação</h1>

@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import { Client } from '@/utils/interfaces'
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
 import { Save, X, Calendar as CalendarIcon } from 'lucide-react'
@@ -151,7 +151,7 @@ function ScheduleEdit() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-6 text-xl'>Editar agendamento</h1>

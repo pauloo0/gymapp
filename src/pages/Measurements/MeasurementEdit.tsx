@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { ArrowLeft, Save, X } from 'lucide-react'
 
@@ -248,7 +248,7 @@ function MeasurementEdit() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <div className='flex flex-row justify-between w-full gap-2 items-cnter'>

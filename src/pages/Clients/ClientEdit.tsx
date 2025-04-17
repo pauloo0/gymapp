@@ -42,7 +42,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { Save, X } from 'lucide-react'
 
@@ -279,7 +279,7 @@ const ClientEdit = () => {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-6 text-xl'>

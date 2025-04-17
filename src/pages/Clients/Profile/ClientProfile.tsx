@@ -14,7 +14,7 @@ import {
 } from '@/utils/interfaces'
 import { getAge } from '@/utils/functions'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 
 import { ArrowLeft, Pencil } from 'lucide-react'
 import {
@@ -293,7 +293,7 @@ function ClientProfile() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <ArrowLeft

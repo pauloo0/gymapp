@@ -1,6 +1,5 @@
 import {
   Home,
-  Users,
   CalendarDays,
   Dumbbell,
   Logs,
@@ -24,7 +23,7 @@ const useBasePath = () => {
   return `/${pathSegments[1] || ''}`
 }
 
-function Navbar() {
+function ClientNavbar() {
   const [activeScreen, setActiveScreen] = useState<Screen>({
     id: 'dashboard',
     path: '/',
@@ -39,10 +38,6 @@ function Navbar() {
       case '/':
         screenId = 'dashboard'
         break
-      case '/clientes':
-      case '/cliente':
-        screenId = 'clients'
-        break
       case '/marcacoes':
       case '/marcacao':
         screenId = 'schedules'
@@ -56,8 +51,6 @@ function Navbar() {
         screenId = 'measurements'
         break
       case '/perfil':
-      case '/pacotes':
-      case '/pacote':
       case '/faturas':
       case '/fatura':
         screenId = 'profile'
@@ -81,12 +74,6 @@ function Navbar() {
           activeScreen.id === 'dashboard' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/')}
-      />
-      <Users
-        className={`hover:cursor-pointer ${
-          activeScreen.id === 'clients' && 'text-opacity-100 text-lime-500'
-        }`}
-        onClick={() => navigateTo('/clientes')}
       />
       <CalendarDays
         className={`hover:cursor-pointer ${
@@ -116,4 +103,4 @@ function Navbar() {
   )
 }
 
-export default Navbar
+export default ClientNavbar

@@ -4,7 +4,7 @@ import { Package } from '@/utils/interfaces'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
-import Navbar from '@/components/Navbar'
+import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
 import {
@@ -62,7 +62,7 @@ function TrainerPackages() {
 
   return (
     <>
-      <Navbar />
+      <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
