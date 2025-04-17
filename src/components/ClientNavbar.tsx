@@ -1,8 +1,8 @@
 import {
   Home,
-  CalendarDays,
-  Dumbbell,
-  Logs,
+  // CalendarDays,
+  // Dumbbell,
+  // Logs,
   CircleUserRound,
 } from 'lucide-react'
 
@@ -75,7 +75,7 @@ function ClientNavbar() {
         }`}
         onClick={() => navigateTo('/')}
       />
-      <CalendarDays
+      {/* <CalendarDays
         className={`hover:cursor-pointer ${
           activeScreen.id === 'schedules' && 'text-opacity-100 text-lime-500'
         }`}
@@ -92,7 +92,7 @@ function ClientNavbar() {
           activeScreen.id === 'measurements' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/avaliacoes')}
-      />
+      /> */}
       <CircleUserRound
         className={`hover:cursor-pointer ${
           activeScreen.id === 'profile' && 'text-opacity-100 text-lime-500'

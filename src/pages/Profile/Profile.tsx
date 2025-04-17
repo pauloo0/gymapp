@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react'
 import { User } from '@/utils/interfaces'
 
 import TrainerNavbar from '@/components/TrainerNavbar'
+import ClientNavbar from '@/components/ClientNavbar'
+
 import Loading from '@/components/reusable/Loading'
 
 import { Button } from '@/components/ui/button'
@@ -76,7 +78,7 @@ function Profile() {
 
   return (
     <>
-      <TrainerNavbar />
+      {user.userRole === 'trainer' ? <TrainerNavbar /> : <ClientNavbar />}
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <h1 className='mb-6 text-xl'>Meu Perfil</h1>
@@ -108,22 +110,26 @@ function Profile() {
               </div>
             </div>
             <div className='grid grid-cols-1 gap-2'>
-              <Button
-                size={'lg'}
-                variant={'secondary'}
-                className='w-full text-gray-900 bg-gray-300 hover:bg-lime-500 hover:border-lime-600'
-                onClick={redirectPackages}
-              >
-                Os meus pacotes
-              </Button>
-              <Button
-                size={'lg'}
-                variant={'secondary'}
-                className='w-full text-gray-900 bg-gray-300 hover:bg-lime-500 hover:border-lime-600'
-                onClick={redirectInvoices}
-              >
-                Faturas
-              </Button>
+              {user.userRole === 'trainer' && (
+                <>
+                  <Button
+                    size={'lg'}
+                    variant={'secondary'}
+                    className='w-full text-gray-900 bg-gray-300 hover:bg-lime-500 hover:border-lime-600'
+                    onClick={redirectPackages}
+                  >
+                    Os meus pacotes
+                  </Button>
+                  <Button
+                    size={'lg'}
+                    variant={'secondary'}
+                    className='w-full text-gray-900 bg-gray-300 hover:bg-lime-500 hover:border-lime-600'
+                    onClick={redirectInvoices}
+                  >
+                    Faturas
+                  </Button>
+                </>
+              )}
               <Button
                 size={'lg'}
                 variant={'destructive'}
