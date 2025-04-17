@@ -84,14 +84,14 @@ function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
   }
 
   return (
-    <div className='flex flex-col justify-center w-full'>
+    <div className='flex flex-col items-center justify-center min-h-screen'>
       <h1 className='mb-6 text-2xl font-bold text-start'>
         Atualizar Palavra-Passe
       </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='flex flex-col w-full space-y-2'
+          className='flex flex-col w-full gap-2 p-4 sm:w-[500px]'
         >
           <FormField
             control={form.control}

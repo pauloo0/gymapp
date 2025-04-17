@@ -102,7 +102,7 @@ function Register() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='flex flex-col w-full gap-2 sm:w-[500px]'
+          className='flex flex-col w-full gap-2 p-4 sm:w-[500px]'
         >
           <FormField
             control={form.control}
