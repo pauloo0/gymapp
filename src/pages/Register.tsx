@@ -203,7 +203,7 @@ function Register() {
           </div>
           <p>
             Ja tem uma conta? Faça o{' '}
-            <Link className='text-blue-600 underline' to='/login'>
+            <Link className='text-lime-400 hover:underline' to='/login'>
               Login
             </Link>
           </p>

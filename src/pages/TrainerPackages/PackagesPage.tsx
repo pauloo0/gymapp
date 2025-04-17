@@ -119,56 +119,59 @@ function PackagesPage() {
     return (
       <>
         <Navbar />
-        <div className='flex flex-row items-center justify-between w-full gap-2'>
-          <ArrowLeft
-            className='w-6 h-6'
-            onClick={() => (window.location.href = '/pacotes')}
-          />
-        </div>
 
-        <div
-          id='package-header'
-          className='flex flex-row items-center justify-end w-full gap-2 mt-10 mb-12'
-        >
-          <Button
-            size={'sm'}
-            className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-amber-400 text-slate-900 hover:bg-amber-500'
-            onClick={() => editPackage(currentPackage)}
+        <main className='min-h-[calc(100vh_-_64px)]'>
+          <div className='flex flex-row items-center justify-between w-full gap-2'>
+            <ArrowLeft
+              className='w-6 h-6'
+              onClick={() => (window.location.href = '/pacotes')}
+            />
+          </div>
+
+          <div
+            id='package-header'
+            className='flex flex-row items-center justify-end w-full gap-2 mt-10 mb-12'
           >
-            <Pencil className='w-4 h-4' /> Editar
-          </Button>
-          {associatedSubscriptions === 0 && (
             <Button
               size={'sm'}
-              className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-red-500 text-slate-200 hover:bg-red-600'
-              onClick={() => deletePackage(currentPackage)}
+              className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-amber-400 text-slate-900 hover:bg-amber-500'
+              onClick={() => editPackage(currentPackage)}
             >
-              <Trash2 className='w-4 h-4' /> Apagar
+              <Pencil className='w-4 h-4' /> Editar
             </Button>
-          )}
-        </div>
+            {associatedSubscriptions === 0 && (
+              <Button
+                size={'sm'}
+                className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-red-700 border-red-600 text-gray-50 hover:bg-red-800'
+                onClick={() => deletePackage(currentPackage)}
+              >
+                <Trash2 className='w-4 h-4' /> Apagar
+              </Button>
+            )}
+          </div>
 
-        <div
-          id='package-info'
-          className='flex flex-col items-start justify-center gap-2'
-        >
-          <div className='flex flex-col items-start justify-center'>
-            <h2 className='text-lg font-semibold'>Nome</h2>
-            {currentPackage.name}
+          <div
+            id='package-info'
+            className='flex flex-col items-start justify-center gap-2'
+          >
+            <div className='flex flex-col items-start justify-center'>
+              <h2 className='text-lg font-semibold'>Nome</h2>
+              {currentPackage.name}
+            </div>
+            <div className='flex flex-col items-start justify-center'>
+              <h2 className='text-lg font-semibold'>Preço</h2>
+              {currentPackage.price} €
+            </div>
+            <div className='flex flex-col items-start justify-center'>
+              <h2 className='text-lg font-semibold'>Dias por semana</h2>
+              {currentPackage.days_per_week}
+            </div>
+            <div className='flex flex-col items-start justify-center'>
+              <h2 className='text-lg font-semibold'>Ativo</h2>
+              {currentPackage.active ? 'Sim' : 'Não'}
+            </div>
           </div>
-          <div className='flex flex-col items-start justify-center'>
-            <h2 className='text-lg font-semibold'>Preço</h2>
-            {currentPackage.price} €
-          </div>
-          <div className='flex flex-col items-start justify-center'>
-            <h2 className='text-lg font-semibold'>Dias por semana</h2>
-            {currentPackage.days_per_week}
-          </div>
-          <div className='flex flex-col items-start justify-center'>
-            <h2 className='text-lg font-semibold'>Ativo</h2>
-            {currentPackage.active ? 'Sim' : 'Não'}
-          </div>
-        </div>
+        </main>
       </>
     )
   }

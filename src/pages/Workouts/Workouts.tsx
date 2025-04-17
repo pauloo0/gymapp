@@ -130,96 +130,98 @@ function Workouts() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-10 text-2xl'>Planos de treino</h1>
 
-      <div className='p-3 border rounded-lg'>
-        <Label className='mb-8'>Nome do cliente</Label>
-        <Select onValueChange={(value) => setSelectedClientId(value)}>
-          <SelectTrigger>
-            <SelectValue placeholder='Selecione o cliente' />
-          </SelectTrigger>
-          <SelectContent>
-            {clients.map((client: Client) => (
-              <SelectItem key={client.id} value={client.id}>
-                {client.firstname} {client.lastname}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-10 text-2xl'>Planos de treino</h1>
 
-      <div
-        id='filters_and_buttons'
-        className='flex flex-row items-center justify-between my-4'
-      >
-        <Button
-          type='button'
-          variant='default'
-          size='sm'
-          onClick={() => (window.location.href = '/treinos/novo')}
-        >
-          <Plus className='w-5 h-5 mr-1' /> Criar novo
-        </Button>
+        {/* FILTERS */}
+        <div className='grid grid-cols-2 gap-2 px-4 py-3 mb-4 bg-gray-900 border border-gray-800 rounded-lg'>
+          <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
+            <Label>Nome do cliente</Label>
+            <Select onValueChange={(value) => setSelectedClientId(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder='Selecione o cliente' />
+              </SelectTrigger>
+              <SelectContent>
+                {clients.map((client: Client) => (
+                  <SelectItem key={client.id} value={client.id}>
+                    {client.firstname} {client.lastname}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div id='filters'>
-          <Select onValueChange={(value) => setFilter(value)}>
-            <SelectTrigger>
-              <SelectValue placeholder='Ver ...' defaultValue={'all'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all'>Ver todos</SelectItem>
-              <SelectItem value='active'>Ver apenas ativos</SelectItem>
-              <SelectItem value='inactive'>Ver apenas inativos</SelectItem>
-              <SelectItem value='public'>Ver apenas públicos</SelectItem>
-              <SelectItem value='private'>Ver apenas privados</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <section
-        id='client_workouts'
-        className='flex flex-col items-center gap-4 jusftify-center overflow-y-auto max-h-[32rem]'
-      >
-        {filteredWorkouts.length > 0 ? (
-          filteredWorkouts.map((workout: Workout) => (
-            <Link
-              to={`/treino/${workout.id}`}
-              key={workout.id}
-              className='flex flex-row items-center justify-between w-full p-3 border rounded-lg'
+          <div className='flex flex-col-reverse items-center justify-between col-span-2 gap-4 sm:flex-row sm:gap-12'>
+            <Button
+              type='button'
+              variant='default'
+              size='sm'
+              onClick={() => (window.location.href = '/treinos/novo')}
+              className='w-full'
             >
-              <h2>{workout.name}</h2>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Ellipsis className='w-4 h-4' />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Link
-                      to={'/treinos/novo'}
-                      className='flex flex-row items-center justify-start gap-1'
-                    >
-                      <Files className='w-4 h-4' />
-                      Duplicar
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link
-                      to={`/treino/${workout.id}/editar`}
-                      className='flex flex-row items-center justify-start gap-1'
-                    >
-                      <Pencil className='w-4 h-4' />
-                      Editar
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </Link>
-          ))
-        ) : (
-          <p>Não encontrei planos de treino para este cliente.</p>
-        )}
-      </section>
+              <Plus className='w-5 h-5 mr-1' /> Criar novo
+            </Button>
+
+            <Select onValueChange={(value) => setFilter(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder='Ver ...' defaultValue={'all'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>Ver todos</SelectItem>
+                <SelectItem value='active'>Ver apenas ativos</SelectItem>
+                <SelectItem value='inactive'>Ver apenas inativos</SelectItem>
+                <SelectItem value='public'>Ver apenas públicos</SelectItem>
+                <SelectItem value='private'>Ver apenas privados</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <section
+          id='client_workouts'
+          className='flex flex-col items-center gap-4 jusftify-center overflow-y-auto max-h-[32rem]'
+        >
+          {filteredWorkouts.length > 0 ? (
+            filteredWorkouts.map((workout: Workout) => (
+              <Link
+                to={`/treino/${workout.id}`}
+                key={workout.id}
+                className='flex flex-row items-center justify-between w-full px-3 py-4 border border-gray-800 rounded-lg hover:bg-gray-900'
+              >
+                <h2>{workout.name}</h2>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Ellipsis className='w-4 h-4' />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>
+                      <Link
+                        to={'/treinos/novo'}
+                        className='flex flex-row items-center justify-start gap-1'
+                      >
+                        <Files className='w-4 h-4' />
+                        Duplicar
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link
+                        to={`/treino/${workout.id}/editar`}
+                        className='flex flex-row items-center justify-start gap-1'
+                      >
+                        <Pencil className='w-4 h-4' />
+                        Editar
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </Link>
+            ))
+          ) : (
+            <p>Não encontrei planos de treino para este cliente.</p>
+          )}
+        </section>
+      </main>
     </>
   )
 }

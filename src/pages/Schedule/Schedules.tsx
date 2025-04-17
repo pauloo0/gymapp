@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ChevronRight, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const emptySchedule: Schedule[] = [
@@ -116,76 +116,67 @@ function Schedules() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-10 text-2xl'>Agendamentos</h1>
 
-      {/* FILTERS */}
-      <div className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 border rounded-lg'>
-        <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
-          <Label htmlFor='name'>Nome</Label>
-          <Input
-            id='name'
-            name='name'
-            className='h-8'
-            placeholder='Nome do cliente'
-            type='text'
-            value={searchFilters.name}
-            onChange={(e) => filterSchedule(e)}
-          />
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-10 text-2xl'>Agendamentos</h1>
+
+        {/* FILTERS */}
+        <div className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 bg-gray-900 border border-gray-800 rounded-lg'>
+          <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
+            <Label htmlFor='name'>Nome</Label>
+            <Input
+              id='name'
+              name='name'
+              className='h-8'
+              placeholder='Nome do cliente'
+              type='text'
+              value={searchFilters.name}
+              onChange={(e) => filterSchedule(e)}
+            />
+          </div>
+          <Button
+            size={'sm'}
+            onClick={() => (window.location.href = '/marcacao/novo')}
+          >
+            <Plus className='w-5 h-5 mr-1' /> Nova marcação
+          </Button>
         </div>
-        <Button
-          size={'sm'}
-          onClick={() => (window.location.href = '/marcacao/novo')}
-        >
-          <Plus className='w-5 h-5 mr-1' /> Nova marcação
-        </Button>
-      </div>
 
-      <section id='schedule-list' className='overflow-y-auto max-h-[32rem]'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Data</TableHead>
-              <TableHead>Hora</TableHead>
-              <TableHead></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredSchedules ? (
-              filteredSchedules.map((schedule: Schedule) => (
-                <TableRow
-                  key={schedule.id}
-                  className={`${
-                    new Date() > new Date(schedule.date)
-                      ? 'bg-red-50 hover:bg-red-100 opacity-80'
-                      : ''
-                  }`}
-                >
-                  <TableCell>
-                    {schedule.clients.firstname +
-                      ' ' +
-                      schedule.clients.lastname}
-                  </TableCell>
-                  <TableCell>{format(schedule.date, 'yyyy/MM/dd')}</TableCell>
-                  <TableCell>{schedule.time}</TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() =>
-                        (window.location.href = `/marcacao/${schedule.id}`)
-                      }
-                      variant={'link'}
-                    >
-                      <ChevronRight className='w-4 h-4' />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <p>Nenhum agendamento criado.</p>
-            )}
-          </TableBody>
-        </Table>
-      </section>
+        <section id='schedule-list' className='overflow-y-auto max-h-[32rem]'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nome</TableHead>
+                <TableHead>Data</TableHead>
+                <TableHead>Hora</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredSchedules ? (
+                filteredSchedules.map((schedule: Schedule) => (
+                  <TableRow
+                    key={schedule.id}
+                    className='hover:bg-gray-900'
+                    onClick={() =>
+                      (window.location.href = `/marcacao/${schedule.id}`)
+                    }
+                  >
+                    <TableCell>
+                      {schedule.clients.firstname +
+                        ' ' +
+                        schedule.clients.lastname}
+                    </TableCell>
+                    <TableCell>{format(schedule.date, 'yyyy/MM/dd')}</TableCell>
+                    <TableCell>{schedule.time}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <p>Nenhum agendamento criado.</p>
+              )}
+            </TableBody>
+          </Table>
+        </section>
+      </main>
     </>
   )
 }

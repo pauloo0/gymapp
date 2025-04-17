@@ -165,157 +165,170 @@ function ScheduleCreate() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-6 text-xl'>Criar marcação</h1>
 
-      {errorMessage && (
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Erro</DialogTitle>
-              <DialogDescription>{errorMessage}</DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      )}
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-6 text-xl'>Criar marcação</h1>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='grid grid-cols-2 gap-4'
-        >
-          <div className='col-span-2'>
+        {errorMessage && (
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+                <DialogDescription>{errorMessage}</DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='grid grid-cols-2 gap-4'
+          >
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='client_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className={`${errorMessage ? 'text-red-500' : ''}`}
+                    >
+                      Cliente
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={`w-full ${
+                            errorMessage ? 'border-red-500' : ''
+                          }`}
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {clients &&
+                          clients.map((client) => (
+                            <SelectItem key={client.id} value={client.id}>
+                              {client.firstname + ' ' + client.lastname}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
-              name='client_id'
+              name='date'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={`${errorMessage ? 'text-red-500' : ''}`}
                   >
-                    Cliente
+                    Data
                   </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        className={`w-full ${
-                          errorMessage ? 'border-red-500' : ''
-                        }`}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {clients &&
-                        clients.map((client) => (
-                          <SelectItem key={client.id} value={client.id}>
-                            {client.firstname + ' ' + client.lastname}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'w-full justify-start text-left font-normal',
+                            !field.value && 'text-muted-foreground',
+                            errorMessage ? 'border-red-500' : ''
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'yyyy/MM/dd')
+                          ) : (
+                            <span>Escolha uma data</span>
+                          )}
+                          <CalendarIcon className='w-4 h-4 ml-2 opacity-50' />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className='w-auto p-0 border-gray-800'
+                      align='start'
+                    >
+                      <Calendar
+                        defaultMonth={new Date()}
+                        captionLayout='dropdown-buttons'
+                        locale={pt}
+                        fromYear={new Date().getFullYear()}
+                        toYear={new Date().getFullYear() + 1}
+                        mode='single'
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        className='bg-gray-900 rounded'
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
 
-          <FormField
-            control={form.control}
-            name='date'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Data
-                </FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-full justify-start text-left font-normal',
-                          !field.value && 'text-muted-foreground',
-                          errorMessage ? 'border-red-500' : ''
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, 'yyyy/MM/dd')
-                        ) : (
-                          <span>Escolha uma data</span>
-                        )}
-                        <CalendarIcon className='w-4 h-4 ml-2 opacity-50' />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className='w-auto p-0' align='start'>
-                    <Calendar
-                      defaultMonth={new Date()}
-                      captionLayout='dropdown-buttons'
-                      locale={pt}
-                      fromYear={new Date().getFullYear()}
-                      toYear={new Date().getFullYear() + 1}
-                      mode='single'
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
+            <FormField
+              control={form.control}
+              name='time'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage ? 'text-red-500' : ''}`}
+                  >
+                    Hora
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='time'
+                      step='60'
+                      lang='pt-PT'
+                      className={`w-full ${
+                        errorMessage ? 'border-red-500' : ''
+                      }`}
+                      {...field}
                     />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='time'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Hora
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='time'
-                    step='60'
-                    lang='pt-PT'
-                    className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className='grid grid-cols-2 col-span-2 gap-2'>
-            <Button
-              type='submit'
-              size={'sm'}
-              className={cn(
-                'flex items-center justify-center px-3 bg-green-600 hover:bg-green-700',
-                isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            >
-              <Save className='w-4 h-4 mr-1' />
-              Guardar
-            </Button>
-            <Button
-              type='reset'
-              onClick={cancelCreate}
-              size={'sm'}
-              className='flex items-center justify-center px-3'
-              variant='secondary'
-              disabled={isLoading}
-            >
-              <X className='w-4 h-4 mr-1' /> Cancelar
-            </Button>
-          </div>
-        </form>
-      </Form>
+            />
+
+            <div className='grid grid-cols-2 col-span-2 gap-2'>
+              <Button
+                type='submit'
+                size={'sm'}
+                className={cn(
+                  'flex items-center justify-center px-3',
+                  isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+                )}
+              >
+                <Save className='w-4 h-4 mr-1' />
+                Guardar
+              </Button>
+              <Button
+                type='reset'
+                onClick={cancelCreate}
+                size={'sm'}
+                className='flex items-center justify-center px-3'
+                variant='secondary'
+                disabled={isLoading}
+              >
+                <X className='w-4 h-4 mr-1' /> Cancelar
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </main>
     </>
   )
 }

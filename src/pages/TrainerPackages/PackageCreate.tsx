@@ -88,109 +88,120 @@ function PackageCreate() {
   if (isLoading) return <Loading />
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h1 className='mb-6 text-xl'>Criar pacote</h1>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='grid grid-cols-2 gap-4'
-        >
-          <div className='col-span-2'>
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-6 text-xl'>Criar pacote</h1>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='grid grid-cols-2 gap-4'
+          >
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className={`${errorMessage ? 'text-red-500' : ''}`}
+                    >
+                      Nome
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className={`w-full ${
+                          errorMessage ? 'border-red-500' : ''
+                        }`}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
-              name='name'
+              name='price'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={`${errorMessage ? 'text-red-500' : ''}`}
                   >
-                    Nome
+                    Preço (€)
                   </FormLabel>
                   <FormControl>
                     <Input
+                      type='number'
                       className={`w-full ${
                         errorMessage ? 'border-red-500' : ''
                       }`}
                       {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
 
-          <FormField
-            control={form.control}
-            name='price'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Preço (€)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='days_per_week'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Dias p/ semana
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className='grid grid-cols-2 col-span-2 gap-2'>
-            <Button
-              type='submit'
-              size={'sm'}
-              className={cn(
-                'flex items-center justify-center px-3 bg-green-600 hover:bg-green-700',
-                isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+            <FormField
+              control={form.control}
+              name='days_per_week'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage ? 'text-red-500' : ''}`}
+                  >
+                    Dias p/ semana
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`w-full ${
+                        errorMessage ? 'border-red-500' : ''
+                      }`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-              disabled={isLoading}
-            >
-              <Save className='w-4 h-4 mr-1' />
-              Guardar
-            </Button>
-            <Button
-              type='reset'
-              onClick={cancelCreate}
-              size={'sm'}
-              className='flex items-center justify-center px-3'
-              variant='secondary'
-              disabled={isLoading}
-            >
-              <X className='w-4 h-4 mr-1' /> Cancelar
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+            />
+
+            <div className='grid grid-cols-2 col-span-2 gap-2'>
+              <Button
+                type='submit'
+                size={'sm'}
+                className={cn(
+                  'flex items-center justify-center px-3',
+                  isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+                )}
+                disabled={isLoading}
+              >
+                <Save className='w-4 h-4 mr-1' />
+                Guardar
+              </Button>
+              <Button
+                type='reset'
+                onClick={cancelCreate}
+                size={'sm'}
+                className='flex items-center justify-center px-3'
+                variant='secondary'
+                disabled={isLoading}
+              >
+                <X className='w-4 h-4 mr-1' /> Cancelar
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </main>
+    </>
   )
 }
 

@@ -150,110 +150,123 @@ function ScheduleEdit() {
   if (isLoading) return <Loading />
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h1 className='mb-6 text-xl'>Editar agendamento</h1>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='grid grid-cols-2 gap-4'
-        >
-          <FormField
-            control={form.control}
-            name='date'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Data
-                </FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-full justify-start text-left font-normal',
-                          !field.value && 'text-muted-foreground',
-                          errorMessage ? 'border-red-500' : ''
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, 'yyyy/MM/dd')
-                        ) : (
-                          <span>Escolha uma data</span>
-                        )}
-                        <CalendarIcon className='w-4 h-4 ml-2 opacity-50' />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className='w-auto p-0' align='start'>
-                    <Calendar
-                      defaultMonth={new Date()}
-                      captionLayout='dropdown-buttons'
-                      locale={pt}
-                      fromYear={new Date().getFullYear()}
-                      toYear={new Date().getFullYear() + 1}
-                      mode='single'
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-6 text-xl'>Editar agendamento</h1>
 
-          <FormField
-            control={form.control}
-            name='time'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Hora
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='time'
-                    step='60'
-                    lang='pt-PT'
-                    className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className='grid grid-cols-2 col-span-2 gap-2'>
-            <Button
-              type='submit'
-              size={'sm'}
-              className={cn(
-                'flex items-center justify-center px-3 bg-green-600 hover:bg-green-700',
-                isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='grid grid-cols-2 gap-4'
+          >
+            <FormField
+              control={form.control}
+              name='date'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage ? 'text-red-500' : ''}`}
+                  >
+                    Data
+                  </FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'w-full justify-start text-left font-normal',
+                            !field.value && 'text-muted-foreground',
+                            errorMessage ? 'border-red-500' : ''
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'yyyy/MM/dd')
+                          ) : (
+                            <span>Escolha uma data</span>
+                          )}
+                          <CalendarIcon className='w-4 h-4 ml-2 opacity-50' />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className='w-auto p-0 border-gray-800'
+                      align='start'
+                    >
+                      <Calendar
+                        defaultMonth={new Date()}
+                        captionLayout='dropdown-buttons'
+                        locale={pt}
+                        fromYear={new Date().getFullYear()}
+                        toYear={new Date().getFullYear() + 1}
+                        mode='single'
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        className='bg-gray-900 rounded'
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
               )}
-            >
-              <Save className='w-4 h-4 mr-1' />
-              Guardar
-            </Button>
-            <Button
-              type='reset'
-              onClick={cancelEdit}
-              size={'sm'}
-              className='flex items-center justify-center px-3'
-              variant='secondary'
-              disabled={isLoading}
-            >
-              <X className='w-4 h-4 mr-1' /> Cancelar
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+            />
+
+            <FormField
+              control={form.control}
+              name='time'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage ? 'text-red-500' : ''}`}
+                  >
+                    Hora
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='time'
+                      step='60'
+                      lang='pt-PT'
+                      className={`w-full ${
+                        errorMessage ? 'border-red-500' : ''
+                      }`}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className='grid grid-cols-2 col-span-2 gap-2'>
+              <Button
+                type='submit'
+                size={'sm'}
+                className={cn(
+                  'flex items-center justify-center px-3',
+                  isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+                )}
+              >
+                <Save className='w-4 h-4 mr-1' />
+                Guardar
+              </Button>
+              <Button
+                type='reset'
+                onClick={cancelEdit}
+                size={'sm'}
+                className='flex items-center justify-center px-3'
+                variant='secondary'
+                disabled={isLoading}
+              >
+                <X className='w-4 h-4 mr-1' /> Cancelar
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </main>
+    </>
   )
 }
 

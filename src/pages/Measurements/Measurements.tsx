@@ -26,6 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Plus } from 'lucide-react'
 
 import { format } from 'date-fns'
 
@@ -116,75 +117,79 @@ function Measurements() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-10 text-2xl'>Avaliações</h1>
 
-      <div className='p-3 border rounded-lg'>
-        <Label className='mb-8'>Nome do cliente</Label>
-        <Select onValueChange={(value) => setSelectedClientId(value)}>
-          <SelectTrigger>
-            <SelectValue placeholder='Selecione o cliente' />
-          </SelectTrigger>
-          <SelectContent>
-            {clients.map((client: Client) => (
-              <SelectItem key={client.id} value={client.id}>
-                {client.firstname} {client.lastname}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-10 text-2xl'>Avaliações</h1>
 
-      <div className='flex flex-row items-center justify-between my-4'>
-        <Button
-          type='button'
-          variant='default'
-          size='sm'
-          onClick={() => (window.location.href = '/avaliacoes/novo')}
+        {/* FILTERS */}
+        <div className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 bg-gray-900 border border-gray-800 rounded-lg'>
+          <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
+            <Label>Nome do cliente</Label>
+            <Select onValueChange={(value) => setSelectedClientId(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder='Selecione o cliente' />
+              </SelectTrigger>
+              <SelectContent>
+                {clients.map((client: Client) => (
+                  <SelectItem key={client.id} value={client.id}>
+                    {client.firstname} {client.lastname}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            type='button'
+            variant='default'
+            size='sm'
+            onClick={() => (window.location.href = '/avaliacoes/novo')}
+          >
+            <Plus className='w-5 h-5 mr-1' /> Criar nova
+          </Button>
+        </div>
+
+        <section
+          id='client_measurements'
+          className='overflow-y-auto max-h-[32rem]'
         >
-          Criar nova
-        </Button>
-      </div>
-
-      <section
-        id='client_measurements'
-        className='flex flex-col items-center justify-center gap-4 overflow-y-auto max-h-[32rem]'
-      >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Cliente</TableHead>
-              <TableHead>Data</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {measurements.length > 0
-              ? measurements.map((measurement: Measurement) => (
-                  <TableRow
-                    key={measurement.id}
-                    onClick={() =>
-                      (window.location.href = `/avaliacao/${measurement.id}`)
-                    }
-                  >
-                    <TableCell>
-                      {measurement.clients.firstname +
-                        ' ' +
-                        measurement.clients.lastname}
-                    </TableCell>
-                    <TableCell>
-                      {format(measurement.date, 'yyyy/MM/dd')}
-                    </TableCell>
-                  </TableRow>
-                ))
-              : selectedClientId !== '' && (
-                  <TableRow>
-                    <TableCell colSpan={2} className='text-center'>
-                      Não encontrei avaliações deste cliente.
-                    </TableCell>
-                  </TableRow>
-                )}
-          </TableBody>
-        </Table>
-      </section>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Data</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {measurements.length > 0
+                ? measurements.map((measurement: Measurement) => (
+                    <TableRow
+                      key={measurement.id}
+                      className='hover:bg-gray-900'
+                      onClick={() =>
+                        (window.location.href = `/avaliacao/${measurement.id}`)
+                      }
+                    >
+                      <TableCell>
+                        {measurement.clients.firstname +
+                          ' ' +
+                          measurement.clients.lastname}
+                      </TableCell>
+                      <TableCell>
+                        {format(measurement.date, 'yyyy/MM/dd')}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : selectedClientId !== '' && (
+                    <TableRow className='hover:bg-gray-900'>
+                      <TableCell colSpan={2} className='text-center'>
+                        Não encontrei avaliações deste cliente.
+                      </TableCell>
+                    </TableRow>
+                  )}
+            </TableBody>
+          </Table>
+        </section>
+      </main>
     </>
   )
 }

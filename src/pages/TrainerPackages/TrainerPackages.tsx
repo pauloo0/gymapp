@@ -63,62 +63,64 @@ function TrainerPackages() {
   return (
     <>
       <Navbar />
-      <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
-        <ArrowLeft
-          className='w-6 h-6'
-          onClick={() => (window.location.href = '/perfil')}
-        />
-        <h1 className='text-2xl font-semibold'>Os meus pacotes</h1>
-      </div>
 
-      <div className='flex flex-row items-center justify-between mb-4'>
-        <Button
-          type='button'
-          variant='default'
-          size='sm'
-          onClick={() => (window.location.href = '/pacotes/novo')}
-        >
-          <Plus className='mr-1' /> Criar novo
-        </Button>
-      </div>
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
+          <ArrowLeft
+            className='w-6 h-6'
+            onClick={() => (window.location.href = '/perfil')}
+          />
+          <h1 className='text-2xl font-semibold'>Os meus pacotes</h1>
+        </div>
 
-      <section id='package-list' className='overflow-y-auto max-h-[32rem]'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Preço</TableHead>
-              <TableHead>Dias p/semana</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {packages ? (
-              packages.map((pkg: Package) => (
-                <TableRow
-                  key={pkg.id}
-                  onClick={() => (window.location.href = `/pacote/${pkg.id}`)}
-                >
-                  <TableCell>{pkg.name}</TableCell>
-                  <TableCell>{pkg.price} €</TableCell>
-                  <TableCell className='text-center'>
-                    {pkg.days_per_week}
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow className='flex flex-col items-center justify-center'>
-                <p>Sem pacotes</p>
-                <Button
-                  onClick={() => (window.location.href = '/pacotes/novo')}
-                >
-                  <Plus className='mr-1' />
-                  Adicionar
-                </Button>
+        <div className='flex flex-row items-center justify-between mb-4'>
+          <Button
+            type='button'
+            variant='default'
+            size='sm'
+            onClick={() => (window.location.href = '/pacotes/novo')}
+          >
+            <Plus className='mr-1' /> Criar novo
+          </Button>
+        </div>
+
+        <section id='package-list' className='overflow-y-auto max-h-[32rem]'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nome</TableHead>
+                <TableHead>Preço</TableHead>
+                <TableHead>Dias p/semana</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </section>
+            </TableHeader>
+            <TableBody>
+              {packages ? (
+                packages.map((pkg: Package) => (
+                  <TableRow
+                    key={pkg.id}
+                    onClick={() => (window.location.href = `/pacote/${pkg.id}`)}
+                    className='hover:bg-gray-900'
+                  >
+                    <TableCell>{pkg.name}</TableCell>
+                    <TableCell>{pkg.price} €</TableCell>
+                    <TableCell>{pkg.days_per_week}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow className='flex flex-col items-center justify-center hover:bg-gray-900'>
+                  <p>Sem pacotes</p>
+                  <Button
+                    onClick={() => (window.location.href = '/pacotes/novo')}
+                  >
+                    <Plus className='mr-1' />
+                    Adicionar
+                  </Button>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </section>
+      </main>
     </>
   )
 }

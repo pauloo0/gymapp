@@ -258,178 +258,179 @@ function InvoicePage() {
     return (
       <>
         <Navbar />
-        <div className='flex flex-row items-center justify-between w-full gap-2'>
-          <div className='flex flex-row items-center justify-start w-full gap-2'>
-            <ArrowLeft
-              className='w-6 h-6'
-              onClick={() => (window.location.href = '/faturas')}
-            />
-            <h1 className='text-2xl font-semibold'>Fatura</h1>
-          </div>
-          <div className='w-full text-end'>
-            <span className='font-semibold'>Data:</span>{' '}
-            {format(invoiceInfo.issue_date, 'yyyy/MM/dd')}
-          </div>
-        </div>
 
-        <section id='invoice-info' className='grid grid-cols-3 gap-2 my-10'>
-          <div className='flex flex-col items-start justify-center col-span-3'>
-            <h2 className='text-lg font-semibold'>Nome</h2>
-            {invoiceInfo.clientName}
+        <main className='min-h-[calc(100vh_-_64px)]'>
+          <div className='flex flex-row items-center justify-between w-full gap-2'>
+            <div className='flex flex-row items-center justify-start w-full gap-2'>
+              <ArrowLeft
+                className='w-6 h-6'
+                onClick={() => (window.location.href = '/faturas')}
+              />
+              <h1 className='text-2xl font-semibold'>Fatura</h1>
+            </div>
+            <div className='w-full text-end'>
+              <span className='font-semibold'>Data:</span>{' '}
+              {format(invoiceInfo.issue_date, 'yyyy/MM/dd')}
+            </div>
           </div>
-          <div className='flex flex-col items-start justify-center col-span-3'>
-            <h2 className='text-lg font-semibold'>Vencimento</h2>
-            {format(invoiceInfo.due_date, 'yyyy/MM/dd')}
-          </div>
-          <div className='flex flex-col items-start justify-center col-span-3'>
-            <h2 className='text-lg font-semibold'>Estado</h2>
-            {invoiceInfo.status}
-          </div>
-          <div className='flex flex-col items-start justify-center'>
-            <h2 className='text-lg font-semibold'>Total</h2>
-            {invoiceInfo.totalAmount} €
-          </div>
-          <div className='flex flex-col items-start justify-center'>
-            <h2 className='text-lg font-semibold'>Pago</h2>
-            {invoiceInfo.paidAmount} €
-          </div>
-          <div className='flex flex-col items-start justify-center'>
-            <h2 className='text-lg font-semibold'>Pendente</h2>
-            {invoiceInfo.pendingAmount} €
-          </div>
-        </section>
 
-        <section
-          id='invoice-payments'
-          className='flex flex-col items-center justify-center gap-4'
-        >
-          <h2 className='w-full text-lg font-semibold'>Pagamentos</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Data</TableHead>
-                <TableHead>Valor</TableHead>
-                <TableHead>Estado</TableHead>
-                {invoiceInfo.pendingAmount > 0 && <TableCell></TableCell>}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {invoiceInfo.payments.length > 0 ? (
-                invoiceInfo.payments.map((payment) => (
-                  <TableRow key={payment.id}>
-                    <TableCell>
-                      {format(payment.payment_date, 'yyyy/MM/dd')}
-                    </TableCell>
-                    <TableCell className='text-center'>
-                      {payment.amount}
-                    </TableCell>
-                    <TableCell>
-                      {payment.cancelled ? 'Cancelado' : 'Válido'}
-                    </TableCell>
-                    {invoiceInfo.pendingAmount > 0 && !payment.cancelled && (
+          <section id='invoice-info' className='grid grid-cols-3 gap-2 my-10'>
+            <div className='flex flex-col items-start justify-center col-span-3'>
+              <h2 className='text-lg font-semibold'>Nome</h2>
+              {invoiceInfo.clientName}
+            </div>
+            <div className='flex flex-col items-start justify-center col-span-3'>
+              <h2 className='text-lg font-semibold'>Vencimento</h2>
+              {format(invoiceInfo.due_date, 'yyyy/MM/dd')}
+            </div>
+            <div className='flex flex-col items-start justify-center col-span-3'>
+              <h2 className='text-lg font-semibold'>Estado</h2>
+              {invoiceInfo.status}
+            </div>
+            <div className='flex flex-col items-start justify-center'>
+              <h2 className='text-lg font-semibold'>Total</h2>
+              {invoiceInfo.totalAmount} €
+            </div>
+            <div className='flex flex-col items-start justify-center'>
+              <h2 className='text-lg font-semibold'>Pago</h2>
+              {invoiceInfo.paidAmount} €
+            </div>
+            <div className='flex flex-col items-start justify-center'>
+              <h2 className='text-lg font-semibold'>Pendente</h2>
+              {invoiceInfo.pendingAmount} €
+            </div>
+          </section>
+
+          <section
+            id='invoice-payments'
+            className='flex flex-col items-center justify-center gap-4'
+          >
+            <h2 className='w-full text-lg font-semibold'>Pagamentos</h2>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Data</TableHead>
+                  <TableHead>Valor</TableHead>
+                  <TableHead>Estado</TableHead>
+                  {invoiceInfo.pendingAmount > 0 && <TableCell></TableCell>}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {invoiceInfo.payments.length > 0 ? (
+                  invoiceInfo.payments.map((payment) => (
+                    <TableRow key={payment.id} className='hover:bg-gray-900'>
                       <TableCell>
-                        <CircleSlash
-                          strokeWidth={3}
-                          className='w-4 h-4 text-red-500'
-                          onClick={() => cancelPayment(payment.id)}
-                        />
+                        {format(payment.payment_date, 'yyyy/MM/dd')}
                       </TableCell>
-                    )}
+                      <TableCell>{payment.amount} €</TableCell>
+                      <TableCell>
+                        {payment.cancelled ? 'Cancelado' : 'Válido'}
+                      </TableCell>
+                      {invoiceInfo.pendingAmount > 0 && !payment.cancelled && (
+                        <TableCell>
+                          <CircleSlash
+                            strokeWidth={3}
+                            className='w-4 h-4 text-red-500'
+                            onClick={() => cancelPayment(payment.id)}
+                          />
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={invoiceInfo.pendingAmount > 0 ? 4 : 3}
+                      className='text-center'
+                    >
+                      Esta fatura não tem pagementos.
+                    </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={invoiceInfo.pendingAmount > 0 ? 4 : 3}
-                    className='text-center'
-                  >
-                    Esta fatura não tem pagementos.
-                  </TableCell>
-                </TableRow>
-              )}
-              {invoiceInfo.pendingAmount > 0 && (
-                <TableRow>
-                  <TableCell colSpan={invoiceInfo.pendingAmount > 0 ? 4 : 3}>
-                    <Drawer open={paymentFormOpen}>
-                      <DrawerTrigger asChild className='w-full'>
-                        <Button
-                          size='sm'
-                          className='w-full'
-                          onClick={() => setPaymentFormOpen(true)}
-                        >
-                          <Plus className='w-4 h-6 mr-1' />
-                          Adicionar Pagamento
-                        </Button>
-                      </DrawerTrigger>
-                      <DrawerContent>
-                        <DrawerHeader>
-                          <DrawerTitle>Adicionar Pagamento</DrawerTitle>
-                          <DrawerDescription />
-                        </DrawerHeader>
-                        <Form {...form}>
-                          <form
-                            onSubmit={form.handleSubmit(onSubmitPayment)}
-                            className='px-6'
+                )}
+                {invoiceInfo.pendingAmount > 0 && (
+                  <TableRow>
+                    <TableCell colSpan={invoiceInfo.pendingAmount > 0 ? 4 : 3}>
+                      <Drawer open={paymentFormOpen}>
+                        <DrawerTrigger asChild className='w-full'>
+                          <Button
+                            size='sm'
+                            className='w-full'
+                            onClick={() => setPaymentFormOpen(true)}
                           >
-                            <FormField
-                              name='amount'
-                              control={form.control}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Valor recebido</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      className={`w-full ${
-                                        errorMessage ? 'border-red-500' : ''
-                                      }`}
-                                      type='text'
-                                      {...field}
-                                      onChange={(e) =>
-                                        field.onChange(Number(e.target.value))
-                                      }
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                            <DrawerFooter className='grid grid-cols-2 gap-2 mb-6'>
-                              <Button
-                                type='submit'
-                                size={'sm'}
-                                className={cn(
-                                  'flex items-center justify-center px-3 bg-green-600 hover:bg-green-700',
-                                  isLoading
-                                    ? 'cursor-not-allowed'
-                                    : 'cursor-pointer'
+                            <Plus className='w-4 h-6 mr-1' />
+                            Adicionar Pagamento
+                          </Button>
+                        </DrawerTrigger>
+                        <DrawerContent>
+                          <DrawerHeader>
+                            <DrawerTitle>Adicionar Pagamento</DrawerTitle>
+                            <DrawerDescription />
+                          </DrawerHeader>
+                          <Form {...form}>
+                            <form
+                              onSubmit={form.handleSubmit(onSubmitPayment)}
+                              className='px-6'
+                            >
+                              <FormField
+                                name='amount'
+                                control={form.control}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Valor recebido</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        className={`w-full text-gray-50 ${
+                                          errorMessage ? 'border-red-500' : ''
+                                        }`}
+                                        type='text'
+                                        {...field}
+                                        onChange={(e) =>
+                                          field.onChange(Number(e.target.value))
+                                        }
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
                                 )}
-                              >
-                                <Save className='w-4 h-4 mr-1' />
-                                Guardar
-                              </Button>
-                              <Button
-                                type='reset'
-                                size={'sm'}
-                                className='flex items-center justify-center px-3'
-                                variant='secondary'
-                                disabled={isLoading}
-                                onClick={cancelAddPayment}
-                              >
-                                <X className='w-4 h-4 mr-1' />
-                                Cancelar
-                              </Button>
-                            </DrawerFooter>
-                          </form>
-                        </Form>
-                      </DrawerContent>
-                    </Drawer>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </section>
+                              />
+
+                              <DrawerFooter className='grid grid-cols-2 gap-2 mb-6'>
+                                <Button
+                                  type='submit'
+                                  size={'sm'}
+                                  className={cn(
+                                    'flex items-center justify-center px-3',
+                                    isLoading
+                                      ? 'cursor-not-allowed'
+                                      : 'cursor-pointer'
+                                  )}
+                                >
+                                  <Save className='w-4 h-4 mr-1' />
+                                  Guardar
+                                </Button>
+                                <Button
+                                  type='reset'
+                                  size={'sm'}
+                                  className='flex items-center justify-center px-3'
+                                  variant='secondary'
+                                  disabled={isLoading}
+                                  onClick={cancelAddPayment}
+                                >
+                                  <X className='w-4 h-4 mr-1' />
+                                  Cancelar
+                                </Button>
+                              </DrawerFooter>
+                            </form>
+                          </Form>
+                        </DrawerContent>
+                      </Drawer>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </section>
+        </main>
       </>
     )
   }

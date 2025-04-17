@@ -119,7 +119,7 @@ function TrainerDashboard() {
   }
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-4 min-h-[calc(100vh_-_64px)]'>
       <ListedSchedules schedules={schedules} />
       <UnpaidInvoicesNextWeek invoices={invoices} />
     </div>

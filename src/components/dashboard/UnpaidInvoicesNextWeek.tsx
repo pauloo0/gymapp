@@ -14,10 +14,10 @@ function UnpaidInvoicesNextWeek({ invoices }: { invoices: Invoice[] }) {
         ) : (
           invoices.map((invoice: Invoice) => (
             <div
-              className={`flex flex-row items-center justify-between px-4 py-2 border rounded-md ${
-                invoice.due_date < new Date().toISOString()
-                  ? 'bg-red-100 border-red-200'
-                  : ''
+              className={`text-gray-50 flex flex-row items-center justify-between px-4 py-2 border rounded-md ${
+                new Date(invoice.due_date).getTime() < new Date().getTime()
+                  ? 'bg-red-700 text-gray-50 border-red-600 hover:bg-red-800'
+                  : 'bg-gray-800 text-gray-50 border-gray-700 hover:bg-gray-900'
               }`}
               key={invoice.id}
               onClick={() => (window.location.href = `/fatura/${invoice.id}`)}
@@ -26,7 +26,7 @@ function UnpaidInvoicesNextWeek({ invoices }: { invoices: Invoice[] }) {
               {invoice.subscriptions.clients.lastname}
               <div className='flex flex-col items-end justify-center'>
                 <span>{invoice.amount} €</span>
-                <span className='text-xs'>
+                <span className='text-xs text-gray-300'>
                   Vencimento:{' '}
                   {new Date(invoice.due_date).toLocaleDateString('pt-PT')}
                 </span>

@@ -140,65 +140,69 @@ function Clients() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-10 text-2xl'>Os meus clientes</h1>
 
-      {/* FILTERS */}
-      <div className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 border rounded-lg'>
-        <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
-          <Label htmlFor='name'>Nome</Label>
-          <Input
-            id='name'
-            name='name'
-            className='h-8'
-            placeholder='Nome do cliente'
-            type='text'
-            value={searchFilters.name}
-            onChange={(e) => filterClient(e)}
-          />
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-10 text-2xl'>Os meus clientes</h1>
+
+        {/* FILTERS */}
+        <div className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 bg-gray-900 border border-gray-800 rounded-lg'>
+          <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
+            <Label htmlFor='name'>Nome</Label>
+            <Input
+              id='name'
+              name='name'
+              className='h-8'
+              placeholder='Nome do cliente'
+              type='text'
+              value={searchFilters.name}
+              onChange={(e) => filterClient(e)}
+            />
+          </div>
+          <Button
+            size={'sm'}
+            onClick={() => (window.location.href = '/clientes/novo')}
+          >
+            <Plus className='w-5 h-5 mr-1' /> Novo cliente
+          </Button>
         </div>
-        <Button
-          size={'sm'}
-          onClick={() => (window.location.href = '/clientes/novo')}
-        >
-          <Plus className='w-5 h-5 mr-1' /> Novo cliente
-        </Button>
-      </div>
 
-      <section id='client-list' className='overflow-y-auto max-h-[32rem]'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Idade</TableHead>
-              <TableHead>Objetivo</TableHead>
-              <TableHead>Data Entrada</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredClients ? (
-              filteredClients.map((client) => (
-                <TableRow
-                  key={client.id}
-                  onClick={() => goToClientPage(client.id)}
-                >
-                  <TableCell>
-                    {client.firstname} {client.lastname}
-                  </TableCell>
-                  <TableCell className='text-center'>
-                    {client.birthday ? getAge(client.birthday) : '0'}
-                  </TableCell>
-                  <TableCell>{client.goal}</TableCell>
-                  <TableCell>
-                    {new Date(client.join_date).toLocaleDateString('pt-PT')}
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <p>Sem clients</p>
-            )}
-          </TableBody>
-        </Table>
-      </section>
+        <section id='client-list' className='overflow-y-auto max-h-[32rem]'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nome</TableHead>
+                <TableHead>Idade</TableHead>
+                <TableHead>Objetivo</TableHead>
+                <TableHead>Data Entrada</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredClients ? (
+                filteredClients.map((client) => (
+                  <TableRow
+                    key={client.id}
+                    className='hover:bg-gray-900'
+                    onClick={() => goToClientPage(client.id)}
+                  >
+                    <TableCell>
+                      {client.firstname} {client.lastname}
+                    </TableCell>
+                    <TableCell>
+                      {client.birthday ? getAge(client.birthday) : '0'}
+                    </TableCell>
+                    <TableCell>{client.goal}</TableCell>
+                    <TableCell>
+                      {new Date(client.join_date).toLocaleDateString('pt-PT')}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <p>Sem clients</p>
+              )}
+            </TableBody>
+          </Table>
+        </section>
+      </main>
     </>
   )
 }

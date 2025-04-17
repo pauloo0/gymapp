@@ -249,442 +249,484 @@ function MeasurementEdit() {
   return (
     <>
       <Navbar />
-      <div className='flex flex-row justify-between w-full gap-2 items-cnter'>
-        <ArrowLeft
-          className='w-6 h-6'
-          onClick={() => (window.location.href = '/avaliacoes')}
-        />
-        <h1 className='text-2xl font-semibold'>
-          Avaliação {client && 'de ' + client.firstname + ' ' + client.lastname}
-        </h1>
-      </div>
 
-      <div
-        id='measurement-header'
-        className='flex flex-row items-center justify-between w-full mt-10 mb-8'
-      >
-        <div className={cn(label_group, 'col-span-2')}>
-          <p className={label}>Data da avaliação</p>
-          <p>{format(measurement.date, 'yyyy/MM/dd')}</p>
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <div className='flex flex-row justify-between w-full gap-2 items-cnter'>
+          <ArrowLeft
+            className='w-6 h-6'
+            onClick={() => (window.location.href = '/avaliacoes')}
+          />
+          <h1 className='text-2xl font-semibold'>
+            Avaliação{' '}
+            {client && 'de ' + client.firstname + ' ' + client.lastname}
+          </h1>
         </div>
-      </div>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='grid grid-cols-2 gap-4 mb-14'
+        <div
+          id='measurement-header'
+          className='flex flex-row items-center justify-between w-full mt-10 mb-8'
         >
-          <section className='col-span-2 mb-4 font-semibold'>
-            <p>Dados gerais</p>
-          </section>
-
-          <FormField
-            control={form.control}
-            name='weight'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage ? 'text-red-500' : ''}`}>
-                  Peso
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`w-full ${errorMessage ? 'border-red-500' : ''}`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='height'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Altura
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='body_fat_pct'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Massa Gorda (%)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='body_fat'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Massa Gorda (Kg)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='muscle_mass_pct'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Massa Muscular (%)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='muscle_mass'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Massa Muscular (Kg)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='water_pct'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Água (%)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='bmi'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  IMC
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='visceral_fat'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Gordura Visceral
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <section className='col-span-2 my-4 font-semibold'>
-            <p>Perímetros</p>
-          </section>
-
-          <FormField
-            control={form.control}
-            name='chest'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Busto
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='waist'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Cintura
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='hip'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Anca
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='leftthigh'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Perna Esquerda
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='rightthigh'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Perna Direita
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='leftarm'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Braço Esquerdo
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='rightarm'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Braço Direito
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='leftcalf'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Gémeo Esquerdo
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='rightcalf'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={`${errorMessage} ? 'text-red-500' : ''`}>
-                  Gémeo Direito
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    className={`${errorMessage} : 'border-red-500' : ''`}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className='grid grid-cols-2 col-span-2 gap-2'>
-            <Button
-              type='submit'
-              size={'sm'}
-              className={cn(
-                'flex items-center justify-center px-3 bg-green-600 hover:bg-green-700',
-                isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
-              )}
-            >
-              <Save className='w-4 h-4 mr-1' />
-              Guardar
-            </Button>
-            <Button
-              type='reset'
-              onClick={cancelEdit}
-              size={'sm'}
-              className='flex items-center justify-center px-3'
-              variant='secondary'
-              disabled={isLoading}
-            >
-              <X className='w-4 h-4 mr-1' /> Cancelar
-            </Button>
+          <div className={cn(label_group, 'col-span-2')}>
+            <p className={label}>Data da avaliação</p>
+            <p>{format(measurement.date, 'yyyy/MM/dd')}</p>
           </div>
-        </form>
-      </Form>
+        </div>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='grid grid-cols-2 gap-4 mb-14'
+          >
+            <section className='col-span-2 mb-4 font-semibold'>
+              <p>Dados gerais</p>
+            </section>
+
+            <FormField
+              control={form.control}
+              name='weight'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage ? 'text-red-500' : ''}`}
+                  >
+                    Peso
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`w-full ${
+                        errorMessage ? 'border-red-500' : ''
+                      }`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='height'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Altura
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='body_fat_pct'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Massa Gorda (%)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='body_fat'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Massa Gorda (Kg)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='muscle_mass_pct'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Massa Muscular (%)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='muscle_mass'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Massa Muscular (Kg)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='water_pct'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Água (%)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='bmi'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    IMC
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='visceral_fat'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Gordura Visceral
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <section className='col-span-2 my-4 font-semibold'>
+              <p>Perímetros</p>
+            </section>
+
+            <FormField
+              control={form.control}
+              name='chest'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Busto
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='waist'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Cintura
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='hip'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Anca
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='leftthigh'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Perna Esquerda
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='rightthigh'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Perna Direita
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='leftarm'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Braço Esquerdo
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='rightarm'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Braço Direito
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='leftcalf'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Gémeo Esquerdo
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='rightcalf'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Gémeo Direito
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className='grid grid-cols-2 col-span-2 gap-2'>
+              <Button
+                type='submit'
+                size={'sm'}
+                className={cn(
+                  'flex items-center justify-center px-3',
+                  isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+                )}
+              >
+                <Save className='w-4 h-4 mr-1' />
+                Guardar
+              </Button>
+              <Button
+                type='reset'
+                onClick={cancelEdit}
+                size={'sm'}
+                className='flex items-center justify-center px-3'
+                variant='secondary'
+                disabled={isLoading}
+              >
+                <X className='w-4 h-4 mr-1' /> Cancelar
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </main>
     </>
   )
 }

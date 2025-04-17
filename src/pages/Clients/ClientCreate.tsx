@@ -49,10 +49,8 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from '@/components/ui/dialog'
 
 const emptyClient: Client = {
@@ -242,182 +240,66 @@ function ClientCreate() {
   if (isLoading) return <Loading />
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h1 className='mb-6 text-xl'>Criar novo cliente</h1>
 
-      {otp && (
-        <Dialog
-          open={isDialogOpen}
-          onOpenChange={(open) => !open && handleRedirect()}
-        >
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Password temporária</DialogTitle>
-              <DialogDescription>
-                O cliente deve entrar pela primeira vez com esta password.
-              </DialogDescription>
-            </DialogHeader>
-            {otp}
-          </DialogContent>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button type='button' variant='secondary'>
-                Fechar
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </Dialog>
-      )}
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-6 text-xl'>Criar novo cliente</h1>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='grid grid-cols-2 gap-4'
-        >
-          <FormField
-            control={form.control}
-            name='firstname'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome</FormLabel>
-                <FormControl>
-                  <Input className='w-full' type='text' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='lastname'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sobrenome</FormLabel>
-                <FormControl>
-                  <Input className='w-full' type='text' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='gender'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Género</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value='Masculino'>Masculino</SelectItem>
-                    <SelectItem value='Feminino'>Feminino</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='phone_number'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telemóvel</FormLabel>
-                <FormControl>
-                  <Input className='w-full' type='text' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>E-mail</FormLabel>
-                <FormControl>
-                  <Input className='w-full' type='email' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        {otp && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleRedirect()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Password temporária</DialogTitle>
+                <DialogDescription>
+                  O cliente deve entrar pela primeira vez com esta password.
+                </DialogDescription>
+              </DialogHeader>
+              {otp}
+            </DialogContent>
+          </Dialog>
+        )}
 
-          <FormField
-            control={form.control}
-            name='birthday'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Data de nascimento</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-full justify-start text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, 'yyyy/MM/dd')
-                        ) : (
-                          <span>Escolha uma data</span>
-                        )}
-                        <CalendarIcon className='w-4 h-4 ml-auto opacity-50' />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className='w-auto p-0' align='start'>
-                    <Calendar
-                      defaultMonth={new Date()}
-                      captionLayout='dropdown-buttons'
-                      locale={pt}
-                      fromYear={1900}
-                      toYear={new Date().getFullYear()}
-                      mode='single'
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormItem>
-            )}
-          />
-
-          <div className='col-span-2'>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='grid grid-cols-2 gap-4'
+          >
             <FormField
               control={form.control}
-              name='goal'
+              name='firstname'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Objetivo</FormLabel>
+                  <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Input className='w-full' type='text' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-
-          <div className='col-span-2'>
             <FormField
               control={form.control}
-              name='package_id'
+              name='lastname'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Pacote</FormLabel>
+                  <FormLabel>Sobrenome</FormLabel>
+                  <FormControl>
+                    <Input className='w-full' type='text' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='gender'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Género</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -428,49 +310,165 @@ function ClientCreate() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {trainerPackages &&
-                        trainerPackages.map((trainerPackage) => (
-                          <SelectItem
-                            key={trainerPackage.id}
-                            value={trainerPackage.id}
-                          >
-                            {trainerPackage.name}
-                          </SelectItem>
-                        ))}
+                      <SelectItem value='Masculino'>Masculino</SelectItem>
+                      <SelectItem value='Feminino'>Feminino</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-
-          <div className='grid grid-cols-2 col-span-2 gap-2'>
-            <Button
-              type='submit'
-              size={'sm'}
-              className={cn(
-                'flex items-center justify-center px-3 bg-green-600 hover:bg-green-700',
-                isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+            <FormField
+              control={form.control}
+              name='phone_number'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telemóvel</FormLabel>
+                  <FormControl>
+                    <Input className='w-full' type='text' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            >
-              <Save className='w-4 h-4 mr-1' />
-              Guardar
-            </Button>
-            <Button
-              type='reset'
-              onClick={cancelCreate}
-              size={'sm'}
-              className='flex items-center justify-center px-3'
-              variant='secondary'
-              disabled={isLoading}
-            >
-              <X className='w-4 h-4 mr-1' /> Cancelar
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+            />
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>E-mail</FormLabel>
+                  <FormControl>
+                    <Input className='w-full' type='email' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='birthday'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Data de nascimento</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'w-full justify-start text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'yyyy/MM/dd')
+                          ) : (
+                            <span>Escolha uma data</span>
+                          )}
+                          <CalendarIcon className='w-4 h-4 ml-auto opacity-50' />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className='w-auto p-0 border-gray-800'
+                      align='start'
+                    >
+                      <Calendar
+                        defaultMonth={new Date()}
+                        captionLayout='dropdown-buttons'
+                        locale={pt}
+                        fromYear={1900}
+                        toYear={new Date().getFullYear()}
+                        mode='single'
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        className='bg-gray-900 rounded'
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormItem>
+              )}
+            />
+
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='goal'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Objetivo</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='package_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Pacote</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {trainerPackages &&
+                          trainerPackages.map((trainerPackage) => (
+                            <SelectItem
+                              key={trainerPackage.id}
+                              value={trainerPackage.id}
+                            >
+                              {trainerPackage.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className='grid grid-cols-2 col-span-2 gap-2'>
+              <Button
+                type='submit'
+                size={'sm'}
+                className={cn(
+                  'flex items-center justify-center px-3',
+                  isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+                )}
+              >
+                <Save className='w-4 h-4 mr-1' />
+                Guardar
+              </Button>
+              <Button
+                type='reset'
+                onClick={cancelCreate}
+                size={'sm'}
+                className='flex items-center justify-center px-3'
+                variant='secondary'
+                disabled={isLoading}
+              >
+                <X className='w-4 h-4 mr-1' /> Cancelar
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </main>
+    </>
   )
 }
 

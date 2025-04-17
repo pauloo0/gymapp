@@ -141,118 +141,123 @@ function Invoices() {
   return (
     <>
       <Navbar />
-      <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
-        <ArrowLeft
-          className='w-6 h-6'
-          onClick={() => (window.location.href = '/perfil')}
-        />
-        <h1 className='text-2xl font-semibold'>Faturas</h1>
-      </div>
 
-      <div className='p-3 border rounded-lg'>
-        <Label className='mb-8'>Nome do cliente</Label>
-        <Select onValueChange={(value) => setSelectedClientId(value)}>
-          <SelectTrigger>
-            <SelectValue placeholder='Selecione o cliente' />
-          </SelectTrigger>
-          <SelectContent>
-            {clients.map((client: Client) => (
-              <SelectItem key={client.id} value={client.id}>
-                {client.firstname} {client.lastname}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div
-        id='filters_and_buttons'
-        className='flex flex-row items-center justify-end my-4'
-      >
-        <div id='filters'>
-          <Select onValueChange={(value) => setFilter(value)}>
-            <SelectTrigger>
-              <SelectValue placeholder='Ver ...' defaultValue={'all'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all'>Ver todos</SelectItem>
-              <SelectItem value='issued'>Não pagos</SelectItem>
-              <SelectItem value='overdue'>Vencidos</SelectItem>
-              <SelectItem value='partial_payment'>Parcela</SelectItem>
-              <SelectItem value='paid'>Pagos</SelectItem>
-            </SelectContent>
-          </Select>
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
+          <ArrowLeft
+            className='w-6 h-6'
+            onClick={() => (window.location.href = '/perfil')}
+          />
+          <h1 className='text-2xl font-semibold'>Faturas</h1>
         </div>
-      </div>
 
-      <section
-        id='client_invoices'
-        className='flex flex-col items-center justify-center gap-4 overflow-y-auto max-h-[32rem]'
-      >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Cliente</TableHead>
-              <TableHead>Vencimento</TableHead>
-              <TableHead>Valor</TableHead>
-              <TableHead>Est.</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredInvoices.length > 0 ? (
-              filteredInvoices.map((invoice: Invoice) => (
-                <TableRow
-                  key={invoice.id}
-                  onClick={() =>
-                    (window.location.href = `/fatura/${invoice.id}`)
-                  }
-                >
-                  <TableCell>
-                    {invoice.subscriptions.clients.firstname +
-                      ' ' +
-                      invoice.subscriptions.clients.lastname}
-                  </TableCell>
-                  <TableCell>
-                    {format(invoice.due_date, 'yyyy/MM/dd')}
-                  </TableCell>
-                  <TableCell className='text-center'>
-                    {invoice.amount}
-                  </TableCell>
-                  <TableCell className='flex items-center justify-center'>
-                    {invoice.status === 'paid' ? (
-                      <SquareCheck
-                        strokeWidth={3}
-                        className='w-4 h-4 text-green-500'
-                      />
-                    ) : invoice.status === 'overdue' ? (
-                      <SquareDot
-                        strokeWidth={3}
-                        className='w-4 h-4 text-red-500'
-                      />
-                    ) : invoice.status === 'partial_payment' ? (
-                      <SquareSlash
-                        strokeWidth={3}
-                        className='w-4 h-4 text-amber-500'
-                      />
-                    ) : (
-                      <SquareMinus
-                        strokeWidth={3}
-                        className='w-4 h-4 text-slate-500'
-                      />
-                    )}
+        {/* FILTERS */}
+        <div className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 bg-gray-900 border border-gray-800 rounded-lg'>
+          <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
+            <Label>Nome do cliente</Label>
+            <Select onValueChange={(value) => setSelectedClientId(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder='Selecione o cliente' />
+              </SelectTrigger>
+              <SelectContent>
+                {clients.map((client: Client) => (
+                  <SelectItem key={client.id} value={client.id}>
+                    {client.firstname} {client.lastname}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div
+          id='filters_and_buttons'
+          className='flex flex-row items-center justify-end my-4'
+        >
+          <div id='filters'>
+            <Select onValueChange={(value) => setFilter(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder='Ver ...' defaultValue={'all'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>Ver todos</SelectItem>
+                <SelectItem value='issued'>Não pagos</SelectItem>
+                <SelectItem value='overdue'>Vencidos</SelectItem>
+                <SelectItem value='partial_payment'>Parcela</SelectItem>
+                <SelectItem value='paid'>Pagos</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <section
+          id='client_invoices'
+          className='flex flex-col items-center justify-center gap-4 overflow-y-auto max-h-[32rem]'
+        >
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Vencimento</TableHead>
+                <TableHead>Valor</TableHead>
+                <TableHead>Est.</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredInvoices.length > 0 ? (
+                filteredInvoices.map((invoice: Invoice) => (
+                  <TableRow
+                    key={invoice.id}
+                    onClick={() =>
+                      (window.location.href = `/fatura/${invoice.id}`)
+                    }
+                    className='hover:bg-gray-900'
+                  >
+                    <TableCell>
+                      {invoice.subscriptions.clients.firstname +
+                        ' ' +
+                        invoice.subscriptions.clients.lastname}
+                    </TableCell>
+                    <TableCell>
+                      {format(invoice.due_date, 'yyyy/MM/dd')}
+                    </TableCell>
+                    <TableCell>{invoice.amount}</TableCell>
+                    <TableCell className='flex items-center justify-start'>
+                      {invoice.status === 'paid' ? (
+                        <SquareCheck
+                          strokeWidth={3}
+                          className='w-4 h-4 text-lime-500'
+                        />
+                      ) : invoice.status === 'overdue' ? (
+                        <SquareDot
+                          strokeWidth={3}
+                          className='w-4 h-4 text-red-500'
+                        />
+                      ) : invoice.status === 'partial_payment' ? (
+                        <SquareSlash
+                          strokeWidth={3}
+                          className='w-4 h-4 text-amber-500'
+                        />
+                      ) : (
+                        <SquareMinus
+                          strokeWidth={3}
+                          className='w-4 h-4 text-slate-500'
+                        />
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow className='hover:bg-gray-900'>
+                  <TableCell colSpan={4} className='text-center'>
+                    Não encontrei faturas para este filtro.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={4} className='text-center'>
-                  Não encontrei faturas para este filtro.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </section>
+              )}
+            </TableBody>
+          </Table>
+        </section>
+      </main>
     </>
   )
 }

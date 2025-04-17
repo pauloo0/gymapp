@@ -292,137 +292,142 @@ function ClientProfile() {
   }
 
   return (
-    <div className='flex flex-col items-start justify-center'>
+    <>
       <Navbar />
-      <ArrowLeft
-        className='w-6 h-6'
-        onClick={() => (window.location.href = '/clientes')}
-      />
-      <div
-        id='client-header'
-        className='flex flex-row items-center justify-between w-full mt-10 mb-12'
-      >
-        <Avatar className='w-14 h-14'>
-          {/* TODO Add image to avatar */}
-          {/* <AvatarImage src={client.image} /> */}
-          <AvatarFallback>
-            {client.firstname[0] + client.lastname[0]}
-          </AvatarFallback>
-        </Avatar>
 
-        <div className='flex flex-col w-full ml-4'>
-          <h1 className='text-xl'>
-            {client.firstname} {client.lastname}
-          </h1>
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <ArrowLeft
+          className='w-6 h-6'
+          onClick={() => (window.location.href = '/clientes')}
+        />
+        <div
+          id='client-header'
+          className='flex flex-row items-center justify-between w-full mt-10 mb-12'
+        >
+          <Avatar className='w-14 h-14'>
+            {/* TODO Add image to avatar */}
+            {/* <AvatarImage src={client.image} /> */}
+            <AvatarFallback>
+              {client.firstname[0] + client.lastname[0]}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className='flex flex-col w-full ml-4'>
+            <h1 className='text-xl'>
+              {client.firstname} {client.lastname}
+            </h1>
+          </div>
+
+          <Button
+            size={'sm'}
+            className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-amber-400 text-slate-800 hover:bg-amber-500'
+            onClick={() => editClient(client)}
+          >
+            <Pencil className='w-4 h-4' />
+            Editar
+          </Button>
         </div>
 
-        <Button
-          size={'sm'}
-          className='flex flex-row items-center justify-center gap-1 px-3 transition-colors duration-200 bg-amber-400 text-slate-800 hover:bg-amber-500'
-          onClick={() => editClient(client)}
+        <section
+          id='client-info'
+          className='overflow-y-auto max-h-[32rem] w-full'
         >
-          <Pencil className='w-4 h-4' />
-          Editar
-        </Button>
-      </div>
-
-      <section
-        id='client-info'
-        className='overflow-y-auto max-h-[32rem] w-full'
-      >
-        <Accordion
-          id='client-sections'
-          type='single'
-          collapsible
-          className='w-full'
-          defaultValue='profile'
-        >
-          <AccordionItem value='profile'>
-            <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
-              Informação
-            </AccordionTrigger>
-            <AccordionContent className='px-4'>
-              <div className='grid grid-cols-2 gap-x-16 gap-y-4'>
-                <div className={label_group}>
-                  <p className={label}>Data de nascimento</p>
-                  <p>{new Date(client.birthday).toLocaleDateString('pt-PT')}</p>
+          <Accordion
+            id='client-sections'
+            type='single'
+            collapsible
+            className='w-full'
+            defaultValue='profile'
+          >
+            <AccordionItem value='profile'>
+              <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+                Informação
+              </AccordionTrigger>
+              <AccordionContent className='px-4'>
+                <div className='grid grid-cols-2 gap-x-16 gap-y-4'>
+                  <div className={label_group}>
+                    <p className={label}>Data de nascimento</p>
+                    <p>
+                      {new Date(client.birthday).toLocaleDateString('pt-PT')}
+                    </p>
+                  </div>
+                  <div className={label_group}>
+                    <p className={label}>Idade</p>
+                    <p>{getAge(client.birthday)}</p>
+                  </div>
+                  <div className={label_group}>
+                    <p className={label}>Género</p>
+                    <p>{client.gender}</p>
+                  </div>
+                  <div className={label_group}>
+                    <p className={label}>Telemóvel</p>
+                    <p>{client.phone_number}</p>
+                  </div>
+                  <div className={label_group}>
+                    <p className={label}>Email</p>
+                    <p>{client.users.email}</p>
+                  </div>
+                  <div className={label_group}>
+                    <p className={label}>Data Entrada</p>
+                    <p>
+                      {new Date(client.join_date).toLocaleDateString('pt-PT')}
+                    </p>
+                  </div>
+                  <div className={label_group}>
+                    <p className={label}>Pacote Subscrito</p>
+                    <p>
+                      {subscription.id === ''
+                        ? 'Sem subscrição ativa'
+                        : subscription.packages.name}
+                    </p>
+                  </div>
+                  <div className={label_group}>
+                    <p className={label}>Ativo ?</p>
+                    <p>{client.active ? 'Sim' : 'Não'}</p>
+                  </div>
+                  <div className={`${label_group} col-span-2`}>
+                    <p className={label}>Objetivo</p>
+                    <p>{client.goal}</p>
+                  </div>
                 </div>
-                <div className={label_group}>
-                  <p className={label}>Idade</p>
-                  <p>{getAge(client.birthday)}</p>
-                </div>
-                <div className={label_group}>
-                  <p className={label}>Género</p>
-                  <p>{client.gender}</p>
-                </div>
-                <div className={label_group}>
-                  <p className={label}>Telemóvel</p>
-                  <p>{client.phone_number}</p>
-                </div>
-                <div className={label_group}>
-                  <p className={label}>Email</p>
-                  <p>{client.users.email}</p>
-                </div>
-                <div className={label_group}>
-                  <p className={label}>Data Entrada</p>
-                  <p>
-                    {new Date(client.join_date).toLocaleDateString('pt-PT')}
-                  </p>
-                </div>
-                <div className={label_group}>
-                  <p className={label}>Pacote Subscrito</p>
-                  <p>
-                    {subscription.id === ''
-                      ? 'Sem subscrição ativa'
-                      : subscription.packages.name}
-                  </p>
-                </div>
-                <div className={label_group}>
-                  <p className={label}>Ativo ?</p>
-                  <p>{client.active ? 'Sim' : 'Não'}</p>
-                </div>
-                <div className={`${label_group} col-span-2`}>
-                  <p className={label}>Objetivo</p>
-                  <p>{client.goal}</p>
-                </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='measurements'>
-            <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
-              Medições
-            </AccordionTrigger>
-            <AccordionContent className='px-4'>
-              <ClientMeasurements measurements={measurements} />
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='workouts'>
-            <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
-              Planos
-            </AccordionTrigger>
-            <AccordionContent className='px-4'>
-              <ClientWorkouts workouts={workouts} />
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='schedule'>
-            <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
-              Marcações
-            </AccordionTrigger>
-            <AccordionContent className='px-4'>
-              <ClientSchedules schedules={schedules} client_id={client.id} />
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='invoicing'>
-            <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
-              Faturação
-            </AccordionTrigger>
-            <AccordionContent className='px-4'>
-              <ClientInvoices invoices={invoices} />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </section>
-    </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value='measurements'>
+              <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+                Medições
+              </AccordionTrigger>
+              <AccordionContent className='px-4'>
+                <ClientMeasurements measurements={measurements} />
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value='workouts'>
+              <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+                Planos
+              </AccordionTrigger>
+              <AccordionContent className='px-4'>
+                <ClientWorkouts workouts={workouts} />
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value='schedule'>
+              <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+                Marcações
+              </AccordionTrigger>
+              <AccordionContent className='px-4'>
+                <ClientSchedules schedules={schedules} client_id={client.id} />
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value='invoicing'>
+              <AccordionTrigger className='p-4 text-lg font-semibold hover:no-underline'>
+                Faturação
+              </AccordionTrigger>
+              <AccordionContent className='px-4'>
+                <ClientInvoices invoices={invoices} />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </section>
+      </main>
+    </>
   )
 }
 

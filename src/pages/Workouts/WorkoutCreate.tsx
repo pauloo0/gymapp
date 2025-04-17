@@ -282,269 +282,272 @@ function WorkoutCreate() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-6 text-xl'>Criar plano de treino</h1>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='grid grid-cols-2 gap-2'
-        >
-          <div className='col-span-2'>
-            <FormField
-              control={form.control}
-              name='name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    className={`${errorMessage ? 'text-red-500' : ''}`}
-                  >
-                    Nome do plano
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      className={`w-full ${
-                        errorMessage ? 'border-red-500' : ''
-                      }`}
-                      type='text'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-6 text-xl'>Criar plano de treino</h1>
 
-            <FormField
-              control={form.control}
-              name='client_id'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    className={`${errorMessage ? 'text-red-500' : ''}`}
-                  >
-                    Cliente
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='grid grid-cols-2 gap-2'
+          >
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className={`${errorMessage ? 'text-red-500' : ''}`}
+                    >
+                      Nome do plano
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger
+                      <Input
                         className={`w-full ${
                           errorMessage ? 'border-red-500' : ''
                         }`}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
+                        type='text'
+                        {...field}
+                      />
                     </FormControl>
-                    <SelectContent className='z-50'>
-                      {clients &&
-                        clients.map((client) => (
-                          <SelectItem key={client.id} value={client.id}>
-                            {client.firstname + ' ' + client.lastname}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='client_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className={`${errorMessage ? 'text-red-500' : ''}`}
+                    >
+                      Cliente
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={`w-full ${
+                            errorMessage ? 'border-red-500' : ''
+                          }`}
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className='z-50'>
+                        {clients &&
+                          clients.map((client) => (
+                            <SelectItem key={client.id} value={client.id}>
+                              {client.firstname + ' ' + client.lastname}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name='active'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
+                  <FormControl>
+                    <Checkbox
+                      checked={form.getValues('active')}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className='space-y-1 leading-none'>
+                    <FormLabel>Ativo</FormLabel>
+                  </div>
                 </FormItem>
               )}
             />
-          </div>
 
-          <FormField
-            control={form.control}
-            name='active'
-            render={({ field }) => (
-              <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
-                <FormControl>
-                  <Checkbox
-                    checked={form.getValues('active')}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className='space-y-1 leading-none'>
-                  <FormLabel>Ativo</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='public'
-            render={({ field }) => (
-              <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
-                <FormControl>
-                  <Checkbox
-                    checked={form.getValues('public')}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className='space-y-1 leading-none'>
-                  <FormLabel>Público</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
-
-          <Drawer
-            open={exercisesDrawerOpen}
-            onOpenChange={() => handleAddExercises()}
-          >
-            <DrawerTrigger asChild className='col-span-2'>
-              <Button size={'sm'}>
-                <Plus className='w-5 h-5 mr-1' /> Adicionar Exercício
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Adicionar Exercícios</DrawerTitle>
-                <DrawerDescription></DrawerDescription>
-              </DrawerHeader>
-              <WorkoutAddExercises
-                dbExercises={dbExercises}
-                addedExercises={addedExercises}
-                setAddedExercises={setAddedExercises}
-                handleOpenClose={handleAddExercises}
-                bodyparts={bodyparts}
-                equipment={equipment}
-              />
-            </DrawerContent>
-          </Drawer>
-
-          {fields.length > 0 && (
-            <div className='flex flex-col col-span-2 gap-2 overflow-y-auto max-h-96'>
-              {fields.map((field, index) => {
-                const exercise = form.getValues(`exercises.${index}`)
-                const isFirst = index === 0
-                const isLast = index === fields.length - 1
-
-                return (
-                  <div
-                    key={field.id}
-                    className='flex flex-col px-3 py-2 border rounded-md'
-                  >
-                    <div className='flex flex-row items-center justify-between'>
-                      <span className='font-bold'>
-                        {
-                          dbExercises.find(
-                            (ex) => ex.id === exercise.exercise_id
-                          )?.name
-                        }
-                      </span>
-
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Ellipsis className='w-4 h-4' />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          {!isFirst && (
-                            <DropdownMenuItem
-                              className='flex flex-row items-center justify-start'
-                              onClick={() => moveExercise(index, 'up')}
-                            >
-                              <ChevronUp className='w-4 h-4 mr-1' />
-                              Mover para cima
-                            </DropdownMenuItem>
-                          )}
-                          {!isLast && (
-                            <DropdownMenuItem
-                              className='flex flex-row items-center justify-start'
-                              onClick={() => moveExercise(index, 'down')}
-                            >
-                              <ChevronDown className='w-4 h-4 mr-1' />
-                              Mover para baixo
-                            </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem
-                            className='flex flex-row items-center justify-start'
-                            onClick={() =>
-                              removeExercise(exercise.exercise_id, index)
-                            }
-                          >
-                            <X className='w-4 h-4 mr-1' />
-                            Remover
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-
-                    <div className='grid grid-cols-2 gap-1'>
-                      <FormField
-                        control={form.control}
-                        name={`exercises.${index}.sets`}
-                        render={({ field }) => (
-                          <FormItem className='flex flex-row items-center justify-start space-x-2'>
-                            <FormLabel>Sets</FormLabel>
-                            <FormControl>
-                              <Input
-                                type='number'
-                                placeholder='Sets'
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
-                                className='w-20 h-8'
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`exercises.${index}.reps`}
-                        render={({ field }) => (
-                          <FormItem className='flex flex-row items-center justify-start space-x-2'>
-                            <FormLabel>Reps</FormLabel>
-                            <FormControl>
-                              <Input
-                                type='number'
-                                placeholder='Reps'
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
-                                className='w-20 h-8'
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+            <FormField
+              control={form.control}
+              name='public'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
+                  <FormControl>
+                    <Checkbox
+                      checked={form.getValues('public')}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className='space-y-1 leading-none'>
+                    <FormLabel>Público</FormLabel>
                   </div>
-                )
-              })}
-            </div>
-          )}
-
-          <div className='grid grid-cols-2 col-span-2 gap-2'>
-            <Button
-              type='submit'
-              size={'sm'}
-              className={cn(
-                'flex items-center justify-center px-3 bg-green-600 hover:bg-green-700',
-                isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+                </FormItem>
               )}
+            />
+
+            <Drawer
+              open={exercisesDrawerOpen}
+              onOpenChange={() => handleAddExercises()}
             >
-              <Save className='w-4 h-4 mr-1' />
-              Guardar
-            </Button>
-            <Button
-              type='reset'
-              onClick={cancelCreate}
-              size={'sm'}
-              className='flex items-center justify-center px-3'
-              variant='secondary'
-              disabled={isLoading}
-            >
-              <X className='w-4 h-4 mr-1' /> Cancelar
-            </Button>
-          </div>
-        </form>
-      </Form>
+              <DrawerTrigger asChild className='col-span-2'>
+                <Button size={'sm'}>
+                  <Plus className='w-5 h-5 mr-1' /> Adicionar Exercício
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>Adicionar Exercícios</DrawerTitle>
+                  <DrawerDescription></DrawerDescription>
+                </DrawerHeader>
+                <WorkoutAddExercises
+                  dbExercises={dbExercises}
+                  addedExercises={addedExercises}
+                  setAddedExercises={setAddedExercises}
+                  handleOpenClose={handleAddExercises}
+                  bodyparts={bodyparts}
+                  equipment={equipment}
+                />
+              </DrawerContent>
+            </Drawer>
+
+            {fields.length > 0 && (
+              <div className='flex flex-col col-span-2 gap-2 overflow-y-auto max-h-96'>
+                {fields.map((field, index) => {
+                  const exercise = form.getValues(`exercises.${index}`)
+                  const isFirst = index === 0
+                  const isLast = index === fields.length - 1
+
+                  return (
+                    <div
+                      key={field.id}
+                      className='flex flex-col px-3 py-2 border border-gray-800 rounded-md'
+                    >
+                      <div className='flex flex-row items-center justify-between'>
+                        <span className='font-bold'>
+                          {
+                            dbExercises.find(
+                              (ex) => ex.id === exercise.exercise_id
+                            )?.name
+                          }
+                        </span>
+
+                        <DropdownMenu>
+                          <DropdownMenuTrigger>
+                            <Ellipsis className='w-4 h-4' />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            {!isFirst && (
+                              <DropdownMenuItem
+                                className='flex flex-row items-center justify-start'
+                                onClick={() => moveExercise(index, 'up')}
+                              >
+                                <ChevronUp className='w-4 h-4 mr-1' />
+                                Mover para cima
+                              </DropdownMenuItem>
+                            )}
+                            {!isLast && (
+                              <DropdownMenuItem
+                                className='flex flex-row items-center justify-start'
+                                onClick={() => moveExercise(index, 'down')}
+                              >
+                                <ChevronDown className='w-4 h-4 mr-1' />
+                                Mover para baixo
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem
+                              className='flex flex-row items-center justify-start'
+                              onClick={() =>
+                                removeExercise(exercise.exercise_id, index)
+                              }
+                            >
+                              <X className='w-4 h-4 mr-1' />
+                              Remover
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+
+                      <div className='grid grid-cols-2 gap-1'>
+                        <FormField
+                          control={form.control}
+                          name={`exercises.${index}.sets`}
+                          render={({ field }) => (
+                            <FormItem className='flex flex-row items-center justify-start space-x-2'>
+                              <FormLabel>Sets</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type='number'
+                                  placeholder='Sets'
+                                  {...field}
+                                  onChange={(e) =>
+                                    field.onChange(Number(e.target.value))
+                                  }
+                                  className='w-20 h-8'
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`exercises.${index}.reps`}
+                          render={({ field }) => (
+                            <FormItem className='flex flex-row items-center justify-start space-x-2'>
+                              <FormLabel>Reps</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type='number'
+                                  placeholder='Reps'
+                                  {...field}
+                                  onChange={(e) =>
+                                    field.onChange(Number(e.target.value))
+                                  }
+                                  className='w-20 h-8'
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
+            <div className='grid grid-cols-2 col-span-2 gap-2'>
+              <Button
+                type='submit'
+                size={'sm'}
+                className={cn(
+                  'flex items-center justify-center px-3',
+                  isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+                )}
+              >
+                <Save className='w-4 h-4 mr-1' />
+                Guardar
+              </Button>
+              <Button
+                type='reset'
+                onClick={cancelCreate}
+                size={'sm'}
+                className='flex items-center justify-center px-3'
+                variant='secondary'
+                disabled={isLoading}
+              >
+                <X className='w-4 h-4 mr-1' /> Cancelar
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </main>
     </>
   )
 }

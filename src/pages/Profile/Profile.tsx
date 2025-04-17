@@ -77,65 +77,65 @@ function Profile() {
   return (
     <>
       <Navbar />
-      <h1 className='mb-6 text-xl'>Meu Perfil</h1>
 
-      {userInfo && (
-        <>
-          <div id='profile-info' className='grid grid-cols-1 gap-4 mb-6'>
-            <div className={label_group}>
-              <p className={label}>Nome</p>
-              <p>
-                {userInfo.clients
-                  ? userInfo.clients[0].firstname +
-                    ' ' +
-                    userInfo.clients[0].lastname
-                  : userInfo.trainers
-                  ? userInfo.trainers[0].firstname +
-                    ' ' +
-                    userInfo.trainers[0].lastname
-                  : ''}
-              </p>
+      <main className='min-h-[calc(100vh_-_64px)]'>
+        <h1 className='mb-6 text-xl'>Meu Perfil</h1>
+
+        {userInfo && (
+          <>
+            <div id='profile-info' className='grid grid-cols-1 gap-4 mb-6'>
+              <div className={label_group}>
+                <p className={label}>Nome</p>
+                <p>
+                  {userInfo.clients
+                    ? userInfo.clients[0].firstname +
+                      ' ' +
+                      userInfo.clients[0].lastname
+                    : userInfo.trainers
+                    ? userInfo.trainers[0].firstname +
+                      ' ' +
+                      userInfo.trainers[0].lastname
+                    : ''}
+                </p>
+              </div>
+              <div className={label_group}>
+                <p className={label}>Username</p>
+                <p>{userInfo.username}</p>
+              </div>
+              <div className={label_group}>
+                <p className={label}>Email</p>
+                <p>{userInfo.email}</p>
+              </div>
             </div>
-
-            <div className={label_group}>
-              <p className={label}>Username</p>
-              <p>{userInfo.username}</p>
+            <div className='grid grid-cols-1 gap-2'>
+              <Button
+                size={'lg'}
+                variant={'secondary'}
+                className='w-full text-gray-900 bg-gray-300 hover:bg-lime-500 hover:border-lime-600'
+                onClick={redirectPackages}
+              >
+                Os meus pacotes
+              </Button>
+              <Button
+                size={'lg'}
+                variant={'secondary'}
+                className='w-full text-gray-900 bg-gray-300 hover:bg-lime-500 hover:border-lime-600'
+                onClick={redirectInvoices}
+              >
+                Faturas
+              </Button>
+              <Button
+                size={'lg'}
+                variant={'destructive'}
+                className='w-full bg-red-700 border-red-600 text-gray-50 hover:bg-red-800'
+                onClick={logout}
+              >
+                <LogOut className='w-4 h-4 mr-1' /> Terminar Sessão
+              </Button>
             </div>
-
-            <div className={label_group}>
-              <p className={label}>Email</p>
-              <p>{userInfo.email}</p>
-            </div>
-          </div>
-
-          <div className='grid grid-cols-1 gap-2'>
-            <Button
-              size={'lg'}
-              variant={'secondary'}
-              className='w-full'
-              onClick={redirectPackages}
-            >
-              Os meus pacotes
-            </Button>
-            <Button
-              size={'lg'}
-              variant={'secondary'}
-              className='w-full'
-              onClick={redirectInvoices}
-            >
-              Faturas
-            </Button>
-            <Button
-              size={'lg'}
-              variant={'destructive'}
-              className='w-full'
-              onClick={logout}
-            >
-              <LogOut className='w-4 h-4 mr-1' /> Terminar Sessão
-            </Button>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </main>
     </>
   )
 }

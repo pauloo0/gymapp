@@ -75,40 +75,40 @@ function Navbar() {
   }
 
   return (
-    <div className='fixed bottom-0 left-0 z-50 flex flex-row items-center justify-around w-screen py-5 text-white bg-slate-900'>
+    <div className='fixed bottom-0 left-0 z-50 flex flex-row items-center justify-around w-screen py-5 bg-gray-900 text-gray-50'>
       <Home
         className={`hover:cursor-pointer ${
-          activeScreen.id === 'dashboard' && 'text-opacity-100 text-teal-400'
+          activeScreen.id === 'dashboard' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/')}
       />
       <Users
         className={`hover:cursor-pointer ${
-          activeScreen.id === 'clients' && 'text-opacity-100 text-teal-400'
+          activeScreen.id === 'clients' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/clientes')}
       />
       <CalendarDays
         className={`hover:cursor-pointer ${
-          activeScreen.id === 'schedules' && 'text-opacity-100 text-teal-400'
+          activeScreen.id === 'schedules' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/marcacoes')}
       />
       <Dumbbell
         className={`hover:cursor-pointer ${
-          activeScreen.id === 'workouts' && 'text-opacity-100 text-teal-400'
+          activeScreen.id === 'workouts' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/treinos')}
       />
       <Logs
         className={`hover:cursor-pointer ${
-          activeScreen.id === 'measurements' && 'text-opacity-100 text-teal-400'
+          activeScreen.id === 'measurements' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/avaliacoes')}
       />
       <CircleUserRound
         className={`hover:cursor-pointer ${
-          activeScreen.id === 'profile' && 'text-opacity-100 text-teal-400'
+          activeScreen.id === 'profile' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/perfil')}
       />

@@ -86,7 +86,7 @@ function WorkoutAddExercises({
     <div className='px-6 relative h-[90vh]'>
       <div
         id='exercisesFilter'
-        className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 border rounded-lg'
+        className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 border border-gray-800 rounded-lg'
       >
         <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
           {/* <Label htmlFor='name'>Nome</Label> */}
@@ -143,9 +143,9 @@ function WorkoutAddExercises({
       <div id='exerciseList' className='grid grid-cols-1 gap-2 overflow-auto'>
         {filteredExercises.map((exercise) => (
           <div
-            className={`px-3 py-2 cursor-pointer border rounded hover:bg-slate-300 ${
+            className={`px-3 py-2 cursor-pointer border border-gray-700 rounded hover:bg-gray-800 ${
               exercisesToAdd.find((e) => exercise.id === e.id)
-                ? 'border-l-8 border-primary bg-slate-200'
+                ? 'border-l-8 border-lime-500 bg-gray-800'
                 : ''
             }`}
             key={exercise.id}
