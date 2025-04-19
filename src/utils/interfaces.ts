@@ -60,37 +60,28 @@ export interface Workout {
   name: string
   active: boolean
   public: boolean
-  workout_exercises: WorkoutExercise[]
+  is_power_test: boolean
+  notes: string
   clients: {
     id: string
     firstname: string
     lastname: string
   }
+  workout_exercises: WorkoutExercise[]
 }
 
 export interface WorkoutExercise {
-  exercises: {
-    id: string
-    name: string
-    description?: string
-    equipment?: {
-      id: string
-      name: string
-    }
-    bodyparts?: {
-      id: string
-      name: string
-    }
-    media?: [
-      {
-        id: string
-        type: string
-        url: string
-      }
-    ]
-  }
+  id: string
+  exercises: Exercise
+  order: number
+  sets: Set[]
+}
+
+export interface Set {
+  id: string
+  set_number: number
   reps: number
-  sets: number
+  weight: number
 }
 
 export interface Subscription {

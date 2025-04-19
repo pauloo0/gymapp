@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Exercise, Bodypart, Equipment } from '@/utils/interfaces'
 
 import { Button } from '@/components/ui/button'
@@ -12,31 +12,29 @@ import {
 } from '@/components/ui/select'
 
 interface WorkoutAddExercisesProps {
-  dbExercises: Exercise[]
-  addedExercises: Exercise[]
-  setAddedExercises: React.Dispatch<React.SetStateAction<Exercise[]>>
+  availableExercises: Exercise[]
+  appendExercises: (
+    exercises: {
+      exercise_id: string
+      sets: { reps: number; weight: number }[]
+    }[]
+  ) => void
   handleOpenClose: () => void
   bodyparts: Bodypart[]
   equipment: Equipment[]
 }
 
 function WorkoutAddExercises({
-  dbExercises,
-  addedExercises,
-  setAddedExercises,
+  availableExercises,
+  appendExercises,
   handleOpenClose,
   bodyparts,
   equipment,
 }: WorkoutAddExercisesProps) {
-  const [exercisesToAdd, setExercisesToAdd] =
-    useState<Exercise[]>(addedExercises)
-
-  dbExercises = dbExercises.filter(
-    (exercise) => !addedExercises.find((e) => exercise.id === e.id)
-  )
+  const [exercisesToAdd, setExercisesToAdd] = useState<Exercise[]>([])
 
   const [filteredExercises, setFilteredExercises] =
-    useState<Exercise[]>(dbExercises)
+    useState<Exercise[]>(availableExercises)
   const [searchFilters, setSearchFilters] = useState({
     name: '',
     bodypart: '',
@@ -54,7 +52,7 @@ function WorkoutAddExercises({
   }
 
   useEffect(() => {
-    let updatedExercises = dbExercises
+    let updatedExercises = availableExercises
 
     if (searchFilters.name) {
       updatedExercises = updatedExercises.filter((exercise) =>
@@ -75,10 +73,15 @@ function WorkoutAddExercises({
     }
 
     setFilteredExercises(updatedExercises)
-  }, [dbExercises, searchFilters])
+  }, [availableExercises, searchFilters])
 
   const handleAddExercise = (newExercises: Exercise[]) => {
-    setAddedExercises([...newExercises])
+    const exercisesForForm = newExercises.map((exercise) => ({
+      exercise_id: exercise.id,
+      sets: [{ reps: 0, weight: 0 }],
+    }))
+
+    appendExercises(exercisesForForm)
     handleOpenClose()
   }
 
@@ -89,7 +92,6 @@ function WorkoutAddExercises({
         className='grid grid-cols-2 gap-4 px-4 py-3 mb-4 border border-gray-800 rounded-lg'
       >
         <div className='flex flex-col items-start justify-start col-span-2 gap-1.5'>
-          {/* <Label htmlFor='name'>Nome</Label> */}
           <Input
             id='name'
             name='name'
@@ -103,7 +105,6 @@ function WorkoutAddExercises({
         </div>
 
         <div className='flex flex-col items-start justify-start gap-1.5'>
-          {/* <Label htmlFor='bodypart'>Parte do corpo</Label> */}
           <Select
             value={searchFilters.bodypart}
             onValueChange={(selectedBodypart) =>
@@ -124,7 +125,6 @@ function WorkoutAddExercises({
         </div>
 
         <div className='flex flex-col items-start justify-start gap-1.5'>
-          {/* <Label htmlFor='equipment'>Equipamento</Label> */}
           <Select defaultValue=''>
             <SelectTrigger>
               <SelectValue placeholder='Equipamento' />
