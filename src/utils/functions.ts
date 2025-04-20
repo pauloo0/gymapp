@@ -31,3 +31,20 @@ export async function testDBConnection() {
     }
   }
 }
+
+export function decimalToHoursMinutes(decimalHour: number) {
+  const hours = Math.floor(decimalHour)
+  const minutes = Math.round((decimalHour - hours) * 60)
+
+  return {
+    hours,
+    minutes,
+    timeString: `${hours > 0 ? hours.toString() + 'h' : ''}${
+      minutes > 0
+        ? hours > 0
+          ? ' ' + minutes.toString() + 'min'
+          : '' + minutes.toString() + 'min'
+        : ''
+    }`,
+  }
+}

@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 
 import { Plus, ArrowLeft } from 'lucide-react'
+import { decimalToHoursMinutes } from '@/utils/functions'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -89,8 +90,9 @@ function TrainerPackages() {
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
+                <TableHead>Dias p/mês</TableHead>
                 <TableHead>Preço</TableHead>
-                <TableHead>Dias p/semana</TableHead>
+                <TableHead>Duração</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -102,8 +104,11 @@ function TrainerPackages() {
                     className='hover:bg-gray-900'
                   >
                     <TableCell>{pkg.name}</TableCell>
+                    <TableCell>{pkg.days_per_month}</TableCell>
                     <TableCell>{pkg.price} €</TableCell>
-                    <TableCell>{pkg.days_per_week}</TableCell>
+                    <TableCell>
+                      {decimalToHoursMinutes(pkg.duration).timeString}
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (

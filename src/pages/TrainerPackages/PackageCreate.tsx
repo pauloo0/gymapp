@@ -28,7 +28,8 @@ import { Input } from '@/components/ui/input'
 const formSchema = z.object({
   name: z.string(),
   price: z.number(),
-  days_per_week: z.number(),
+  duration: z.number(),
+  days_per_month: z.number(),
 })
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -49,7 +50,8 @@ function PackageCreate() {
     defaultValues: {
       name: '',
       price: 0,
-      days_per_week: 0,
+      duration: 0,
+      days_per_month: 0,
     },
   })
 
@@ -97,9 +99,9 @@ function PackageCreate() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className='grid grid-cols-2 gap-4'
+            className='grid grid-cols-3 gap-4'
           >
-            <div className='col-span-2'>
+            <div className='col-span-3'>
               <FormField
                 control={form.control}
                 name='name'
@@ -137,6 +139,7 @@ function PackageCreate() {
                   <FormControl>
                     <Input
                       type='number'
+                      step={0.01}
                       className={`w-full ${
                         errorMessage ? 'border-red-500' : ''
                       }`}
@@ -148,16 +151,15 @@ function PackageCreate() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name='days_per_week'
+              name='duration'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
                     className={`${errorMessage ? 'text-red-500' : ''}`}
                   >
-                    Dias p/ semana
+                    Duração (Horas)
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -174,7 +176,32 @@ function PackageCreate() {
               )}
             />
 
-            <div className='grid grid-cols-2 col-span-2 gap-2'>
+            <FormField
+              control={form.control}
+              name='days_per_month'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage ? 'text-red-500' : ''}`}
+                  >
+                    Dias p/ mês
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`w-full ${
+                        errorMessage ? 'border-red-500' : ''
+                      }`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className='grid grid-cols-2 col-span-3 gap-2'>
               <Button
                 type='submit'
                 size={'sm'}

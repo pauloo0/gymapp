@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 
 import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
+import { decimalToHoursMinutes } from '@/utils/functions'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -163,8 +164,12 @@ function PackagesPage() {
               {currentPackage.price} €
             </div>
             <div className='flex flex-col items-start justify-center'>
-              <h2 className='text-lg font-semibold'>Dias por semana</h2>
-              {currentPackage.days_per_week}
+              <h2 className='text-lg font-semibold'>Duração</h2>
+              {decimalToHoursMinutes(currentPackage.duration).timeString}
+            </div>
+            <div className='flex flex-col items-start justify-center'>
+              <h2 className='text-lg font-semibold'>Dias por mês</h2>
+              {currentPackage.days_per_month}
             </div>
             <div className='flex flex-col items-start justify-center'>
               <h2 className='text-lg font-semibold'>Ativo</h2>

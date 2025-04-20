@@ -122,7 +122,8 @@ export interface Package {
   id: string
   name: string
   price: number
-  days_per_week: number
+  duration: number
+  days_per_month: number
   active: boolean
 }
 
