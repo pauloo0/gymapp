@@ -61,8 +61,9 @@ const emptyClient: Client = {
       packages: {
         id: '',
         name: '',
-        days_per_week: 0,
         price: 0,
+        duration: 0,
+        days_per_month: 0,
         active: false,
       },
     },
@@ -91,46 +92,6 @@ const emptyMeasurement: Measurement[] = [
     rightarm: 0,
     leftcalf: 0,
     rightcalf: 0,
-    clients: {
-      id: '',
-      firstname: '',
-      lastname: '',
-    },
-  },
-]
-
-const emptyWorkout: Workout[] = [
-  {
-    id: '',
-    name: '',
-    active: true,
-    public: false,
-    workout_exercises: [
-      {
-        exercises: {
-          id: '',
-          name: '',
-          description: '',
-          equipment: {
-            id: '',
-            name: '',
-          },
-          bodyparts: {
-            id: '',
-            name: '',
-          },
-          media: [
-            {
-              id: '',
-              type: '',
-              url: '',
-            },
-          ],
-        },
-        reps: 20,
-        sets: 6,
-      },
-    ],
     clients: {
       id: '',
       firstname: '',
@@ -182,7 +143,8 @@ const emptySubscription: Subscription = {
     id: '',
     name: '',
     price: 0,
-    days_per_week: 0,
+    duration: 0,
+    days_per_month: 0,
     active: false,
   },
 }
@@ -202,7 +164,7 @@ function ClientProfile() {
   const [client, setClient] = useState(emptyClient)
   const [measurements, setMeasurements] = useState(emptyMeasurement)
   const [invoices, setInvoices] = useState(emptyInvoice)
-  const [workouts, setWorkouts] = useState(emptyWorkout)
+  const [workouts, setWorkouts] = useState<Workout[]>([])
   const [subscription, setSubscription] = useState(emptySubscription)
   const [schedules, setSchedules] = useState(emptySchedule)
 
@@ -248,7 +210,7 @@ function ClientProfile() {
         const measurements =
           res2.status === 204 ? emptyMeasurement : res2.data.measurements
         const invoices = res3.status === 204 ? emptyInvoice : res3.data.invoices
-        const workouts = res4.status === 204 ? emptyWorkout : res4.data.workouts
+        const workouts = res4.status === 204 ? [] : res4.data.workouts
         const subscription =
           res5.status === 204 ? emptySubscription : res5.data.subscription
         const schedules =

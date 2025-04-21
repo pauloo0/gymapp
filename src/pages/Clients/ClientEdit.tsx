@@ -69,8 +69,9 @@ const emptyClient: Client = {
       packages: {
         id: '',
         name: '',
-        days_per_week: 0,
         price: 0,
+        duration: 0,
+        days_per_month: 0,
         active: false,
       },
     },
@@ -82,7 +83,8 @@ const emptyPackages: Package[] = [
     id: '',
     name: '',
     price: 0,
-    days_per_week: 0,
+    duration: 0,
+    days_per_month: 0,
     active: false,
   },
 ]
