@@ -9,8 +9,9 @@ import Loading from '@/components/reusable/Loading'
 import axios from 'axios'
 import { format, isBefore } from 'date-fns'
 import { useParams } from 'react-router'
-import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -155,6 +156,23 @@ function SchedulePage() {
               <h2 className='text-lg font-semibold'>Hora:</h2>
               {schedule.time}
             </div>
+
+            {schedule.workouts && (
+              <section className='flex flex-col gap-2 mt-4'>
+                <div
+                  id='workout-link'
+                  className='flex flex-col items-start justify-between'
+                >
+                  <h2 className='text-lg font-semibold'>Treino associado:</h2>
+                  <Link to={`/treino/${schedule.workouts.id}`}>
+                    <p className='flex flex-row items-center justify-center text-xl'>
+                      {schedule.workouts.name}{' '}
+                      <ArrowRight className='w-5 h-5 ml-2' />
+                    </p>
+                  </Link>
+                </div>
+              </section>
+            )}
           </div>
         </main>
       </>

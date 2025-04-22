@@ -20,6 +20,7 @@ export interface Schedule {
   id: string
   date: string
   time: string
+  workouts: Workout | null
   clients: {
     id: string
     firstname: string

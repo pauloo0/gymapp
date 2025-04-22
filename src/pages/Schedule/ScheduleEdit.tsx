@@ -9,7 +9,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { Client } from '@/utils/interfaces'
+import { Client, Workout } from '@/utils/interfaces'
 import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
@@ -36,10 +36,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select'
 
 const formSchema = z.object({
   date: z.date(),
   time: z.string(),
+  workout_id: z.string().nullable(),
 })
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -58,12 +66,14 @@ function ScheduleEdit() {
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [client, setClient] = useState<Client | null>(null)
+  const [clientWorkouts, setClientWorkouts] = useState<Workout[]>([])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       date: new Date(),
       time: '',
+      workout_id: '',
     },
   })
 
@@ -83,6 +93,7 @@ function ScheduleEdit() {
         form.reset({
           date: new Date(format(schedule.date, 'yyyy/MM/dd')),
           time: schedule.time,
+          workout_id: schedule.workout_id,
         })
 
         const resClient = await axios.get(
@@ -109,6 +120,38 @@ function ScheduleEdit() {
     fetchSchedule()
   }, [schedule_id, token, form])
 
+  useEffect(() => {
+    if (!client) return
+
+    const fetchClientWorkouts = async () => {
+      try {
+        setIsLoading(true)
+
+        const res = await axios.get(`${apiUrl}/workouts/client/${client.id}`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
+
+        const workouts: Workout[] = res.data.workouts.filter(
+          (workout: Workout) => !workout.public
+        )
+
+        setClientWorkouts(workouts)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          setErrorMessage(error.response?.data)
+        } else {
+          console.error('An unexpected error ocurred.', error)
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchClientWorkouts()
+  }, [token, client])
+
   const cancelEdit = () => {
     window.location.href = `/marcacao/${schedule_id}`
   }
@@ -119,6 +162,8 @@ function ScheduleEdit() {
     const updatedScheduleInfo = {
       ...values,
       client_id: client?.id,
+      date: format(values.date, 'yyyy-MM-dd'),
+      // workout_id: values.workout_id === '' ? null : values.workout_id,
     }
 
     try {
@@ -239,6 +284,37 @@ function ScheduleEdit() {
                 </FormItem>
               )}
             />
+
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='workout_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Plano de treino</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value || ''}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {clientWorkouts.length > 0 &&
+                          clientWorkouts.map((workout) => (
+                            <SelectItem key={workout.id} value={workout.id}>
+                              {workout.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <div className='grid grid-cols-2 col-span-2 gap-2'>
               <Button

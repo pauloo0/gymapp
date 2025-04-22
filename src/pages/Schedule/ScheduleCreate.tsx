@@ -13,7 +13,7 @@ import { pt } from 'date-fns/locale'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-import { Client } from '@/utils/interfaces'
+import { Client, Workout } from '@/utils/interfaces'
 
 import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
@@ -59,6 +59,7 @@ const formSchema = z.object({
   client_id: z.string().nonempty('O cliente deve estar preenchido.'),
   date: z.date(),
   time: z.string(),
+  workout_id: z.string().nullable(),
 })
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -78,6 +79,7 @@ function ScheduleCreate() {
   const [isLoading, setIsLoading] = useState(true)
   const [clients, setClients] = useState<Client[] | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [clientWorkouts, setClientWorkouts] = useState<Workout[]>([])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,6 +87,7 @@ function ScheduleCreate() {
       client_id: client_id ? client_id : '',
       date: new Date(),
       time: '',
+      workout_id: '',
     },
   })
 
@@ -120,6 +123,36 @@ function ScheduleCreate() {
     fetchClients()
   }, [token])
 
+  useEffect(() => {
+    const fetchClientWorkouts = async () => {
+      try {
+        setIsLoading(true)
+
+        const res = await axios.get(`${apiUrl}/workouts/all`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
+
+        const workouts: Workout[] = res.data.workouts.filter(
+          (workout: Workout) => !workout.public
+        )
+
+        setClientWorkouts(workouts)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          setErrorMessage(error.response?.data)
+        } else {
+          console.error('An unexpected error ocurred.', error)
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchClientWorkouts()
+  }, [token])
+
   const cancelCreate = () => {
     window.history.back()
   }
@@ -130,6 +163,7 @@ function ScheduleCreate() {
     const scheduleInfo = {
       ...values,
       date: format(values.date, 'yyyy-MM-dd'),
+      workout_id: values.workout_id === '' ? null : values.workout_id,
     }
 
     try {
@@ -197,7 +231,15 @@ function ScheduleCreate() {
                       Cliente
                     </FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        field.onChange(value)
+
+                        setClientWorkouts((prev) => {
+                          return prev.filter(
+                            (workout) => workout.clients.id === value
+                          )
+                        })
+                      }}
                       defaultValue={field.value}
                     >
                       <FormControl>
@@ -302,6 +344,37 @@ function ScheduleCreate() {
                 </FormItem>
               )}
             />
+
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='workout_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Plano de treino</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value || ''}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {clientWorkouts.length > 0 &&
+                          clientWorkouts.map((workout) => (
+                            <SelectItem key={workout.id} value={workout.id}>
+                              {workout.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <div className='grid grid-cols-2 col-span-2 gap-2'>
               <Button
