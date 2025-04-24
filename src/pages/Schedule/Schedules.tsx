@@ -28,6 +28,7 @@ const emptySchedule: Schedule[] = [
     date: '',
     time: '',
     clients: { id: '', firstname: '', lastname: '' },
+    workouts: null,
   },
 ]
 
