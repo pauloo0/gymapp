@@ -13,7 +13,15 @@ export interface Client {
     id: string
     email: string
   }
+  client_locations: ClientLocation
   subscriptions: Subscription[]
+}
+
+export interface ClientLocation {
+  id: string
+  trainer_id: string
+  location: string
+  color_hex: string
 }
 
 export interface Schedule {

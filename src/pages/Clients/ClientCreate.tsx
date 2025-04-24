@@ -11,7 +11,7 @@ import { pt } from 'date-fns/locale'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-import { Client, Package } from '@/utils/interfaces'
+import { Client, ClientLocation, Package } from '@/utils/interfaces'
 
 import TrainerNavbar from '@/components/TrainerNavbar'
 import { Save, X } from 'lucide-react'
@@ -68,6 +68,12 @@ const emptyClient: Client = {
     id: '',
     email: '',
   },
+  client_locations: {
+    id: '',
+    trainer_id: '',
+    location: '',
+    color_hex: '',
+  },
   subscriptions: [
     {
       id: '',
@@ -107,6 +113,7 @@ const formSchema = z.object({
   email: z.string().email({ message: 'Email inválido.' }),
   goal: z.string().max(255, { message: 'Objetivo muito extenso.' }),
   package_id: z.string(),
+  location_id: z.string(),
 })
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -122,6 +129,7 @@ function ClientCreate() {
   const [isLoading, setIsLoading] = useState(true)
   const [trainerPackages, setTrainerPackages] =
     useState<Package[]>(emptyPackages)
+  const [clientLocations, setClientLocations] = useState<ClientLocation[]>([])
   const [otp, setOtp] = useState<string | undefined>(undefined)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
@@ -136,6 +144,7 @@ function ClientCreate() {
       email: emptyClient.users.email,
       goal: emptyClient.goal,
       package_id: emptyClient.subscriptions[0].packages.id,
+      location_id: emptyClient.client_locations.id,
     },
   })
 
@@ -158,6 +167,7 @@ function ClientCreate() {
       birthday: format(values.birthday, 'yyyy-MM-dd'),
       join_date: format(new Date(), 'yyyy-MM-dd'),
       goal: values.goal,
+      location_id: values.location_id,
     }
 
     const subscriptionInfo = {
@@ -209,13 +219,21 @@ function ClientCreate() {
   useEffect(() => {
     const fetchTrainerPackages = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/packages`, {
-          headers: {
-            'Auth-Token': token,
-          },
-        })
+        const [resTrainerPackages, resClientLocations] = await Promise.all([
+          axios.get(`${apiUrl}/packages`, {
+            headers: {
+              'Auth-Token': token,
+            },
+          }),
+          axios.get(`${apiUrl}/client-locations`, {
+            headers: {
+              'Auth-Token': token,
+            },
+          }),
+        ])
 
-        setTrainerPackages(res.data.packages)
+        setTrainerPackages(resTrainerPackages.data.packages)
+        setClientLocations(resClientLocations.data.locations)
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.status)
@@ -434,6 +452,37 @@ function ClientCreate() {
                               value={trainerPackage.id}
                             >
                               {trainerPackage.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='location_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Localização</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {clientLocations &&
+                          clientLocations.map((location) => (
+                            <SelectItem key={location.id} value={location.id}>
+                              {location.location}
                             </SelectItem>
                           ))}
                       </SelectContent>

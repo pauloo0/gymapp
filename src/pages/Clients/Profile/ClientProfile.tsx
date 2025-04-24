@@ -53,6 +53,12 @@ const emptyClient: Client = {
     id: '',
     email: '',
   },
+  client_locations: {
+    id: '',
+    trainer_id: '',
+    location: '',
+    color_hex: '',
+  },
   subscriptions: [
     {
       id: '',
@@ -132,6 +138,7 @@ const emptySchedule: Schedule[] = [
       firstname: '',
       lastname: '',
     },
+    workouts: null,
   },
 ]
 
@@ -253,11 +260,13 @@ function ClientProfile() {
     return <Loading />
   }
 
+  console.log(client)
+
   return (
     <>
       <TrainerNavbar />
 
-      <main className='min-h-[calc(100vh_-_64px)]'>
+      <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <ArrowLeft
           className='w-6 h-6'
           onClick={() => (window.location.href = '/clientes')}
@@ -290,10 +299,7 @@ function ClientProfile() {
           </Button>
         </div>
 
-        <section
-          id='client-info'
-          className='overflow-y-auto max-h-[32rem] w-full'
-        >
+        <section id='client-info' className='w-full overflow-y-auto'>
           <Accordion
             id='client-sections'
             type='single'
@@ -346,6 +352,17 @@ function ClientProfile() {
                   <div className={label_group}>
                     <p className={label}>Ativo ?</p>
                     <p>{client.active ? 'Sim' : 'Não'}</p>
+                  </div>
+                  <div className={label_group}>
+                    <p className={label}>Localização</p>
+                    <p
+                      className={`border-l-8 pl-2`}
+                      style={{
+                        borderColor: '#' + client.client_locations.color_hex,
+                      }}
+                    >
+                      {client.client_locations.location}
+                    </p>
                   </div>
                   <div className={`${label_group} col-span-2`}>
                     <p className={label}>Objetivo</p>

@@ -4,7 +4,7 @@ import { useParams } from 'react-router'
 import { useState, useEffect } from 'react'
 
 import axios from 'axios'
-import { Client, Package } from '@/utils/interfaces'
+import { Client, ClientLocation, Package } from '@/utils/interfaces'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -61,6 +61,12 @@ const emptyClient: Client = {
     id: '',
     email: '',
   },
+  client_locations: {
+    id: '',
+    trainer_id: '',
+    location: '',
+    color_hex: '',
+  },
   subscriptions: [
     {
       id: '',
@@ -101,6 +107,7 @@ const formSchema = z.object({
   goal: z.string().max(255, { message: 'Objetivo muito extenso.' }),
   active: z.boolean(),
   package_id: z.string(),
+  location_id: z.string(),
 })
 
 const ClientEdit = () => {
@@ -116,6 +123,8 @@ const ClientEdit = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [trainerPackages, setTrainerPackages] =
     useState<Package[]>(emptyPackages)
+  const [clientLocations, setClientLocations] = useState<ClientLocation[]>([])
+
   const [client, setClient] = useState(emptyClient)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -130,6 +139,7 @@ const ClientEdit = () => {
       goal: client.goal,
       active: client.active,
       package_id: client.subscriptions[0].packages.id,
+      location_id: emptyClient.client_locations.id,
     },
   })
 
@@ -138,13 +148,21 @@ const ClientEdit = () => {
   useEffect(() => {
     const fetchTrainerPackages = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/packages`, {
-          headers: {
-            'Auth-Token': token,
-          },
-        })
+        const [resTrainerPackages, resClientLocations] = await Promise.all([
+          axios.get(`${apiUrl}/packages`, {
+            headers: {
+              'Auth-Token': token,
+            },
+          }),
+          axios.get(`${apiUrl}/client-locations`, {
+            headers: {
+              'Auth-Token': token,
+            },
+          }),
+        ])
 
-        setTrainerPackages(res.data.packages)
+        setTrainerPackages(resTrainerPackages.data.packages)
+        setClientLocations(resClientLocations.data.locations)
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.status)
@@ -172,6 +190,7 @@ const ClientEdit = () => {
           birthday: new Date(client.birthday),
           join_date: new Date(client.join_date),
           package_id: client.subscriptions[0].packages.id,
+          location_id: client.client_locations.id,
         })
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -203,6 +222,7 @@ const ClientEdit = () => {
       birthday: format(values.birthday, 'yyyy-MM-dd'),
       join_date: format(values.join_date, 'yyyy-MM-dd'),
       goal: values.goal,
+      location_id: values.location_id,
     }
 
     const subscriptionInfo = {
@@ -508,6 +528,37 @@ const ClientEdit = () => {
                               value={trainerPackage.id}
                             >
                               {trainerPackage.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='location_id'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Localização</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {clientLocations &&
+                          clientLocations.map((location) => (
+                            <SelectItem key={location.id} value={location.id}>
+                              {location.location}
                             </SelectItem>
                           ))}
                       </SelectContent>
