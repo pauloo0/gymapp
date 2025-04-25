@@ -38,6 +38,12 @@ const emptyClient: Client[] = [
       id: '',
       email: '',
     },
+    client_locations: {
+      id: '',
+      trainer_id: '',
+      location: '',
+      color_hex: '',
+    },
     subscriptions: [
       {
         id: '',
