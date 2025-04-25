@@ -60,6 +60,7 @@ function TrainerNavbar() {
       case '/pacote':
       case '/faturas':
       case '/fatura':
+      case '/localizacoes':
         screenId = 'profile'
         break
       default:

@@ -38,6 +38,10 @@ import PackageEdit from './pages/TrainerPackages/PackageEdit'
 import Invoices from './pages/Invoices/Invoices'
 import InvoicePage from './pages/Invoices/InvoicePage'
 
+import ClientLocations from './pages/Locations/Locations'
+import LocationEdit from './pages/Locations/LocationEdit'
+import LocationCreate from './pages/Locations/LocationCreate'
+
 import DBConnectionError from './pages/DBConnectionError'
 import Loading from './components/reusable/Loading'
 
@@ -127,6 +131,13 @@ function App() {
           <Route path='/pacotes/novo' element={<PackageCreate />} />
           <Route path='/faturas' element={<Invoices />} />
           <Route path='/fatura/:invoice_id' element={<InvoicePage />} />
+          <Route path='/localizacoes' element={<ClientLocations />} />
+          <Route
+            path='/localizacoes/:location_id/edit'
+            element={<LocationEdit />}
+          />
+          <Route path='/localizacoes/nova' element={<LocationCreate />} />
+
           <Route path='*' element={<NotFound />} />
         </Routes>
       </div>

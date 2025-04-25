@@ -66,6 +66,9 @@ function Profile() {
   const redirectInvoices = () => {
     window.location.href = '/faturas'
   }
+  const redirectClientLocations = () => {
+    window.location.href = '/localizacoes'
+  }
 
   const logout = () => {
     setIsLoading(true)
@@ -127,6 +130,14 @@ function Profile() {
                     onClick={redirectInvoices}
                   >
                     Faturas
+                  </Button>
+                  <Button
+                    size={'lg'}
+                    variant={'secondary'}
+                    className='w-full text-gray-900 bg-gray-300 hover:bg-lime-500 hover:border-lime-600'
+                    onClick={redirectClientLocations}
+                  >
+                    Localizações de clientes
                   </Button>
                 </>
               )}
