@@ -93,7 +93,7 @@ function ScheduleEdit() {
         form.reset({
           date: new Date(format(schedule.date, 'yyyy/MM/dd')),
           time: schedule.time,
-          workout_id: schedule.workout_id,
+          workout_id: schedule.workout_id || '',
         })
 
         const resClient = await axios.get(
@@ -163,7 +163,7 @@ function ScheduleEdit() {
       ...values,
       client_id: client?.id,
       date: format(values.date, 'yyyy-MM-dd'),
-      // workout_id: values.workout_id === '' ? null : values.workout_id,
+      workout_id: values.workout_id === '' ? null : values.workout_id,
     }
 
     try {
