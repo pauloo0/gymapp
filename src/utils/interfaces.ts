@@ -22,6 +22,7 @@ export interface ClientLocation {
   trainer_id: string
   location: string
   color_hex: string
+  associatedClients: number
 }
 
 export interface Schedule {

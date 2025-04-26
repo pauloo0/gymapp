@@ -110,12 +110,14 @@ export default function ClientLocations() {
                       >
                         <Pencil className='w-4 h-4' />
                       </Link>
-                      <div
-                        onClick={() => deleteLocation(location.id)}
-                        className='p-2 bg-red-500 rounded-lg hover:bg-red-600 hover:cursor-pointer'
-                      >
-                        <Trash2 className='w-4 h-4' />
-                      </div>
+                      {location.associatedClients === 0 && (
+                        <div
+                          onClick={() => deleteLocation(location.id)}
+                          className='p-2 bg-red-500 rounded-lg hover:bg-red-600 hover:cursor-pointer'
+                        >
+                          <Trash2 className='w-4 h-4' />
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))

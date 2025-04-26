@@ -43,6 +43,7 @@ const emptyClient: Client[] = [
       trainer_id: '',
       location: '',
       color_hex: '',
+      associatedClients: 0,
     },
     subscriptions: [
       {
