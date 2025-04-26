@@ -261,8 +261,6 @@ function ClientProfile() {
     return <Loading />
   }
 
-  console.log(client)
-
   return (
     <>
       <TrainerNavbar />
