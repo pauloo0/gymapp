@@ -2,14 +2,24 @@ import { Invoice } from '@/utils/interfaces'
 
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 
-function UnpaidInvoicesNextWeek({ invoices }: { invoices: Invoice[] }) {
+function UnpaidInvoicesNextWeek({
+  invoices,
+  userRole,
+}: {
+  invoices: Invoice[] | null
+  userRole: string
+}) {
+  if (userRole === '') {
+    window.location.href = '/login'
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Pagamentos Pendentes</CardTitle>
       </CardHeader>
       <CardContent className='grid grid-cols-1 gap-2 p-2'>
-        {invoices.length === 0 ? (
+        {!invoices || invoices.length === 0 ? (
           <p className='text-center'>Sem pagamentos pendentes</p>
         ) : (
           invoices.map((invoice: Invoice) => (

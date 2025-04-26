@@ -92,7 +92,10 @@ function TrainerDashboard() {
   return (
     <div className='flex flex-col gap-4 min-h-[calc(100vh_-_64px)]'>
       <ListedSchedules schedules={schedules} userRole={user.userRole || ''} />
-      <UnpaidInvoicesNextWeek invoices={invoices} />
+      <UnpaidInvoicesNextWeek
+        invoices={invoices}
+        userRole={user.userRole || ''}
+      />
     </div>
   )
 }

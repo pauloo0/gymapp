@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { Schedule } from '@/utils/interfaces'
+import { Invoice, Schedule } from '@/utils/interfaces'
 
 import axios from 'axios'
 import { isThisWeek } from 'date-fns'
 
 import Loading from '@/components/reusable/Loading'
 import ListedSchedules from '@/components/dashboard/ListedSchedules'
+import UnpaidInvoicesNextWeek from '@/components/dashboard/UnpaidInvoicesNextWeek'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -21,12 +22,18 @@ function ClientDashboard() {
 
   const [isLoading, setIsLoading] = useState(true)
   const [schedules, setSchedules] = useState<Schedule[]>([])
+  const [invoices, setInvoices] = useState<Invoice[] | null>(null)
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [resSchedules] = await Promise.all([
+        const [resSchedules, resInvoices] = await Promise.all([
           axios.get(`${apiUrl}/schedule`, {
+            headers: {
+              'Auth-Token': token,
+            },
+          }),
+          axios.get(`${apiUrl}/invoices/unpaid`, {
             headers: {
               'Auth-Token': token,
             },
@@ -34,7 +41,6 @@ function ClientDashboard() {
         ])
 
         const schedules: Schedule[] = resSchedules.data.schedule
-
         const sortedSchedules = schedules
           .filter((schedule: Schedule) => isThisWeek(schedule.date))
           .sort((scheduleA: Schedule, scheduleB: Schedule) => {
@@ -47,8 +53,11 @@ function ClientDashboard() {
               timeA.getTime() - timeB.getTime()
             )
           })
-
         setSchedules(sortedSchedules)
+
+        const unpaidInvoices = resInvoices.data.invoices
+
+        setInvoices(unpaidInvoices)
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.data)
@@ -71,6 +80,10 @@ function ClientDashboard() {
   return (
     <div className='flex flex-col gap-4 min-h-[calc(100vh_-_64px)]'>
       <ListedSchedules schedules={schedules} userRole={user.userRole || ''} />
+      <UnpaidInvoicesNextWeek
+        invoices={invoices ? invoices : null}
+        userRole={user.userRole || ''}
+      />
     </div>
   )
 }
