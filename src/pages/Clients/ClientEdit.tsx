@@ -131,61 +131,48 @@ const ClientEdit = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstname: client.firstname,
-      lastname: client.lastname,
-      gender: client.gender,
-      phone_number: client.phone_number,
-      birthday: new Date(client.birthday),
-      join_date: new Date(client.join_date),
-      goal: client.goal,
-      active: client.active,
-      package_id: client.subscriptions[0].packages.id,
-      location_id: emptyClient.client_locations.id,
+      firstname: '',
+      lastname: '',
+      gender: '',
+      phone_number: '',
+      birthday: new Date(),
+      join_date: new Date(),
+      goal: '',
+      active: true,
+      package_id: '',
+      location_id: '',
     },
   })
 
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
   useEffect(() => {
-    const fetchTrainerPackages = async () => {
-      try {
-        const [resTrainerPackages, resClientLocations] = await Promise.all([
-          axios.get(`${apiUrl}/packages`, {
-            headers: {
-              'Auth-Token': token,
-            },
-          }),
-          axios.get(`${apiUrl}/client-locations`, {
-            headers: {
-              'Auth-Token': token,
-            },
-          }),
-        ])
-
-        setTrainerPackages(resTrainerPackages.data.packages)
-        setClientLocations(resClientLocations.data.locations)
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error(error.response?.status)
-          console.error(error.response?.data)
-        } else {
-          console.error('An unexpected error occurred:', error)
-        }
-      }
-    }
-
     const fetchClientInfo = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/clients/${id}`, {
-          headers: {
-            'Auth-Token': token,
-          },
-        })
+        const [resClient, resTrainerPackages, resClientLocations] =
+          await Promise.all([
+            axios.get(`${apiUrl}/clients/${id}`, {
+              headers: {
+                'Auth-Token': token,
+              },
+            }),
+            axios.get(`${apiUrl}/packages`, {
+              headers: {
+                'Auth-Token': token,
+              },
+            }),
+            axios.get(`${apiUrl}/client-locations`, {
+              headers: {
+                'Auth-Token': token,
+              },
+            }),
+          ])
 
-        const client: Client =
-          res.status === 204 ? emptyClient : res.data.client
-
+        const client: Client = resClient.data.client
         setClient(client)
+        setTrainerPackages(resTrainerPackages.data.packages)
+        setClientLocations(resClientLocations.data.locations)
+
         form.reset({
           ...client,
           birthday: new Date(client.birthday),
@@ -204,7 +191,6 @@ const ClientEdit = () => {
       setIsLoading(false)
     }
 
-    fetchTrainerPackages()
     fetchClientInfo()
   }, [token, id, apiUrl, form])
 
