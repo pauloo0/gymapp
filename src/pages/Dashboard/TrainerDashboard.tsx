@@ -10,48 +10,13 @@ import Loading from '@/components/reusable/Loading'
 import ListedSchedules from '@/components/dashboard/ListedSchedules'
 import UnpaidInvoicesNextWeek from '@/components/dashboard/UnpaidInvoicesNextWeek'
 
-const emptySchedules: Schedule[] = [
-  {
-    id: '',
-    date: '',
-    time: '',
-    clients: {
-      id: '',
-      firstname: '',
-      lastname: '',
-    },
-  },
-]
-
-const emptyInvoices: Invoice[] = [
-  {
-    id: '',
-    issue_date: '',
-    due_date: '',
-    amount: 0,
-    status: '',
-    subscriptions: {
-      id: '',
-      start_date: '',
-      active: false,
-      package_id: '',
-      clients: {
-        id: '',
-        firstname: '',
-        lastname: '',
-        active: false,
-      },
-    },
-  },
-]
-
 function TrainerDashboard() {
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
   const token = useToken()
 
   const [isLoading, setIsLoading] = useState(true)
-  const [schedules, setSchedules] = useState<Schedule[]>(emptySchedules)
-  const [invoices, setInvoices] = useState<Invoice[]>(emptyInvoices)
+  const [schedules, setSchedules] = useState<Schedule[]>([])
+  const [invoices, setInvoices] = useState<Invoice[]>([])
 
   useEffect(() => {
     const fetchDashboardData = async () => {
