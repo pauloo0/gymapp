@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useToken } from '@/utils/tokenWrapper'
+import { useUser } from '@/utils/userWrapper'
 import { Schedule, Invoice } from '@/utils/interfaces'
 
 import axios from 'axios'
@@ -13,6 +14,11 @@ import UnpaidInvoicesNextWeek from '@/components/dashboard/UnpaidInvoicesNextWee
 function TrainerDashboard() {
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
   const token = useToken()
+  const user = useUser()
+
+  if (!token || !user) {
+    window.location.href = '/login'
+  }
 
   const [isLoading, setIsLoading] = useState(true)
   const [schedules, setSchedules] = useState<Schedule[]>([])
@@ -85,7 +91,7 @@ function TrainerDashboard() {
 
   return (
     <div className='flex flex-col gap-4 min-h-[calc(100vh_-_64px)]'>
-      <ListedSchedules schedules={schedules} />
+      <ListedSchedules schedules={schedules} userRole={user.userRole || ''} />
       <UnpaidInvoicesNextWeek invoices={invoices} />
     </div>
   )

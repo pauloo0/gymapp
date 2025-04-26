@@ -3,9 +3,19 @@ import { Schedule } from '@/utils/interfaces'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-function ListedSchedules({ schedules }: { schedules: Schedule[] }) {
+function ListedSchedules({
+  schedules,
+  userRole,
+}: {
+  schedules: Schedule[]
+  userRole: string
+}) {
   const navigateToSchedule = (id: string) => {
     window.location.href = `/marcacao/${id}`
+  }
+
+  if (userRole === '') {
+    window.location.href = '/login'
   }
 
   return (
@@ -25,21 +35,43 @@ function ListedSchedules({ schedules }: { schedules: Schedule[] }) {
               key={schedule.id}
               onClick={() => navigateToSchedule(schedule.id)}
             >
-              <div>
-                {schedule.clients.firstname + ' ' + schedule.clients.lastname}
-              </div>
-              <div className='flex flex-col items-end justify-center text-sm text-gray-300'>
-                <span>{schedule.time}</span>
-                <span>
-                  {new Date(schedule.date).toLocaleDateString('pt-PT')}
-                </span>
-              </div>
+              {userRole === 'trainer' ? (
+                <>
+                  <div>
+                    {schedule.clients.firstname +
+                      ' ' +
+                      schedule.clients.lastname}
+                  </div>
+                  <div className='flex flex-col items-end justify-center text-sm text-gray-300'>
+                    <span>{schedule.time}</span>
+                    <span>
+                      {new Date(schedule.date).toLocaleDateString('pt-PT')}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    {schedule.clients.firstname +
+                      ' ' +
+                      schedule.clients.lastname}
+                  </div>
+                  <div className='flex flex-col items-end justify-center text-sm text-gray-300'>
+                    <span>{schedule.time}</span>
+                    <span>
+                      {new Date(schedule.date).toLocaleDateString('pt-PT')}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           ))
         )}
-        <Button onClick={() => navigateToSchedule('novo')}>
-          Fazer marcação
-        </Button>
+        {userRole !== 'client' && (
+          <Button onClick={() => navigateToSchedule('novo')}>
+            Fazer marcação
+          </Button>
+        )}
       </CardContent>
     </Card>
   )
