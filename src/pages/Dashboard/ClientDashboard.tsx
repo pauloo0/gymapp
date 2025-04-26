@@ -4,11 +4,19 @@ import { useUser } from '@/utils/userWrapper'
 import { Invoice, Schedule } from '@/utils/interfaces'
 
 import axios from 'axios'
-import { isThisWeek } from 'date-fns'
+import { isThisWeek, format } from 'date-fns'
 
 import Loading from '@/components/reusable/Loading'
 import ListedSchedules from '@/components/dashboard/ListedSchedules'
 import UnpaidInvoicesNextWeek from '@/components/dashboard/UnpaidInvoicesNextWeek'
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -23,6 +31,7 @@ function ClientDashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [schedules, setSchedules] = useState<Schedule[]>([])
   const [invoices, setInvoices] = useState<Invoice[] | null>(null)
+  const [flashInvoicePopUp, setFlashInvoicePopUp] = useState(false)
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -73,6 +82,12 @@ function ClientDashboard() {
     fetchDashboardData()
   }, [token])
 
+  useEffect(() => {
+    if (!invoices) return
+
+    setFlashInvoicePopUp(isThisWeek(invoices[0].due_date))
+  }, [invoices])
+
   if (isLoading) {
     return <Loading />
   }
@@ -84,6 +99,24 @@ function ClientDashboard() {
         invoices={invoices ? invoices : null}
         userRole={user.userRole || ''}
       />
+
+      {flashInvoicePopUp && invoices && (
+        <Dialog
+          open={flashInvoicePopUp}
+          onOpenChange={() => setFlashInvoicePopUp(false)}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Semana de pagamento</DialogTitle>
+              <DialogDescription>
+                Esta é a semana de pagamento, tem até dia
+                {' ' + format(invoices[0].due_date, 'yyyy-MM-dd')} pagar.
+              </DialogDescription>
+            </DialogHeader>
+            Valor a pagar: {invoices[0].amount} €
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   )
 }
