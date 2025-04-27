@@ -45,6 +45,9 @@ function Measurements() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [measurements, setMeasurements] = useState<Measurement[]>([])
+  const [filteredMeasurements, setFilteredMeasurements] = useState<
+    Measurement[]
+  >([])
 
   const [clients, setClients] = useState<Client[]>([])
   const [selectedClientId, setSelectedClientId] = useState('')
@@ -111,7 +114,24 @@ function Measurements() {
     }
 
     fetchMeasurements()
-  }, [token, selectedClientId, userRole])
+  }, [token, userRole])
+
+  useEffect(() => {
+    setFilteredMeasurements(measurements)
+  }, [measurements])
+
+  useEffect(() => {
+    if (!selectedClientId || selectedClientId === '') return
+
+    setFilteredMeasurements(measurements)
+
+    setFilteredMeasurements((measurements) => {
+      const filtered = measurements.filter(
+        (measurement) => measurement.clients.id === selectedClientId
+      )
+      return filtered
+    })
+  }, [selectedClientId, measurements])
 
   if (isLoading) return <Loading />
 
@@ -133,8 +153,8 @@ function Measurements() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {measurements &&
-                  measurements.map((measurement) => (
+                {filteredMeasurements &&
+                  filteredMeasurements.map((measurement) => (
                     <TableRow
                       key={measurement.id}
                       className='w-full hover:bg-gray-900'
@@ -208,8 +228,8 @@ function Measurements() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {measurements.length > 0
-                  ? measurements.map((measurement: Measurement) => (
+                {filteredMeasurements.length > 0
+                  ? filteredMeasurements.map((measurement: Measurement) => (
                       <TableRow
                         key={measurement.id}
                         className='hover:bg-gray-900'
