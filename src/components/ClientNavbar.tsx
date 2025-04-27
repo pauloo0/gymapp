@@ -2,7 +2,7 @@ import {
   Home,
   // CalendarDays,
   // Dumbbell,
-  // Logs,
+  Logs,
   CircleUserRound,
 } from 'lucide-react'
 
@@ -80,19 +80,19 @@ function ClientNavbar() {
           activeScreen.id === 'schedules' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/marcacoes')}
-      />
-      <Dumbbell
+      /> */}
+      {/* <Dumbbell
         className={`hover:cursor-pointer ${
           activeScreen.id === 'workouts' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/treinos')}
-      />
+      /> */}
       <Logs
         className={`hover:cursor-pointer ${
           activeScreen.id === 'measurements' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/avaliacoes')}
-      /> */}
+      />
       <CircleUserRound
         className={`hover:cursor-pointer ${
           activeScreen.id === 'profile' && 'text-opacity-100 text-lime-500'
