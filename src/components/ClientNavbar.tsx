@@ -1,10 +1,4 @@
-import {
-  Home,
-  // CalendarDays,
-  // Dumbbell,
-  Logs,
-  CircleUserRound,
-} from 'lucide-react'
+import { Home, Dumbbell, Logs, CircleUserRound } from 'lucide-react'
 
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router'
@@ -75,18 +69,12 @@ function ClientNavbar() {
         }`}
         onClick={() => navigateTo('/')}
       />
-      {/* <CalendarDays
-        className={`hover:cursor-pointer ${
-          activeScreen.id === 'schedules' && 'text-opacity-100 text-lime-500'
-        }`}
-        onClick={() => navigateTo('/marcacoes')}
-      /> */}
-      {/* <Dumbbell
+      <Dumbbell
         className={`hover:cursor-pointer ${
           activeScreen.id === 'workouts' && 'text-opacity-100 text-lime-500'
         }`}
         onClick={() => navigateTo('/treinos')}
-      /> */}
+      />
       <Logs
         className={`hover:cursor-pointer ${
           activeScreen.id === 'measurements' && 'text-opacity-100 text-lime-500'
