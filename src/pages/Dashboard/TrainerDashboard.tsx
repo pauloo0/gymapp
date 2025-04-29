@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { Schedule, Invoice } from '@/utils/interfaces'
+import { Invoice } from '@/utils/interfaces'
 
 import axios from 'axios'
 import { isThisWeek } from 'date-fns'
 
 import Loading from '@/components/reusable/Loading'
 
-import ListedSchedules from '@/components/dashboard/ListedSchedules'
 import UnpaidInvoicesNextWeek from '@/components/dashboard/UnpaidInvoicesNextWeek'
+import { Link } from 'react-router-dom'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 function TrainerDashboard() {
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -21,41 +22,16 @@ function TrainerDashboard() {
   }
 
   const [isLoading, setIsLoading] = useState(true)
-  const [schedules, setSchedules] = useState<Schedule[]>([])
   const [invoices, setInvoices] = useState<Invoice[]>([])
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [resSchedules, resInvoices] = await Promise.all([
-          axios.get(`${apiUrl}/schedule`, {
-            headers: {
-              'Auth-Token': token,
-            },
-          }),
-          axios.get(`${apiUrl}/invoices/unpaid`, {
-            headers: {
-              'Auth-Token': token,
-            },
-          }),
-        ])
-
-        const schedules: Schedule[] = resSchedules.data.schedule
-
-        const sortedSchedules = schedules
-          .filter((schedule: Schedule) => isThisWeek(schedule.date))
-          .sort((scheduleA: Schedule, scheduleB: Schedule) => {
-            const dateA = new Date(scheduleA.date)
-            const dateB = new Date(scheduleB.date)
-            const timeA = new Date(`1970-01-01T${scheduleA.time}`)
-            const timeB = new Date(`1970-01-01T${scheduleB.time}`)
-            return (
-              dateA.getTime() - dateB.getTime() ||
-              timeA.getTime() - timeB.getTime()
-            )
-          })
-
-        setSchedules(sortedSchedules)
+        const resInvoices = await axios.get(`${apiUrl}/invoices/unpaid`, {
+          headers: {
+            'Auth-Token': token,
+          },
+        })
 
         const unpaidInvoicesDueNextWeek = resInvoices.data.invoices
           .filter((invoice: Invoice) => {
@@ -91,11 +67,24 @@ function TrainerDashboard() {
 
   return (
     <div className='flex flex-col gap-4 min-h-[calc(100vh_-_64px)]'>
-      <ListedSchedules schedules={schedules} userRole={user.userRole || ''} />
       <UnpaidInvoicesNextWeek
         invoices={invoices}
         userRole={user.userRole || ''}
       />
+      <Link to='/marcacoes'>
+        <Card
+          className='relative bg-center bg-cover'
+          style={{ backgroundImage: `url(/src/assets/calendar.png)` }}
+        >
+          <div className='absolute inset-0 bg-black bg-opacity-70'></div>
+          <CardHeader className='relative'>
+            <CardTitle className='text-lg font-bold text-white'>
+              Agenda
+            </CardTitle>
+          </CardHeader>
+          <CardContent className='relative'></CardContent>
+        </Card>
+      </Link>
     </div>
   )
 }
