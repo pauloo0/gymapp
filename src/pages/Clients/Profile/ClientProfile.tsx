@@ -138,6 +138,20 @@ const emptySchedule: Schedule[] = [
       id: '',
       firstname: '',
       lastname: '',
+      client_locations: {
+        id: '',
+        location: '',
+        color_hex: '',
+      },
+      subscriptions: {
+        id: '',
+        packages: {
+          id: '',
+          name: '',
+          days_per_month: 0,
+          duration: 0,
+        },
+      },
     },
     workouts: null,
   },
