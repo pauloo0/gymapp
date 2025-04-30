@@ -29,7 +29,7 @@ function ClientMeasurements({ measurements }: { measurements: Measurement[] }) {
         {measurements.map((measurement) => (
           <TableRow
             key={measurement.id}
-            onClick={() => navigateTo(`/avaliacoes/${measurement.id}`)}
+            onClick={() => navigateTo(`/avaliacao/${measurement.id}`)}
           >
             <TableCell className='p-2'>
               {new Date(measurement.date).toLocaleDateString('pt-PT')}
