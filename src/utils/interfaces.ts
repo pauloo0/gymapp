@@ -34,6 +34,20 @@ export interface Schedule {
     id: string
     firstname: string
     lastname: string
+    client_locations: {
+      id: string
+      location: string
+      color_hex: string
+    }
+    subscriptions: {
+      id: string
+      packages: {
+        id: string
+        name: string
+        days_per_month: number
+        duration: number
+      }
+    }
   }
 }
 
