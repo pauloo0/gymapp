@@ -144,17 +144,17 @@ function Measurements() {
           <h1 className='mb-10 text-2xl'>Avaliações Físicas</h1>
 
           <section>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className='text-center'>Dia</TableHead>
-                  <TableHead className='text-center'>Mês</TableHead>
-                  <TableHead className='text-center'>Ano</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredMeasurements &&
-                  filteredMeasurements.map((measurement) => (
+            {filteredMeasurements.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className='text-center'>Dia</TableHead>
+                    <TableHead className='text-center'>Mês</TableHead>
+                    <TableHead className='text-center'>Ano</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredMeasurements.map((measurement) => (
                     <TableRow
                       key={measurement.id}
                       className='w-full hover:bg-gray-900'
@@ -173,8 +173,11 @@ function Measurements() {
                       </TableCell>
                     </TableRow>
                   ))}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+            ) : (
+              <p className='text-center'>Sem avaliações disponíveis.</p>
+            )}
           </section>
         </main>
       </>

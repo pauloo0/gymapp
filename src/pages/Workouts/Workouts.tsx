@@ -175,7 +175,7 @@ function Workouts() {
                 </Link>
               ))
             ) : (
-              <p>Não encontrei planos de treino para este cliente.</p>
+              <p>Ainda não tem planos de treino criados.</p>
             )}
           </section>
         </main>
