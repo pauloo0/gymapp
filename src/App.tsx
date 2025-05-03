@@ -79,7 +79,11 @@ function App() {
   if (isLoading) return <Loading />
 
   if (!dbStatus || dbStatus.status !== 200) {
-    return <DBConnectionError checkConnection={checkConnection} />
+    return (
+      <main className='bg-gray-950 text-gray-50'>
+        <DBConnectionError checkConnection={checkConnection} />
+      </main>
+    )
   }
 
   const routesWithoutPadding = ['/login', '/register']
