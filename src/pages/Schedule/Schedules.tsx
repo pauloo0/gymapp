@@ -354,9 +354,7 @@ function Schedules() {
                               '#' + schedule.clients.client_locations.color_hex,
                           }}
                         >
-                          {schedule.clients.firstname +
-                            ' ' +
-                            schedule.clients.lastname}
+                          {schedule.clients.client_locations.location}
                         </TableCell>
                         <TableCell>
                           {format(schedule.date, 'yyyy/MM/dd')}
