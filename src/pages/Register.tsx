@@ -97,8 +97,14 @@ function Register() {
   if (isLoading) return <Loading />
 
   return (
-    <section className='flex flex-col items-center justify-center min-h-screen'>
-      <h1 className='mb-6 text-2xl font-bold'>Registar</h1>
+    <main className='flex flex-col items-center justify-center min-h-screen'>
+      <img
+        src='/src/assets/logo.svg'
+        alt='TraynLab'
+        width={'200px'}
+        className='mb-8'
+      />
+      <h1 className='text-2xl font-bold'>Registar</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -209,7 +215,7 @@ function Register() {
           </p>
         </form>
       </Form>
-    </section>
+    </main>
   )
 }
 

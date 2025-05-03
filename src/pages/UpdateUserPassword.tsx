@@ -84,10 +84,14 @@ function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
   }
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen'>
-      <h1 className='mb-6 text-2xl font-bold text-start'>
-        Atualizar Palavra-Passe
-      </h1>
+    <main className='flex flex-col items-center justify-center min-h-screen'>
+      <img
+        src='/src/assets/logo.svg'
+        alt='TraynLab'
+        width={'350px'}
+        className='mb-8'
+      />
+      <h1 className='text-2xl font-bold'>Atualizar Palavra-Passe</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -138,7 +142,7 @@ function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
           </div>
         </form>
       </Form>
-    </div>
+    </main>
   )
 }
 

@@ -91,8 +91,14 @@ function Login() {
     return <UpdateUserPassword userInfo={userInfo} />
   }
   return (
-    <section className='flex flex-col items-center justify-center min-h-screen'>
-      <h1 className='mb-6 text-2xl font-bold'>Iniciar sessão</h1>
+    <main className='flex flex-col items-center justify-center h-screen'>
+      <img
+        src='/src/assets/logo.svg'
+        alt='TraynLab'
+        width={'350px'}
+        className='mb-8'
+      />
+      <h1 className='text-2xl font-bold'>Iniciar sessão</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -148,7 +154,7 @@ function Login() {
           </div>
         </form>
       </Form>
-    </section>
+    </main>
   )
 }
 
