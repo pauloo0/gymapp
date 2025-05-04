@@ -11,6 +11,7 @@ import Loading from '@/components/reusable/Loading'
 import UnpaidInvoicesNextWeek from '@/components/dashboard/UnpaidInvoicesNextWeek'
 import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import calendarPhoto from '@/assets/calendar.png'
 
 function TrainerDashboard() {
   const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -74,7 +75,7 @@ function TrainerDashboard() {
       <Link to='/marcacoes'>
         <Card
           className='relative bg-center bg-cover'
-          style={{ backgroundImage: `url(/src/assets/calendar.png)` }}
+          style={{ backgroundImage: `url(${calendarPhoto})` }}
         >
           <div className='absolute inset-0 bg-black bg-opacity-70'></div>
           <CardHeader className='relative'>

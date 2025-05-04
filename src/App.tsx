@@ -45,6 +45,8 @@ import LocationCreate from './pages/Locations/LocationCreate'
 import DBConnectionError from './pages/DBConnectionError'
 import Loading from './components/reusable/Loading'
 
+import backgroundLogo from '@/assets/logo.svg'
+
 interface DbStatus {
   status: number
   message: string
@@ -86,64 +88,96 @@ function App() {
     )
   }
 
+  const routesWithoutBackgroundLogo = ['/login', '/register']
+  const shouldInsertBackgroundLogo = !routesWithoutBackgroundLogo.some(
+    (route) => location.pathname.startsWith(route)
+  )
+
   const routesWithoutPadding = ['/login', '/register']
   const shouldApplyPadding = !routesWithoutPadding.some((route) =>
     location.pathname.startsWith(route)
   )
 
   return (
-    <main className='bg-gray-950 text-gray-50'>
-      <div className={shouldApplyPadding ? 'p-4 pt-12' : ''}>
-        <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/' element={<Dashboard />} />
-          <Route path='/perfil' element={<Profile />} />
-          <Route path='/clientes' element={<Clients />} />
-          <Route path='/cliente/:id' element={<ClientProfile />} />
-          <Route path='/cliente/:id/editar' element={<ClientEdit />} />
-          <Route path='/clientes/novo' element={<ClientCreate />} />
-          <Route path='/marcacoes' element={<Schedules />} />
-          <Route path='/marcacao/:schedule_id' element={<SchedulePage />} />
-          <Route
-            path='/marcacao/:schedule_id/editar'
-            element={<ScheduleEdit />}
-          />
-          <Route path='/marcacao/novo' element={<ScheduleCreate />} />
-          <Route
-            path='/marcacao/novo/:client_id'
-            element={<ScheduleCreate />}
-          />
-          <Route path='/treinos' element={<Workouts />} />
-          <Route path='/treino/:workout_id' element={<WorkoutPage />} />
-          <Route path='/treino/:workout_id/editar' element={<WorkoutEdit />} />
-          <Route path='/treinos/novo' element={<WorkoutCreate />} />
-          <Route path='/avaliacoes' element={<Measurements />} />
-          <Route
-            path='/avaliacao/:measurement_id'
-            element={<MeasurementPage />}
-          />
-          <Route path='/avaliacoes/novo' element={<MeasurementCreate />} />
-          <Route
-            path='/avaliacao/:measurement_id/editar'
-            element={<MeasurementEdit />}
-          />
-          <Route path='/pacotes' element={<TrainerPackages />} />
-          <Route path='/pacote/:package_id' element={<PackagePage />} />
-          <Route path='/pacote/:package_id/editar' element={<PackageEdit />} />
-          <Route path='/pacotes/novo' element={<PackageCreate />} />
-          <Route path='/faturas' element={<Invoices />} />
-          <Route path='/fatura/:invoice_id' element={<InvoicePage />} />
-          <Route path='/localizacoes' element={<ClientLocations />} />
-          <Route
-            path='/localizacoes/:location_id/edit'
-            element={<LocationEdit />}
-          />
-          <Route path='/localizacoes/nova' element={<LocationCreate />} />
-
-          <Route path='*' element={<NotFound />} />
-        </Routes>
+    <main
+      className='relative bg-gray-950 text-gray-50'
+      style={{
+        backgroundImage: shouldInsertBackgroundLogo
+          ? `url(${backgroundLogo})`
+          : 'none',
+        backgroundSize: '50% auto',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
+    >
+      <div className='absolute inset-0 z-0 bg-gray-950 opacity-90' />
+      {/* {shouldInsertBackgrounLogo && (
+        <img
+          src={backgroundLogo}
+          alt='Background Logo'
+          className='fixed inset-0 w-2/3 h-auto m-auto md:w-1/2 opacity-10'
+          style={{ zIndex: -1, pointerEvents: 'none' }}
+        />
+      )} */}
+      <div className='relative z-10'>
+        <div className={`${shouldApplyPadding ? 'p-4 pt-12' : ''}`}>
+          <Routes>
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/' element={<Dashboard />} />
+            <Route path='/perfil' element={<Profile />} />
+            <Route path='/clientes' element={<Clients />} />
+            <Route path='/cliente/:id' element={<ClientProfile />} />
+            <Route path='/cliente/:id/editar' element={<ClientEdit />} />
+            <Route path='/clientes/novo' element={<ClientCreate />} />
+            <Route path='/marcacoes' element={<Schedules />} />
+            <Route path='/marcacao/:schedule_id' element={<SchedulePage />} />
+            <Route
+              path='/marcacao/:schedule_id/editar'
+              element={<ScheduleEdit />}
+            />
+            <Route path='/marcacao/novo' element={<ScheduleCreate />} />
+            <Route
+              path='/marcacao/novo/:client_id'
+              element={<ScheduleCreate />}
+            />
+            <Route path='/treinos' element={<Workouts />} />
+            <Route path='/treino/:workout_id' element={<WorkoutPage />} />
+            <Route
+              path='/treino/:workout_id/editar'
+              element={<WorkoutEdit />}
+            />
+            <Route path='/treinos/novo' element={<WorkoutCreate />} />
+            <Route path='/avaliacoes' element={<Measurements />} />
+            <Route
+              path='/avaliacao/:measurement_id'
+              element={<MeasurementPage />}
+            />
+            <Route path='/avaliacoes/novo' element={<MeasurementCreate />} />
+            <Route
+              path='/avaliacao/:measurement_id/editar'
+              element={<MeasurementEdit />}
+            />
+            <Route path='/pacotes' element={<TrainerPackages />} />
+            <Route path='/pacote/:package_id' element={<PackagePage />} />
+            <Route
+              path='/pacote/:package_id/editar'
+              element={<PackageEdit />}
+            />
+            <Route path='/pacotes/novo' element={<PackageCreate />} />
+            <Route path='/faturas' element={<Invoices />} />
+            <Route path='/fatura/:invoice_id' element={<InvoicePage />} />
+            <Route path='/localizacoes' element={<ClientLocations />} />
+            <Route
+              path='/localizacoes/:location_id/edit'
+              element={<LocationEdit />}
+            />
+            <Route path='/localizacoes/nova' element={<LocationCreate />} />
+            <Route path='*' element={<NotFound />} />
+          </Routes>
+        </div>
       </div>
     </main>
   )

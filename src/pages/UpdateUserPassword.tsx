@@ -18,6 +18,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
+import logo from '@/assets/logo.svg'
+
 const formSchema = z
   .object({
     password: z.string().min(6, {
@@ -85,12 +87,7 @@ function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
 
   return (
     <main className='flex flex-col items-center justify-center min-h-screen'>
-      <img
-        src='/src/assets/logo.svg'
-        alt='TraynLab'
-        width={'350px'}
-        className='mb-8'
-      />
+      <img src={logo} alt='TraynLab' width={'350px'} className='mb-8' />
       <h1 className='text-2xl font-bold'>Atualizar Palavra-Passe</h1>
       <Form {...form}>
         <form

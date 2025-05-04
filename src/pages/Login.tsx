@@ -22,6 +22,8 @@ import {
 import { useEffect, useState } from 'react'
 import UpdateUserPassword from './UpdateUserPassword'
 
+import logo from '@/assets/logo.svg'
+
 const isEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
 
 const formSchema = z.object({
@@ -92,12 +94,7 @@ function Login() {
   }
   return (
     <main className='flex flex-col items-center justify-center h-screen'>
-      <img
-        src='/src/assets/logo.svg'
-        alt='TraynLab'
-        width={'350px'}
-        className='mb-8'
-      />
+      <img src={logo} alt='TraynLab' width={'350px'} className='mb-8' />
       <h1 className='text-2xl font-bold'>Iniciar sessão</h1>
       <Form {...form}>
         <form

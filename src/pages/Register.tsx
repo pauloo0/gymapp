@@ -20,6 +20,8 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Link } from 'react-router-dom'
 
+import logo from '@/assets/logo.svg'
+
 const isEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -98,12 +100,7 @@ function Register() {
 
   return (
     <main className='flex flex-col items-center justify-center min-h-screen'>
-      <img
-        src='/src/assets/logo.svg'
-        alt='TraynLab'
-        width={'200px'}
-        className='mb-8'
-      />
+      <img src={logo} alt='TraynLab' width={'200px'} className='mb-8' />
       <h1 className='text-2xl font-bold'>Registar</h1>
       <Form {...form}>
         <form
