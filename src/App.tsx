@@ -112,14 +112,6 @@ function App() {
       }}
     >
       <div className='absolute inset-0 z-0 bg-gray-950 opacity-90' />
-      {/* {shouldInsertBackgrounLogo && (
-        <img
-          src={backgroundLogo}
-          alt='Background Logo'
-          className='fixed inset-0 w-2/3 h-auto m-auto md:w-1/2 opacity-10'
-          style={{ zIndex: -1, pointerEvents: 'none' }}
-        />
-      )} */}
       <div className='relative z-10'>
         <div className={`${shouldApplyPadding ? 'p-4 pt-12' : ''}`}>
           <Routes>
