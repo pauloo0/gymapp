@@ -1,7 +1,7 @@
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
 import { Client } from '@/utils/interfaces'
-import { getAge } from '@/utils/functions'
+import { differenceInYears } from 'date-fns'
 
 import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
@@ -196,7 +196,9 @@ function Clients() {
                       {client.firstname} {client.lastname}
                     </TableCell>
                     <TableCell>
-                      {client.birthday ? getAge(client.birthday) : '0'}
+                      {client.birthday
+                        ? differenceInYears(new Date(), client.birthday)
+                        : '0'}
                     </TableCell>
                     <TableCell>{client.goal}</TableCell>
                     <TableCell>

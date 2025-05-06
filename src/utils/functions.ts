@@ -2,10 +2,6 @@ import axios from 'axios'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
-export function getAge(birthday: string) {
-  return new Date().getFullYear() - new Date(birthday).getFullYear()
-}
-
 export async function testDBConnection() {
   try {
     const res = await axios.get(`${apiUrl}/db/checkhealth`)

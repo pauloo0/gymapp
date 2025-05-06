@@ -12,7 +12,7 @@ import {
   Invoice,
   Subscription,
 } from '@/utils/interfaces'
-import { getAge } from '@/utils/functions'
+import { differenceInYears } from 'date-fns'
 
 import TrainerNavbar from '@/components/TrainerNavbar'
 
@@ -333,7 +333,7 @@ function ClientProfile() {
                   </div>
                   <div className={label_group}>
                     <p className={label}>Idade</p>
-                    <p>{getAge(client.birthday)}</p>
+                    <p>{differenceInYears(new Date(), client.birthday)}</p>
                   </div>
                   <div className={label_group}>
                     <p className={label}>Género</p>
