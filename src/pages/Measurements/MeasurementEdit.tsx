@@ -1,6 +1,6 @@
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { useEffect, useState } from 'react'
 
 import axios from 'axios'
@@ -80,11 +80,13 @@ const formSchema = z.object({
 })
 
 function MeasurementEdit() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { measurement_id } = useParams()
@@ -201,7 +203,7 @@ function MeasurementEdit() {
   }, [token, measurement])
 
   const cancelEdit = () => {
-    window.location.href = `/avaliacao/${measurement_id}`
+    navigate(`/avaliacao/${measurement_id}`)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -225,7 +227,7 @@ function MeasurementEdit() {
       )
 
       if (resUpdatedMeasurement.status === 201) {
-        window.location.href = `/avaliacao/${measurement_id}`
+        navigate(`/avaliacao/${measurement_id}`)
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -244,7 +246,7 @@ function MeasurementEdit() {
   const label = 'text-sm font-semibold leading-none'
 
   if (isLoading) return <Loading />
-  if (!measurement) window.location.href = '/avaliacoes'
+  if (!measurement) navigate('/avaliacoes')
 
   return (
     <>
@@ -254,7 +256,7 @@ function MeasurementEdit() {
         <div className='flex flex-row justify-between w-full gap-2 items-cnter'>
           <ArrowLeft
             className='w-6 h-6'
-            onClick={() => (window.location.href = '/avaliacoes')}
+            onClick={() => navigate('/avaliacoes')}
           />
           <h1 className='text-2xl font-semibold'>
             Avaliação{' '}

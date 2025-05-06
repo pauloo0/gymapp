@@ -9,7 +9,7 @@ import { isThisWeek } from 'date-fns'
 import Loading from '@/components/reusable/Loading'
 
 import UnpaidInvoicesNextWeek from '@/components/dashboard/UnpaidInvoicesNextWeek'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import calendarPhoto from '@/assets/calendar.png'
 
@@ -18,8 +18,10 @@ function TrainerDashboard() {
   const token = useToken()
   const user = useUser()
 
+  const navigate = useNavigate()
+
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [isLoading, setIsLoading] = useState(true)

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 import { ClientLocation } from '@/utils/interfaces'
 
@@ -47,11 +47,13 @@ const formSchema = z.object({
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 export default function LocationEdit() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { location_id } = useParams()
@@ -118,7 +120,7 @@ export default function LocationEdit() {
       )
 
       if (res.status === 201) {
-        window.location.href = '/localizacoes'
+        navigate('/localizacoes')
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

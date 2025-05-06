@@ -1,4 +1,4 @@
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
@@ -172,11 +172,13 @@ const emptySubscription: Subscription = {
 }
 
 function ClientProfile() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { id } = useParams()
@@ -263,12 +265,12 @@ function ClientProfile() {
   const label = 'text-sm font-semibold leading-none'
 
   const editClient = (client: Client) => {
-    window.location.href = `/cliente/${client.id}/editar`
+    navigate(`/cliente/${client.id}/editar`)
   }
 
   // Return to client list if client is not found
   if (!isLoading && client.id === '') {
-    window.location.href = '/clientes'
+    navigate('/clientes')
   }
 
   if (isLoading) {
@@ -280,10 +282,7 @@ function ClientProfile() {
       <TrainerNavbar />
 
       <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
-        <ArrowLeft
-          className='w-6 h-6'
-          onClick={() => (window.location.href = '/clientes')}
-        />
+        <ArrowLeft className='w-6 h-6' onClick={() => navigate('/clientes')} />
         <div
           id='client-header'
           className='flex flex-row items-center justify-between w-full mt-10 mb-12'

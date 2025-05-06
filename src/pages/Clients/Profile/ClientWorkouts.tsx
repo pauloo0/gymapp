@@ -8,10 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useNavigate } from 'react-router'
 
 function ClientWorkouts({ workouts }: { workouts: Workout[] }) {
+  const navigate = useNavigate()
+
   const navigateTo = (path: string) => {
-    window.location.href = path
+    navigate(path)
   }
 
   if (workouts.length === 0) {

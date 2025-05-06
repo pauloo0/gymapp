@@ -30,15 +30,18 @@ import {
 import { Plus } from 'lucide-react'
 
 import { format } from 'date-fns'
+import { useNavigate } from 'react-router'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function Measurements() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const userRole = user.userRole
@@ -158,9 +161,7 @@ function Measurements() {
                     <TableRow
                       key={measurement.id}
                       className='w-full hover:bg-gray-900'
-                      onClick={() =>
-                        (window.location.href = `/avaliacao/${measurement.id}`)
-                      }
+                      onClick={() => navigate(`/avaliacao/${measurement.id}`)}
                     >
                       <TableCell className='text-center'>
                         {format(measurement.date, 'dd')}
@@ -213,7 +214,7 @@ function Measurements() {
               type='button'
               variant='default'
               size='sm'
-              onClick={() => (window.location.href = '/avaliacoes/novo')}
+              onClick={() => navigate('/avaliacoes/novo')}
             >
               <Plus className='w-5 h-5 mr-1' /> Criar nova
             </Button>
@@ -236,9 +237,7 @@ function Measurements() {
                       <TableRow
                         key={measurement.id}
                         className='hover:bg-gray-900'
-                        onClick={() =>
-                          (window.location.href = `/avaliacao/${measurement.id}`)
-                        }
+                        onClick={() => navigate(`/avaliacao/${measurement.id}`)}
                       >
                         <TableCell>
                           {measurement.clients.firstname +

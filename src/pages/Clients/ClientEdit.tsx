@@ -1,6 +1,6 @@
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { useState, useEffect } from 'react'
 
 import axios from 'axios'
@@ -112,11 +112,13 @@ const formSchema = z.object({
 })
 
 const ClientEdit = () => {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { id } = useParams()
@@ -195,7 +197,7 @@ const ClientEdit = () => {
   }, [token, id, apiUrl, form])
 
   const cancelEdit = () => {
-    window.location.href = `/cliente/${id}`
+    navigate(`/cliente/${id}`)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -265,7 +267,7 @@ const ClientEdit = () => {
         throw new Error('Erro ao editar cliente.')
       }
 
-      window.location.href = `/cliente/${id}`
+      navigate(`/cliente/${id}`)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data)
@@ -278,13 +280,13 @@ const ClientEdit = () => {
 
   // Return to client list if client is not found
   if ((!isLoading && client.id === '') || !id) {
-    window.location.href = '/clientes'
+    navigate('/clientes')
   }
 
   if (isLoading) {
     return <Loading />
   }
-  if (!trainerPackages) window.location.href = `/cliente/${client.id}`
+  if (!trainerPackages) navigate(`/cliente/${client.id}`)
 
   return (
     <>

@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/select'
 
 import locationColors from '@/utils/locationColors'
+import { useNavigate } from 'react-router'
 
 const colorHexRegex = /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
 
@@ -44,11 +45,13 @@ const formSchema = z.object({
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 export default function LocationCreate() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -77,7 +80,7 @@ export default function LocationCreate() {
       })
 
       if (res.status === 201) {
-        window.location.href = '/localizacoes'
+        navigate('/localizacoes')
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

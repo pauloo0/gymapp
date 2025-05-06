@@ -34,15 +34,18 @@ import {
   SquareDot,
   ArrowLeft,
 } from 'lucide-react'
+import { useNavigate } from 'react-router'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function Invoices() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -144,10 +147,7 @@ function Invoices() {
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
-          <ArrowLeft
-            className='w-6 h-6'
-            onClick={() => (window.location.href = '/perfil')}
-          />
+          <ArrowLeft className='w-6 h-6' onClick={() => navigate('/perfil')} />
           <h1 className='text-2xl font-semibold'>Faturas</h1>
         </div>
 
@@ -208,9 +208,7 @@ function Invoices() {
                 filteredInvoices.map((invoice: Invoice) => (
                   <TableRow
                     key={invoice.id}
-                    onClick={() =>
-                      (window.location.href = `/fatura/${invoice.id}`)
-                    }
+                    onClick={() => navigate(`/fatura/${invoice.id}`)}
                     className='hover:bg-gray-900'
                   >
                     <TableCell>

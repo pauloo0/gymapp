@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router'
 
 const emptyClient: Client[] = [
   {
@@ -64,11 +65,13 @@ const emptyClient: Client[] = [
 ]
 
 function Clients() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [clients, setClients] = useState<Client[]>(emptyClient)
@@ -138,7 +141,7 @@ function Clients() {
   }, [token, apiUrl])
 
   const goToClientPage = (id: string) => {
-    window.location.href = `/cliente/${id}`
+    navigate(`/cliente/${id}`)
   }
 
   if (isLoading) {
@@ -166,10 +169,7 @@ function Clients() {
               onChange={(e) => filterClient(e)}
             />
           </div>
-          <Button
-            size={'sm'}
-            onClick={() => (window.location.href = '/clientes/novo')}
-          >
+          <Button size={'sm'} onClick={() => navigate('/clientes/novo')}>
             <Plus className='w-5 h-5 mr-1' /> Novo cliente
           </Button>
         </div>

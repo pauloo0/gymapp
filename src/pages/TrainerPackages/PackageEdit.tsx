@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 import { Package } from '@/utils/interfaces'
 
@@ -38,11 +38,13 @@ const formSchema = z.object({
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function PackageEdit() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { package_id } = useParams()
@@ -153,7 +155,7 @@ function PackageEdit() {
       )
 
       if (res.status === 201) {
-        window.location.href = `/pacote/${package_id}`
+        navigate(`/pacote/${package_id}`)
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -168,7 +170,7 @@ function PackageEdit() {
   }
 
   if (isLoading) return <Loading />
-  if (!currentPackage) window.location.href = '/pacotes'
+  if (!currentPackage) navigate('/pacotes')
 
   return (
     <>

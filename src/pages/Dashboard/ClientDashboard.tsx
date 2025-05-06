@@ -17,15 +17,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useNavigate } from 'react-router'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function ClientDashboard() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [isLoading, setIsLoading] = useState(true)

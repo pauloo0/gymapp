@@ -13,15 +13,18 @@ import Loading from '@/components/reusable/Loading'
 
 import { Button } from '@/components/ui/button'
 import { LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function Profile() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -61,13 +64,13 @@ function Profile() {
   const label = 'text-sm font-semibold leading-none'
 
   const redirectPackages = () => {
-    window.location.href = '/pacotes'
+    navigate('/pacotes')
   }
   const redirectInvoices = () => {
-    window.location.href = '/faturas'
+    navigate('/faturas')
   }
   const redirectClientLocations = () => {
-    window.location.href = '/localizacoes'
+    navigate('/localizacoes')
   }
 
   const logout = () => {
@@ -75,7 +78,7 @@ function Profile() {
 
     setTimeout(() => {
       localStorage.clear()
-      window.location.href = '/login'
+      navigate('/login')
     }, 1000)
   }
 

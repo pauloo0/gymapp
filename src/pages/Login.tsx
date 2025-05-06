@@ -23,6 +23,7 @@ import { useEffect, useState } from 'react'
 import UpdateUserPassword from './UpdateUserPassword'
 
 import logo from '@/assets/logo.svg'
+import { useNavigate } from 'react-router'
 
 const isEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
 
@@ -37,9 +38,10 @@ const formSchema = z.object({
 
 function Login() {
   const token = useToken()
+  const navigate = useNavigate()
 
   if (token) {
-    window.location.href = '/'
+    navigate('/')
   }
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -84,7 +86,7 @@ function Login() {
       setToken(userInfo.token as string)
       setUser({ userId: userInfo.user, role: userInfo.role })
 
-      window.location.href = '/'
+      navigate('/')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passwordUpdateRequired])

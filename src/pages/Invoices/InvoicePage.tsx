@@ -69,14 +69,15 @@ interface InvoiceInfo {
 }
 
 function InvoicePage() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
-  const navigate = useNavigate()
   const { invoice_id } = useParams()
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -181,7 +182,7 @@ function InvoicePage() {
   }
 
   const onSubmitPayment = async (values: z.infer<typeof formSchema>) => {
-    if (!invoiceInfo) window.location.href = '/faturas'
+    if (!invoiceInfo) navigate('/faturas')
 
     try {
       setIsLoading(true)
@@ -253,7 +254,7 @@ function InvoicePage() {
   if (isLoading) return <Loading />
 
   if (!invoiceInfo) {
-    window.location.href = '/faturas'
+    navigate('/faturas')
   } else {
     return (
       <>
@@ -264,7 +265,7 @@ function InvoicePage() {
             <div className='flex flex-row items-center justify-start w-full gap-2'>
               <ArrowLeft
                 className='w-6 h-6'
-                onClick={() => (window.location.href = '/faturas')}
+                onClick={() => navigate('/faturas')}
               />
               <h1 className='text-2xl font-semibold'>Fatura</h1>
             </div>

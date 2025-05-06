@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 import { Workout } from '@/utils/interfaces'
 
@@ -23,11 +23,13 @@ import {
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function WorkoutPage() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { workout_id } = useParams()
@@ -61,13 +63,13 @@ function WorkoutPage() {
   }, [token, workout_id])
 
   const editWorkout = (workout: Workout) => {
-    window.location.href = `/treino/${workout.id}/editar`
+    navigate(`/treino/${workout.id}/editar`)
   }
 
   if (isLoading) return <Loading />
 
   if (!workout) {
-    window.location.href = '/treinos'
+    navigate('/treinos')
   } else {
     return (
       <>
@@ -78,7 +80,7 @@ function WorkoutPage() {
             <div className='flex flex-row items-center justify-between w-full gap-2'>
               <ArrowLeft
                 className='w-6 h-6'
-                onClick={() => (window.location.href = '/treinos')}
+                onClick={() => navigate('/treinos')}
               />
               <h1 className='text-2xl font-semibold'>
                 Treino de{' '}

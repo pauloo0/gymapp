@@ -32,6 +32,7 @@ import { Button } from '@/components/ui/button'
 
 import { CalendarDays, Plus, TableOfContents } from 'lucide-react'
 import { getTextColorForBackground } from '@/utils/functions'
+import { useNavigate } from 'react-router'
 
 const emptySchedule: Schedule[] = [
   {
@@ -92,11 +93,13 @@ const hours = Array.from(
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function Schedules() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [schedules, setSchedules] = useState<Schedule[]>(emptySchedule)
@@ -198,10 +201,7 @@ function Schedules() {
           id='buttons'
           className='flex flex-col items-center justify-between gap-3 mb-4 sm:flex-row'
         >
-          <Button
-            size={'sm'}
-            onClick={() => (window.location.href = '/marcacao/novo')}
-          >
+          <Button size={'sm'} onClick={() => navigate('/marcacao/novo')}>
             <Plus className='w-5 h-5 mr-1' /> Nova marcação
           </Button>
 
@@ -269,9 +269,7 @@ function Schedules() {
                           height: `${height}rem`,
                           backgroundColor: colorHex,
                         }}
-                        onClick={() =>
-                          (window.location.href = `/marcacao/${schedule.id}`)
-                        }
+                        onClick={() => navigate(`/marcacao/${schedule.id}`)}
                       >
                         <div className='font-medium truncate'>
                           {schedule.clients.firstname}{' '}
@@ -338,9 +336,7 @@ function Schedules() {
                       <TableRow
                         key={schedule.id}
                         className='hover:bg-gray-900'
-                        onClick={() =>
-                          (window.location.href = `/marcacao/${schedule.id}`)
-                        }
+                        onClick={() => navigate(`/marcacao/${schedule.id}`)}
                       >
                         <TableCell>
                           {schedule.clients.firstname +

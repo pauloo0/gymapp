@@ -1,7 +1,7 @@
 import { Home, Dumbbell, Logs, CircleUserRound } from 'lucide-react'
 
 import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 interface Screen {
   id: string
@@ -22,6 +22,8 @@ function ClientNavbar() {
     id: 'dashboard',
     path: '/',
   })
+
+  const navigate = useNavigate()
 
   const screenPath = useBasePath()
 
@@ -57,8 +59,8 @@ function ClientNavbar() {
     setActiveScreen({ id: screenId, path: screenPath })
   }, [screenPath])
 
-  const navigateTo = (path: string) => {
-    window.location.href = path
+  const handleClick = (path: string) => {
+    navigate(path)
   }
 
   return (
@@ -67,25 +69,25 @@ function ClientNavbar() {
         className={`hover:cursor-pointer ${
           activeScreen.id === 'dashboard' && 'text-opacity-100 text-lime-500'
         }`}
-        onClick={() => navigateTo('/')}
+        onClick={() => handleClick('/')}
       />
       <Dumbbell
         className={`hover:cursor-pointer ${
           activeScreen.id === 'workouts' && 'text-opacity-100 text-lime-500'
         }`}
-        onClick={() => navigateTo('/treinos')}
+        onClick={() => handleClick('/treinos')}
       />
       <Logs
         className={`hover:cursor-pointer ${
           activeScreen.id === 'measurements' && 'text-opacity-100 text-lime-500'
         }`}
-        onClick={() => navigateTo('/avaliacoes')}
+        onClick={() => handleClick('/avaliacoes')}
       />
       <CircleUserRound
         className={`hover:cursor-pointer ${
           activeScreen.id === 'profile' && 'text-opacity-100 text-lime-500'
         }`}
-        onClick={() => navigateTo('/perfil')}
+        onClick={() => handleClick('/perfil')}
       />
     </div>
   )

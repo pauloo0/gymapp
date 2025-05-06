@@ -8,10 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useNavigate } from 'react-router'
 
 function ClientMeasurements({ measurements }: { measurements: Measurement[] }) {
+  const navigate = useNavigate()
+
   const navigateTo = (path: string) => {
-    window.location.href = path
+    navigate(path)
   }
 
   if (measurements.length === 0) {

@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { useNavigate } from 'react-router'
 
 function ClientSchedules({
   schedules,
@@ -18,8 +19,10 @@ function ClientSchedules({
   schedules: Schedule[]
   client_id: string
 }) {
+  const navigate = useNavigate()
+
   const createSchedule = () => {
-    window.location.href = `/marcacao/novo/${client_id}`
+    navigate(`/marcacao/novo/${client_id}`)
   }
 
   return (

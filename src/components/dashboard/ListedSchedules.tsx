@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router'
+
 import { Schedule } from '@/utils/interfaces'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,12 +12,14 @@ function ListedSchedules({
   schedules: Schedule[]
   userRole: string
 }) {
+  const navigate = useNavigate()
+
   const navigateToSchedule = (id: string) => {
-    window.location.href = `/marcacao/${id}`
+    navigate(`/marcacao/${id}`)
   }
 
   if (userRole === '') {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   return (

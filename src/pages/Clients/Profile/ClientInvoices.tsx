@@ -8,10 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useNavigate } from 'react-router'
 
 function ClientInvoices({ invoices }: { invoices: Invoice[] }) {
+  const navigate = useNavigate()
+
   const navigateTo = (path: string) => {
-    window.location.href = path
+    navigate(path)
   }
 
   const orderedInvoices = invoices

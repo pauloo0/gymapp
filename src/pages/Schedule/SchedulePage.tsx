@@ -8,7 +8,7 @@ import Loading from '@/components/reusable/Loading'
 
 import axios from 'axios'
 import { format, isBefore } from 'date-fns'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { ArrowLeft, ArrowRight, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
@@ -16,11 +16,13 @@ import { Link } from 'react-router-dom'
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function SchedulePage() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { schedule_id } = useParams()
@@ -66,7 +68,7 @@ function SchedulePage() {
   }, [token, schedule_id])
 
   const editSchedule = (schedule: Schedule) => {
-    window.location.href = `/marcacao/${schedule.id}/editar`
+    navigate(`/marcacao/${schedule.id}/editar`)
   }
 
   const deleteSchedule = async (sch: Schedule) => {
@@ -82,7 +84,7 @@ function SchedulePage() {
           },
         })
 
-        if (res.status === 200) window.location.href = '/marcacoes'
+        if (res.status === 200) navigate('/marcacoes')
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.status)
@@ -99,7 +101,7 @@ function SchedulePage() {
   if (isLoading) return <Loading />
 
   if (!schedule) {
-    window.location.href = '/marcacoes'
+    navigate('/marcacoes')
   } else {
     return (
       <>
@@ -110,7 +112,7 @@ function SchedulePage() {
             <ArrowLeft
               className='w-6 h-6'
               onClick={() => {
-                window.location.href = '/marcacoes'
+                navigate('/marcacoes')
               }}
             />
             <h1 className='text-2xl font-semibold'>

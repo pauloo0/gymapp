@@ -6,13 +6,16 @@ import TrainerDashboard from './TrainerDashboard'
 
 import ClientNavbar from '@/components/ClientNavbar'
 import TrainerNavbar from '@/components/TrainerNavbar'
+import { useNavigate } from 'react-router'
 
 function Dashboard() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   if (user.userRole === 'client') {

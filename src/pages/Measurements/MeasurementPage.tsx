@@ -1,6 +1,6 @@
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 import { useEffect, useState } from 'react'
 
@@ -21,11 +21,13 @@ import ClientNavbar from '@/components/ClientNavbar'
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function MeasurementPage() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { measurement_id } = useParams()
@@ -69,13 +71,13 @@ function MeasurementPage() {
   const label = 'text-sm font-semibold leading-none'
 
   const editMeasurement = (measurement: Measurement) => {
-    window.location.href = `/avaliacao/${measurement.id}/editar`
+    navigate(`/avaliacao/${measurement.id}/editar`)
   }
 
   if (isLoading) return <Loading />
 
   if (!measurement) {
-    window.location.href = '/avaliacoes'
+    navigate('/avaliacoes')
   } else {
     return (
       <>
@@ -85,7 +87,7 @@ function MeasurementPage() {
           <div className='flex flex-row justify-between w-full gap-2 items-cnter'>
             <ArrowLeft
               className='w-6 h-6'
-              onClick={() => (window.location.href = '/avaliacoes')}
+              onClick={() => navigate('/avaliacoes')}
             />
             <h1 className='text-2xl font-semibold'>
               Avaliação de

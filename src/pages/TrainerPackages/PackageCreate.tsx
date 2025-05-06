@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useNavigate } from 'react-router'
 
 const formSchema = z.object({
   name: z.string(),
@@ -35,11 +36,13 @@ const formSchema = z.object({
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function PackageCreate() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -73,7 +76,7 @@ function PackageCreate() {
 
       if (res.status === 201) {
         alert('Pacote criado com sucesso!')
-        window.location.href = '/pacotes'
+        navigate('/pacotes')
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router'
+
 import { Invoice } from '@/utils/interfaces'
 
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
@@ -9,8 +11,10 @@ function UnpaidInvoicesNextWeek({
   invoices: Invoice[] | null
   userRole: string
 }) {
+  const navigate = useNavigate()
+
   if (userRole === '') {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   return (
@@ -30,7 +34,7 @@ function UnpaidInvoicesNextWeek({
                   : 'bg-gray-800 text-gray-50 border-gray-700 hover:bg-gray-900'
               }`}
               key={invoice.id}
-              onClick={() => (window.location.href = `/fatura/${invoice.id}`)}
+              onClick={() => navigate(`/fatura/${invoice.id}`)}
             >
               {invoice.subscriptions.clients.firstname}{' '}
               {invoice.subscriptions.clients.lastname}

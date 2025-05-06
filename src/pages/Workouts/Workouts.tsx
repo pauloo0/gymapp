@@ -26,17 +26,19 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ClientNavbar from '@/components/ClientNavbar'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function Workouts() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const userRole = user.userRole
@@ -214,7 +216,7 @@ function Workouts() {
                 type='button'
                 variant='default'
                 size='sm'
-                onClick={() => (window.location.href = '/treinos/novo')}
+                onClick={() => navigate('/treinos/novo')}
                 className='w-full'
               >
                 <Plus className='w-5 h-5 mr-1' /> Criar novo

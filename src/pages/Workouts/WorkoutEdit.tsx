@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
@@ -104,12 +104,14 @@ const formSchema = z.object({
 })
 
 function WorkoutEdit() {
+  const navigate = useNavigate()
+
   const { workout_id } = useParams()
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -208,7 +210,7 @@ function WorkoutEdit() {
   }, [token, workout_id, form])
 
   const cancelEdit = () => {
-    window.location.href = `/treino/${workout_id}`
+    navigate(`/treino/${workout_id}`)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -241,7 +243,7 @@ function WorkoutEdit() {
       setIsLoading(false)
 
       if (resUpdatedWorkout.status === 200) {
-        window.location.href = `/treino/${workout_id}`
+        navigate(`/treino/${workout_id}`)
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

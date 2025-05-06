@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
@@ -53,11 +53,13 @@ const formSchema = z.object({
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function ScheduleEdit() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   // Client id from URL
@@ -153,7 +155,7 @@ function ScheduleEdit() {
   }, [token, client])
 
   const cancelEdit = () => {
-    window.location.href = `/marcacao/${schedule_id}`
+    navigate(`/marcacao/${schedule_id}`)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -178,7 +180,7 @@ function ScheduleEdit() {
       )
 
       if (resUpdatedSchedule.status === 201) {
-        window.location.href = `/marcacao/${schedule_id}`
+        navigate(`/marcacao/${schedule_id}`)
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

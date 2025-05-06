@@ -19,15 +19,18 @@ import { Button } from '@/components/ui/button'
 
 import { Plus, ArrowLeft } from 'lucide-react'
 import { decimalToHoursMinutes } from '@/utils/functions'
+import { useNavigate } from 'react-router'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function TrainerPackages() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -67,10 +70,7 @@ function TrainerPackages() {
 
       <main className='min-h-[calc(100vh_-_64px)]'>
         <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
-          <ArrowLeft
-            className='w-6 h-6'
-            onClick={() => (window.location.href = '/perfil')}
-          />
+          <ArrowLeft className='w-6 h-6' onClick={() => navigate('/perfil')} />
           <h1 className='text-2xl font-semibold'>Os meus pacotes</h1>
         </div>
 
@@ -79,7 +79,7 @@ function TrainerPackages() {
             type='button'
             variant='default'
             size='sm'
-            onClick={() => (window.location.href = '/pacotes/novo')}
+            onClick={() => navigate('/pacotes/novo')}
           >
             <Plus className='mr-1' /> Criar novo
           </Button>
@@ -100,7 +100,7 @@ function TrainerPackages() {
                 packages.map((pkg: Package) => (
                   <TableRow
                     key={pkg.id}
-                    onClick={() => (window.location.href = `/pacote/${pkg.id}`)}
+                    onClick={() => navigate(`/pacote/${pkg.id}`)}
                     className='hover:bg-gray-900'
                   >
                     <TableCell>{pkg.name}</TableCell>
@@ -114,9 +114,7 @@ function TrainerPackages() {
               ) : (
                 <TableRow className='flex flex-col items-center justify-center hover:bg-gray-900'>
                   <p>Sem pacotes</p>
-                  <Button
-                    onClick={() => (window.location.href = '/pacotes/novo')}
-                  >
+                  <Button onClick={() => navigate('/pacotes/novo')}>
                     <Plus className='mr-1' />
                     Adicionar
                   </Button>

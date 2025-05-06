@@ -52,6 +52,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useNavigate } from 'react-router'
 
 const emptyClient: Client = {
   id: '',
@@ -120,11 +121,13 @@ const formSchema = z.object({
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function ClientCreate() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [isLoading, setIsLoading] = useState(true)
@@ -150,7 +153,7 @@ function ClientCreate() {
   })
 
   const cancelCreate = () => {
-    window.location.href = '/clientes'
+    navigate('/clientes')
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -255,7 +258,7 @@ function ClientCreate() {
   }, [otp])
 
   const handleRedirect = () => {
-    window.location.href = `/clientes`
+    navigate(`/clientes`)
   }
 
   if (isLoading) return <Loading />

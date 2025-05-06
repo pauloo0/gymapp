@@ -71,6 +71,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useNavigate } from 'react-router'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -105,11 +106,13 @@ const formSchema = z.object({
 })
 
 function WorkoutCreate() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -222,7 +225,7 @@ function WorkoutCreate() {
   })
 
   const cancelCreate = () => {
-    window.location.href = '/treinos'
+    navigate('/treinos')
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -256,7 +259,7 @@ function WorkoutCreate() {
       setIsLoading(false)
 
       if (resNewWorkout.status === 201) {
-        window.location.href = '/treinos'
+        navigate('/treinos')
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

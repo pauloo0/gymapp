@@ -53,7 +53,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 const formSchema = z.object({
   client_id: z.string().nonempty('O cliente deve estar preenchido.'),
@@ -65,11 +65,13 @@ const formSchema = z.object({
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function ScheduleCreate() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   // Client Id from URL
@@ -178,7 +180,7 @@ function ScheduleCreate() {
       }
 
       alert('Marcação criada com sucesso!')
-      window.location.href = '/marcacoes'
+      navigate('/marcacoes')
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data.message)

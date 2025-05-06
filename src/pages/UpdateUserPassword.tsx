@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/form'
 
 import logo from '@/assets/logo.svg'
+import { useNavigate } from 'react-router'
 
 const formSchema = z
   .object({
@@ -48,6 +49,8 @@ interface UserInfo {
 }
 
 function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
+  const navigate = useNavigate()
+
   const { token, user, role } = userInfo
 
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -74,7 +77,7 @@ function UpdateUserPassword({ userInfo }: { userInfo: UserInfo }) {
         setToken(token)
         setUser({ userId: user, role: role })
 
-        window.location.href = '/'
+        navigate('/')
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

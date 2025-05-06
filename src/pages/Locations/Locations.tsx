@@ -17,17 +17,19 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 export default function ClientLocations() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const [clientLocations, setClientLocations] = useState<ClientLocation[]>([])
@@ -63,7 +65,7 @@ export default function ClientLocations() {
   }
 
   const redirectNewLocation = () => {
-    window.location.href = '/localizacoes/nova'
+    navigate('/localizacoes/nova')
   }
 
   if (isLoading) return <Loading />

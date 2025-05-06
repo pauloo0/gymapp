@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import logo from '@/assets/logo.svg'
 
@@ -49,6 +49,8 @@ const formSchema = z
   })
 
 function Register() {
+  const navigate = useNavigate()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -83,7 +85,7 @@ function Register() {
       const res = await axios.post(`${apiUrl}/user/register`, userValues)
 
       if (res.status === 201) {
-        window.location.href = '/login'
+        navigate('/login')
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

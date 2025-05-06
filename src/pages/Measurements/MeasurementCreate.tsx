@@ -1,6 +1,6 @@
 import { useToken } from '@/utils/tokenWrapper'
 import { useUser } from '@/utils/userWrapper'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { useEffect, useState } from 'react'
 
 import axios from 'axios'
@@ -70,11 +70,13 @@ const formSchema = z.object({
 })
 
 function MeasurementCreate() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { client_id } = useParams()
@@ -137,7 +139,7 @@ function MeasurementCreate() {
   }, [token])
 
   const cancelCreate = () => {
-    window.location.href = `/avaliacoes`
+    navigate(`/avaliacoes`)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -157,7 +159,7 @@ function MeasurementCreate() {
 
       if (res.status === 201) {
         alert('Avaliação criada com sucesso!')
-        window.location.href = '/avaliacoes'
+        navigate('/avaliacoes')
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -171,7 +173,7 @@ function MeasurementCreate() {
   }
 
   if (isLoading) return <Loading />
-  if (!clients) window.location.href = '/avaliacoes'
+  if (!clients) navigate('/avaliacoes')
 
   return (
     <>

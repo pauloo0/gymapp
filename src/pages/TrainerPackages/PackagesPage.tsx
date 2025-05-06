@@ -3,7 +3,7 @@ import { useUser } from '@/utils/userWrapper'
 import { Package } from '@/utils/interfaces'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -15,11 +15,13 @@ import { decimalToHoursMinutes } from '@/utils/functions'
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 function PackagesPage() {
+  const navigate = useNavigate()
+
   const token = useToken()
   const user = useUser()
 
   if (!token || !user) {
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   const { package_id } = useParams()
@@ -82,7 +84,7 @@ function PackagesPage() {
   }, [token, package_id])
 
   const editPackage = (pkg: Package) => {
-    window.location.href = `/pacote/${pkg.id}/editar`
+    navigate(`/pacote/${pkg.id}/editar`)
   }
 
   const deletePackage = async (pkg: Package) => {
@@ -98,7 +100,7 @@ function PackagesPage() {
           },
         })
 
-        if (res.status === 200) window.location.href = '/pacotes'
+        if (res.status === 200) navigate('/pacotes')
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(error.response?.status)
@@ -115,7 +117,7 @@ function PackagesPage() {
   if (isLoading) return <Loading />
 
   if (!currentPackage) {
-    window.location.href = '/pacotes'
+    navigate('/pacotes')
   } else {
     return (
       <>
@@ -125,7 +127,7 @@ function PackagesPage() {
           <div className='flex flex-row items-center justify-between w-full gap-2'>
             <ArrowLeft
               className='w-6 h-6'
-              onClick={() => (window.location.href = '/pacotes')}
+              onClick={() => navigate('/pacotes')}
             />
           </div>
 
