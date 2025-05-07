@@ -95,7 +95,7 @@ export default function ClientLocations() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {clientLocations.length > 0 ? (
+              {clientLocations && clientLocations.length > 0 ? (
                 clientLocations.map((location: ClientLocation) => (
                   <TableRow key={location.id} className='hover:bg-gray-900'>
                     <TableCell>{location.location}</TableCell>
