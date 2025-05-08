@@ -45,6 +45,14 @@ import {
 import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { Save, X } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 const emptyClient: Client = {
   id: '',
@@ -127,6 +135,13 @@ const ClientEdit = () => {
   const [trainerPackages, setTrainerPackages] =
     useState<Package[]>(emptyPackages)
   const [clientLocations, setClientLocations] = useState<ClientLocation[]>([])
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
 
   const [client, setClient] = useState(emptyClient)
 
@@ -264,23 +279,40 @@ const ClientEdit = () => {
       }
 
       if (resClient.status !== 200) {
-        throw new Error('Erro ao editar cliente.')
+        console.error(resClient.data)
+        throw new Error(resClient.data)
       }
 
-      navigate(`/cliente/${id}`)
+      setSuccessMessage('Alterações gravadas com sucesso!')
+      setIsLoading(false)
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.data)
-        console.error(error.response?.status)
+        setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inexperado: ${error}`)
         console.error('An unexpected error occurred:', error)
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
   // Return to client list if client is not found
   if ((!isLoading && client.id === '') || !id) {
     navigate('/clientes')
+  }
+
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate(`/cliente/${client.id}`)
   }
 
   if (isLoading) {
@@ -296,6 +328,50 @@ const ClientEdit = () => {
         <h1 className='mb-6 text-xl'>
           Editar cliente {client.firstname + ' ' + client.lastname}
         </h1>
+
+        {successMessage && (
+          <Dialog open={isDialogOpen} onOpenChange={(open) => !open}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog open={isDialogOpen} onOpenChange={(open) => !open}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+                <DialogDescription>
+                  O cliente deve entrar pela primeira vez com esta password.
+                </DialogDescription>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

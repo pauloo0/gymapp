@@ -49,6 +49,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -135,6 +136,9 @@ function ClientCreate() {
     useState<Package[]>(emptyPackages)
   const [clientLocations, setClientLocations] = useState<ClientLocation[]>([])
   const [otp, setOtp] = useState<string | undefined>(undefined)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -189,7 +193,8 @@ function ClientCreate() {
       })
 
       if (resClient.status !== 201) {
-        throw new Error('Erro a criar cliente')
+        console.error(resClient.data)
+        throw new Error(resClient.data)
       }
 
       const resSubscription = await axios.post(
@@ -203,20 +208,21 @@ function ClientCreate() {
       )
 
       if (resSubscription.status !== 201) {
-        throw new Error('Erro a criar subscrições para o cliente')
+        console.error(resSubscription.data)
+        throw new Error(resSubscription.data)
       }
 
-      setIsLoading(false)
-
-      // TODO: Send email to client with link to website and One-Time-Password sent by the API
       setOtp(resClient.data.password)
+      setIsLoading(false)
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.data)
-        console.error(error.response?.status)
+        setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inexperado: ${error}`)
         console.error('An unexpected error occurred:', error)
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -254,6 +260,10 @@ function ClientCreate() {
   }, [token])
 
   useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
     if (otp) setIsDialogOpen(true)
   }, [otp])
 
@@ -283,6 +293,29 @@ function ClientCreate() {
                 </DialogDescription>
               </DialogHeader>
               {otp}
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog open={isDialogOpen} onOpenChange={(open) => !open}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+                <DialogDescription>
+                  O cliente deve entrar pela primeira vez com esta password.
+                </DialogDescription>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}
