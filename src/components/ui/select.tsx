@@ -85,6 +85,7 @@ const SelectContent = React.forwardRef<
       <SelectPrimitive.Viewport
         className={cn(
           'p-1',
+          'touch-pan-y',
           position === 'popper' &&
             'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
         )}
@@ -92,7 +93,39 @@ const SelectContent = React.forwardRef<
         <div
           ref={(ref) => {
             if (!ref) return
-            // ref.ontouchstart = (e) => e.preventDefault()
+
+            // Track if we're scrolling vs tapping
+            let isScrolling = false
+            let startY = 0
+
+            // On touch start, record position but don't prevent default yet
+            ref.ontouchstart = (e) => {
+              startY = e.touches[0].clientY
+              isScrolling = false
+            }
+
+            // During touch move, determine if user is scrolling
+            ref.ontouchmove = (e) => {
+              const currentY = e.touches[0].clientY
+              const deltaY = Math.abs(currentY - startY)
+
+              // If moved more than 5px vertically, consider it a scroll
+              if (deltaY > 5) {
+                isScrolling = true
+              }
+            }
+
+            // On touch end, prevent default only if not scrolling
+            ref.ontouchend = (e) => {
+              if (!isScrolling) {
+                e.preventDefault()
+              }
+
+              // Small delay to prevent background element activation
+              setTimeout(() => {
+                isScrolling = false
+              }, 100)
+            }
           }}
         >
           {children}
