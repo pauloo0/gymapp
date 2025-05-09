@@ -143,7 +143,7 @@ function Measurements() {
       <>
         <ClientNavbar />
 
-        <main className='min-h-[calc(100vh_-_64px)]'>
+        <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
           <h1 className='mb-10 text-2xl'>Avaliações Físicas</h1>
 
           <section>
@@ -190,7 +190,7 @@ function Measurements() {
       <>
         <TrainerNavbar />
 
-        <main className='min-h-[calc(100vh_-_64px)]'>
+        <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
           <h1 className='mb-10 text-2xl'>Avaliações</h1>
 
           {/* FILTERS */}

@@ -157,7 +157,7 @@ function Workouts() {
       <>
         {userRole === 'client' ? <ClientNavbar /> : <TrainerNavbar />}
 
-        <main className='min-h-[calc(100vh_-_64px)]'>
+        <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
           <h1 className='mb-10 text-2xl'>Planos de treino</h1>
 
           <section
@@ -190,7 +190,7 @@ function Workouts() {
       <>
         <TrainerNavbar />
 
-        <main className='min-h-[calc(100vh_-_64px)]'>
+        <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
           <h1 className='mb-10 text-2xl'>Planos de treino</h1>
 
           {/* FILTERS */}

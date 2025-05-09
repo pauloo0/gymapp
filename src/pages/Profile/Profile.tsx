@@ -86,7 +86,7 @@ function Profile() {
     <>
       {user.userRole === 'trainer' ? <TrainerNavbar /> : <ClientNavbar />}
 
-      <main className='min-h-[calc(100vh_-_64px)]'>
+      <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Meu Perfil</h1>
 
         {userInfo && (

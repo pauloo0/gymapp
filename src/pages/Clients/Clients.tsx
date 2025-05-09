@@ -152,7 +152,7 @@ function Clients() {
     <>
       <TrainerNavbar />
 
-      <main className='min-h-[calc(100vh_-_64px)]'>
+      <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-10 text-2xl'>Os meus clientes</h1>
 
         {/* FILTERS */}
@@ -174,7 +174,7 @@ function Clients() {
           </Button>
         </div>
 
-        <section id='client-list' className='overflow-y-auto max-h-[32rem]'>
+        <section id='client-list'>
           <Table>
             <TableHeader>
               <TableRow>

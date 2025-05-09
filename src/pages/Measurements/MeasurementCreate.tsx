@@ -179,7 +179,7 @@ function MeasurementCreate() {
     <>
       <TrainerNavbar />
 
-      <main className='min-h-[calc(100vh_-_64px)]'>
+      <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Nova Avaliação</h1>
 
         <Form {...form}>

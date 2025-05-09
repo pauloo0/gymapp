@@ -123,7 +123,7 @@ function PackagesPage() {
       <>
         <TrainerNavbar />
 
-        <main className='min-h-[calc(100vh_-_64px)]'>
+        <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
           <div className='flex flex-row items-center justify-between w-full gap-2'>
             <ArrowLeft
               className='w-6 h-6'

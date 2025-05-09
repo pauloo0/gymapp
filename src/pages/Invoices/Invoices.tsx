@@ -145,7 +145,7 @@ function Invoices() {
     <>
       <TrainerNavbar />
 
-      <main className='min-h-[calc(100vh_-_64px)]'>
+      <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
           <ArrowLeft className='w-6 h-6' onClick={() => navigate('/perfil')} />
           <h1 className='text-2xl font-semibold'>Faturas</h1>

@@ -20,19 +20,19 @@ function Dashboard() {
 
   if (user.userRole === 'client') {
     return (
-      <>
+      <div className='pb-[80px]'>
         <ClientNavbar />
         <ClientDashboard />
-      </>
+      </div>
     )
   }
 
   if (user.userRole === 'trainer') {
     return (
-      <>
+      <div className='pb-[80px]'>
         <TrainerNavbar />
         <TrainerDashboard />
-      </>
+      </div>
     )
   }
 }
