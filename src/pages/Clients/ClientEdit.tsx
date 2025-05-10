@@ -226,21 +226,8 @@ const ClientEdit = () => {
       birthday: format(values.birthday, 'yyyy-MM-dd'),
       join_date: format(values.join_date, 'yyyy-MM-dd'),
       goal: values.goal,
-      location_id: values.location_id,
-    }
-
-    const subscriptionInfo = {
-      client_id: id,
-      package_id: client.subscriptions[0].packages.id,
-      start_date: client.subscriptions[0].start_date,
-      active: false,
-    }
-
-    const newSubscriptionInfo = {
-      client_id: id,
       package_id: values.package_id,
-      start_date: format(new Date(), 'yyyy-MM-dd'),
-      active: true,
+      location_id: values.location_id,
     }
 
     try {
@@ -249,34 +236,6 @@ const ClientEdit = () => {
           'Auth-Token': token,
         },
       })
-
-      const resChangeSubscription = await axios.put(
-        `${apiUrl}/subscriptions/${client.subscriptions[0].id}`,
-        subscriptionInfo,
-        {
-          headers: {
-            'Auth-Token': token,
-          },
-        }
-      )
-
-      const resNewSubscription = await axios.post(
-        `${apiUrl}/subscriptions`,
-        newSubscriptionInfo,
-        {
-          headers: {
-            'Auth-Token': token,
-          },
-        }
-      )
-
-      if (resChangeSubscription.status !== 200) {
-        throw new Error('Erro ao inativar subscrição antiga.')
-      }
-
-      if (resNewSubscription.status !== 201) {
-        throw new Error('Erro ao subscrever ao novo pacote.')
-      }
 
       if (resClient.status !== 200) {
         console.error(resClient.data)
