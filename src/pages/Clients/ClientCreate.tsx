@@ -161,6 +161,7 @@ function ClientCreate() {
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setErrorMessage(undefined)
     setIsLoading(true)
 
     const client_id: string = uuid()
@@ -212,8 +213,8 @@ function ClientCreate() {
         throw new Error(resSubscription.data)
       }
 
+      setErrorMessage(undefined)
       setOtp(resClient.data.password)
-      setIsLoading(false)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data)
@@ -271,6 +272,11 @@ function ClientCreate() {
     navigate(`/clientes`)
   }
 
+  const handleErrorClose = () => {
+    setErrorMessage(undefined)
+    setIsDialogOpen(false)
+  }
+
   if (isLoading) return <Loading />
 
   return (
@@ -298,20 +304,20 @@ function ClientCreate() {
         )}
 
         {errorMessage && (
-          <Dialog open={isDialogOpen} onOpenChange={(open) => !open}>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose}
+          >
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Erro</DialogTitle>
-                <DialogDescription>
-                  O cliente deve entrar pela primeira vez com esta password.
-                </DialogDescription>
               </DialogHeader>
               {errorMessage}
               <DialogFooter>
                 <Button
                   type='button'
                   variant={'default'}
-                  onClick={() => setIsDialogOpen(false)}
+                  onClick={handleErrorClose}
                 >
                   Ok
                 </Button>

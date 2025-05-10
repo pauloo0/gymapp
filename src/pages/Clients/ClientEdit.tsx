@@ -48,7 +48,6 @@ import { Save, X } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -216,6 +215,9 @@ const ClientEdit = () => {
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setErrorMessage(undefined)
+    setIsLoading(true)
+
     const clientInfo = {
       id: id,
       firstname: values.firstname,
@@ -242,8 +244,8 @@ const ClientEdit = () => {
         throw new Error(resClient.data)
       }
 
+      setErrorMessage(undefined)
       setSuccessMessage('Alterações gravadas com sucesso!')
-      setIsLoading(false)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data)
@@ -274,6 +276,11 @@ const ClientEdit = () => {
     navigate(`/cliente/${client.id}`)
   }
 
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
+  }
+
   if (isLoading) {
     return <Loading />
   }
@@ -289,7 +296,10 @@ const ClientEdit = () => {
         </h1>
 
         {successMessage && (
-          <Dialog open={isDialogOpen} onOpenChange={(open) => !open}>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Sucesso</DialogTitle>
@@ -309,20 +319,20 @@ const ClientEdit = () => {
         )}
 
         {errorMessage && (
-          <Dialog open={isDialogOpen} onOpenChange={(open) => !open}>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose()}
+          >
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Erro</DialogTitle>
-                <DialogDescription>
-                  O cliente deve entrar pela primeira vez com esta password.
-                </DialogDescription>
               </DialogHeader>
               {errorMessage}
               <DialogFooter>
                 <Button
                   type='button'
                   variant={'default'}
-                  onClick={() => setIsDialogOpen(false)}
+                  onClick={handleErrorClose}
                 >
                   Ok
                 </Button>
