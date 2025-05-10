@@ -48,7 +48,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -259,8 +258,8 @@ function ScheduleCreate() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Erro</DialogTitle>
-                <DialogDescription>{errorMessage}</DialogDescription>
               </DialogHeader>
+              {errorMessage}
               <DialogFooter>
                 <Button
                   type='button'
