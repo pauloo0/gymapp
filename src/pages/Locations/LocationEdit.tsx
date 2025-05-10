@@ -35,6 +35,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
 import locationColors from '@/utils/locationColors'
 
 const colorHexRegex = /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
@@ -58,7 +66,13 @@ export default function LocationEdit() {
 
   const { location_id } = useParams()
 
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [isDialogOpen, setIsDialogOpen] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -99,7 +113,7 @@ export default function LocationEdit() {
     }
 
     fetchData()
-  }, [token, location_id, form])
+  }, [token, location_id, form, setErrorMessage])
 
   const cancelEdit = () => {
     window.history.back()
@@ -109,7 +123,7 @@ export default function LocationEdit() {
     setIsLoading(true)
 
     try {
-      const res = await axios.put(
+      const resUpdateClientLocation = await axios.put(
         `${apiUrl}/client-locations/${location_id}`,
         values,
         {
@@ -119,20 +133,40 @@ export default function LocationEdit() {
         }
       )
 
-      if (res.status === 201) {
-        navigate('/localizacoes')
+      if (resUpdateClientLocation.status !== 200) {
+        console.error(resUpdateClientLocation.data)
+        throw new Error(resUpdateClientLocation.data)
       }
+
+      setErrorMessage(undefined)
+      setSuccessMessage('Localização atualizada com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.status)
-        console.error(error.response?.data)
+        setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inesperado: ${error}}`)
         console.error('An unexpected error occurred:', error)
       }
     } finally {
       setIsLoading(false)
     }
-    console.log(values)
+  }
+
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate('/localizacoes')
+  }
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
   }
 
   if (isLoading) return <Loading />
@@ -143,6 +177,52 @@ export default function LocationEdit() {
 
       <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Editar localização</h1>
+
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Form {...form}>
           <form

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { useToken } from '@/utils/tokenWrapper'
@@ -32,6 +32,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
 import locationColors from '@/utils/locationColors'
 import { useNavigate } from 'react-router'
 
@@ -54,7 +62,13 @@ export default function LocationCreate() {
     navigate('/login')
   }
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,27 +84,54 @@ export default function LocationCreate() {
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setErrorMessage(undefined)
     setIsLoading(true)
 
     try {
-      const res = await axios.post(`${apiUrl}/client-locations`, values, {
-        headers: {
-          'Auth-Token': token,
-        },
-      })
+      const resClientLocations = await axios.post(
+        `${apiUrl}/client-locations`,
+        values,
+        {
+          headers: {
+            'Auth-Token': token,
+          },
+        }
+      )
 
-      if (res.status === 201) {
-        navigate('/localizacoes')
+      if (resClientLocations.status !== 201) {
+        console.error(resClientLocations.data)
+        throw new Error(resClientLocations.data)
       }
+
+      setErrorMessage(undefined)
+      setSuccessMessage('Localização criada com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error occurred.', error)
       }
     } finally {
       setIsLoading(false)
     }
+  }
+
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate('/localizacoes')
+  }
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
   }
 
   if (isLoading) return <Loading />
@@ -101,6 +142,52 @@ export default function LocationCreate() {
 
       <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Editar localização</h1>
+
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Form {...form}>
           <form
