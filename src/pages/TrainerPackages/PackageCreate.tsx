@@ -104,36 +104,34 @@ function PackageCreate() {
             onSubmit={form.handleSubmit(onSubmit)}
             className='grid grid-cols-3 gap-4'
           >
-            <div className='col-span-3'>
-              <FormField
-                control={form.control}
-                name='name'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className={`${errorMessage ? 'text-red-500' : ''}`}
-                    >
-                      Nome
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className={`w-full ${
-                          errorMessage ? 'border-red-500' : ''
-                        }`}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name='name'
+              render={({ field }) => (
+                <FormItem className='col-span-3'>
+                  <FormLabel
+                    className={`${errorMessage ? 'text-red-500' : ''}`}
+                  >
+                    Nome
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className={`w-full ${
+                        errorMessage ? 'border-red-500' : ''
+                      }`}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
               name='price'
               render={({ field }) => (
-                <FormItem>
+                <FormItem className='col-span-3 sm:col-span-1'>
                   <FormLabel
                     className={`${errorMessage ? 'text-red-500' : ''}`}
                   >
@@ -158,7 +156,7 @@ function PackageCreate() {
               control={form.control}
               name='duration'
               render={({ field }) => (
-                <FormItem>
+                <FormItem className='col-span-3 sm:col-span-1'>
                   <FormLabel
                     className={`${errorMessage ? 'text-red-500' : ''}`}
                   >
@@ -183,7 +181,7 @@ function PackageCreate() {
               control={form.control}
               name='days_per_month'
               render={({ field }) => (
-                <FormItem>
+                <FormItem className='col-span-3 sm:col-span-1'>
                   <FormLabel
                     className={`${errorMessage ? 'text-red-500' : ''}`}
                   >
@@ -204,7 +202,7 @@ function PackageCreate() {
               )}
             />
 
-            <div className='grid grid-cols-2 col-span-3 gap-2'>
+            <div className='grid grid-cols-2 col-span-3 gap-2 mt-4'>
               <Button
                 type='submit'
                 size={'sm'}
