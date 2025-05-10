@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { useToken } from '@/utils/tokenWrapper'
@@ -24,6 +24,14 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { useNavigate } from 'react-router'
 
 const formSchema = z.object({
@@ -45,7 +53,13 @@ function PackageCreate() {
     navigate('/login')
   }
 
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -68,26 +82,46 @@ function PackageCreate() {
     const packageInfo = { ...values }
 
     try {
-      const res = await axios.post(`${apiUrl}/packages`, packageInfo, {
+      const resPackage = await axios.post(`${apiUrl}/packages`, packageInfo, {
         headers: {
           'Auth-Token': token,
         },
       })
 
-      if (res.status === 201) {
-        alert('Pacote criado com sucesso!')
-        navigate('/pacotes')
+      if (resPackage.status !== 201) {
+        console.error(resPackage.data)
+        throw new Error(resPackage.data)
       }
+
+      setErrorMessage(undefined)
+      setSuccessMessage('Pacote criado com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.data)
         setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Error inesperado: ${error}`)
         console.error('An unexpected error occurred.', error)
       }
     } finally {
       setIsLoading(false)
     }
+  }
+
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate('/pacotes')
+  }
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
   }
 
   if (isLoading) return <Loading />
@@ -98,6 +132,52 @@ function PackageCreate() {
 
       <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Criar pacote</h1>
+
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Form {...form}>
           <form

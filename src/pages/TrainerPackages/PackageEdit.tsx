@@ -27,6 +27,13 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 const formSchema = z.object({
   name: z.string(),
@@ -49,10 +56,15 @@ function PackageEdit() {
 
   const { package_id } = useParams()
 
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
   const [isLoading, setIsLoading] = useState(true)
-  const [associatedSubscriptions, setAssociatedSubscriptions] =
-    useState<number>(0)
   const [currentPackage, setCurrentPackage] = useState<Package>()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -98,53 +110,23 @@ function PackageEdit() {
     fetchPackage()
   }, [token, form, package_id])
 
-  useEffect(() => {
-    const fetchSubscriptions = async () => {
-      try {
-        const res = await axios.get(`${apiUrl}/packages/${package_id}/subs`, {
-          headers: {
-            'Auth-Token': token,
-          },
-        })
-
-        const count: number = res.data.packageSubscriptions
-        setAssociatedSubscriptions(count)
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          setErrorMessage(error.response?.data)
-        } else {
-          console.error('An unexpected error occurred.', error)
-        }
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchSubscriptions()
-  }, [token, package_id])
-
   const cancelEdit = () => {
     window.history.back()
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
+    setErrorMessage(undefined)
 
     const updatedPackageInfo = {
-      ...values,
-      price: associatedSubscriptions > 0 ? currentPackage!.price : values.price,
-      duration:
-        associatedSubscriptions > 0
-          ? currentPackage!.duration
-          : values.duration,
-      days_per_month:
-        associatedSubscriptions > 0
-          ? currentPackage!.days_per_month
-          : values.days_per_month,
+      name: values.name,
+      price: values.price,
+      duration: values.duration,
+      days_per_month: values.days_per_month,
     }
 
     try {
-      const res = await axios.put(
+      const resPackage = await axios.put(
         `${apiUrl}/packages/${package_id}`,
         updatedPackageInfo,
         {
@@ -154,19 +136,40 @@ function PackageEdit() {
         }
       )
 
-      if (res.status === 201) {
-        navigate(`/pacote/${package_id}`)
+      if (resPackage.status !== 200) {
+        console.error(resPackage.data)
+        throw new Error(resPackage.data)
       }
+
+      setErrorMessage(undefined)
+      setSuccessMessage('Alterações gravadas com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.status)
-        console.error(error.response?.data)
+        setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error occurred:', error)
       }
     } finally {
       setIsLoading(false)
     }
+  }
+
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate(`/pacote/${package_id}`)
+  }
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
   }
 
   if (isLoading) return <Loading />
@@ -178,6 +181,52 @@ function PackageEdit() {
 
       <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Editar pacote</h1>
+
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Form {...form}>
           <form
