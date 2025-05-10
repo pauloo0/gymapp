@@ -250,7 +250,7 @@ const ClientEdit = () => {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data)
       } else {
-        setErrorMessage(`Erro inexperado: ${error}`)
+        setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error occurred:', error)
       }
     } finally {
