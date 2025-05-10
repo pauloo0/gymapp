@@ -44,6 +44,14 @@ import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { Save, X, Calendar as CalendarIcon } from 'lucide-react'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
 const formSchema = z.object({
@@ -82,7 +90,13 @@ function MeasurementCreate() {
   const { client_id } = useParams()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(true)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
   const [clients, setClients] = useState<Client[]>([])
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -143,6 +157,7 @@ function MeasurementCreate() {
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setErrorMessage(undefined)
     setIsLoading(true)
 
     const measurementInfo = {
@@ -151,20 +166,28 @@ function MeasurementCreate() {
     }
 
     try {
-      const res = await axios.post(`${apiUrl}/measurements`, measurementInfo, {
-        headers: {
-          'Auth-Token': token,
-        },
-      })
+      const resMeasurement = await axios.post(
+        `${apiUrl}/measurements`,
+        measurementInfo,
+        {
+          headers: {
+            'Auth-Token': token,
+          },
+        }
+      )
 
-      if (res.status === 201) {
-        alert('Avaliação criada com sucesso!')
-        navigate('/avaliacoes')
+      if (resMeasurement.status !== 201) {
+        console.error(resMeasurement.data)
+        setErrorMessage(resMeasurement.data)
       }
+
+      setErrorMessage(undefined)
+      setSuccessMessage('Avaliação antropométrica criada com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error occurred', error)
       }
     } finally {
@@ -172,8 +195,25 @@ function MeasurementCreate() {
     }
   }
 
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate('/avaliacoes')
+  }
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
+  }
+
   if (isLoading) return <Loading />
-  if (!clients) navigate('/avaliacoes')
+  if (!clients) setErrorMessage('Não encontrei clientes.')
 
   return (
     <>
@@ -181,6 +221,52 @@ function MeasurementCreate() {
 
       <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Nova Avaliação</h1>
+
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Form {...form}>
           <form

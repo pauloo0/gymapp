@@ -28,6 +28,14 @@ import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 import { ArrowLeft, Save, X } from 'lucide-react'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
 const emptyMeasurement: Measurement = {
   id: '',
   date: '',
@@ -92,7 +100,13 @@ function MeasurementEdit() {
   const { measurement_id } = useParams()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(true)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
   const [measurement, setMeasurement] = useState<Measurement>(emptyMeasurement)
   const [client, setClient] = useState<Client>()
 
@@ -207,6 +221,7 @@ function MeasurementEdit() {
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setErrorMessage(undefined)
     setIsLoading(true)
 
     const updatedMeasurementInfo = {
@@ -226,14 +241,18 @@ function MeasurementEdit() {
         }
       )
 
-      if (resUpdatedMeasurement.status === 201) {
-        navigate(`/avaliacao/${measurement_id}`)
+      if (resUpdatedMeasurement.status !== 200) {
+        console.error(resUpdatedMeasurement.data)
+        throw new Error(resUpdatedMeasurement.data)
       }
+
+      setErrorMessage(undefined)
+      setSuccessMessage('Avaliação antropométrica atualizada com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.status)
-        console.error(error.response?.data)
+        setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error occurred.', error)
       }
     } finally {
@@ -241,12 +260,29 @@ function MeasurementEdit() {
     }
   }
 
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate(`/avaliacao/${measurement_id}`)
+  }
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
+  }
+
   // Tailwind classes in a variable
   const label_group = 'flex flex-col items-start justify-center gap-1'
   const label = 'text-sm font-semibold leading-none'
 
   if (isLoading) return <Loading />
-  if (!measurement) navigate('/avaliacoes')
+  if (!measurement) setErrorMessage('Não encontrei esta medição.')
 
   return (
     <>
@@ -273,6 +309,52 @@ function MeasurementEdit() {
             <p>{format(measurement.date, 'yyyy/MM/dd')}</p>
           </div>
         </div>
+
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Form {...form}>
           <form
