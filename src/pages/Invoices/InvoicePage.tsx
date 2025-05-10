@@ -351,7 +351,12 @@ function InvoicePage() {
                 {invoiceInfo.pendingAmount > 0 && (
                   <TableRow>
                     <TableCell colSpan={invoiceInfo.pendingAmount > 0 ? 4 : 3}>
-                      <Drawer open={paymentFormOpen}>
+                      <Drawer
+                        open={paymentFormOpen}
+                        onOpenChange={() =>
+                          setPaymentFormOpen(!paymentFormOpen)
+                        }
+                      >
                         <DrawerTrigger asChild className='w-full'>
                           <Button
                             size='sm'
