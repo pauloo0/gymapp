@@ -44,6 +44,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
 const formSchema = z.object({
   date: z.date(),
   time: z.string(),
@@ -65,7 +73,13 @@ function ScheduleEdit() {
   // Client id from URL
   const { schedule_id } = useParams()
 
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(true)
   const [client, setClient] = useState<Client | null>(null)
   const [clientWorkouts, setClientWorkouts] = useState<Workout[]>([])
@@ -159,6 +173,7 @@ function ScheduleEdit() {
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setErrorMessage(undefined)
     setIsLoading(true)
 
     const updatedScheduleInfo = {
@@ -179,19 +194,40 @@ function ScheduleEdit() {
         }
       )
 
-      if (resUpdatedSchedule.status === 201) {
-        navigate(`/marcacao/${schedule_id}`)
+      if (resUpdatedSchedule.status !== 200) {
+        console.error(resUpdatedSchedule.data)
+        throw new Error(resUpdatedSchedule.data)
       }
+
+      setErrorMessage(undefined)
+      setSuccessMessage('Alterações gravadas com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.status)
-        console.error(error.response?.data)
+        setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error occurred:', error)
       }
     } finally {
       setIsLoading(false)
     }
+  }
+
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate(`/marcacao/${schedule_id}`)
+  }
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
   }
 
   if (isLoading) return <Loading />
@@ -202,6 +238,52 @@ function ScheduleEdit() {
 
       <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Editar agendamento</h1>
+
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Form {...form}>
           <form

@@ -49,6 +49,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -77,7 +78,12 @@ function ScheduleCreate() {
   // Client Id from URL
   const { client_id } = useParams()
 
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
   const [isLoading, setIsLoading] = useState(true)
   const [clients, setClients] = useState<Client[] | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
@@ -160,6 +166,7 @@ function ScheduleCreate() {
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setErrorMessage(undefined)
     setIsLoading(true)
 
     const scheduleInfo = {
@@ -169,22 +176,24 @@ function ScheduleCreate() {
     }
 
     try {
-      const res = await axios.post(`${apiUrl}/schedule`, scheduleInfo, {
+      const resSchedule = await axios.post(`${apiUrl}/schedule`, scheduleInfo, {
         headers: {
           'Auth-Token': token,
         },
       })
 
-      if (res.status !== 201) {
-        throw new Error('Erro a criar marcação')
+      if (resSchedule.status !== 201) {
+        console.error(resSchedule.data)
+        throw new Error(resSchedule.data)
       }
 
-      alert('Marcação criada com sucesso!')
-      navigate('/marcacoes')
+      setErrorMessage(undefined)
+      setSuccessMessage('Agendamento criado com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setErrorMessage(error.response?.data.message)
       } else {
+        setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error occurred:', error)
       }
     } finally {
@@ -196,6 +205,20 @@ function ScheduleCreate() {
     if (errorMessage) setIsDialogOpen(true)
   }, [errorMessage])
 
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+    navigate('/marcacoes')
+  }
+
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
+  }
+
   if (isLoading) return <Loading />
 
   return (
@@ -205,13 +228,48 @@ function ScheduleCreate() {
       <main className='min-h-[calc(100vh_-_64px)] pb-[80px]'>
         <h1 className='mb-6 text-xl'>Criar marcação</h1>
 
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
         {errorMessage && (
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose}
+          >
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Erro</DialogTitle>
                 <DialogDescription>{errorMessage}</DialogDescription>
               </DialogHeader>
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}
