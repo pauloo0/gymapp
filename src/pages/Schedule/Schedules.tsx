@@ -20,15 +20,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-// import {
-//   Select,
-//   SelectTrigger,
-//   SelectValue,
-//   SelectContent,
-//   SelectItem,
-//   SelectLabel,
-//   SelectGroup,
-// } from '@/components/ui/select'
 
 import { CalendarDays, Plus, TableOfContents } from 'lucide-react'
 import { getTextColorForBackground } from '@/utils/functions'
@@ -39,6 +30,7 @@ const emptySchedule: Schedule[] = [
     id: '',
     date: '',
     time: '',
+    status: 'scheduled',
     clients: {
       id: '',
       firstname: '',
@@ -61,26 +53,6 @@ const emptySchedule: Schedule[] = [
     workouts: null,
   },
 ]
-
-// const workingHours: string[] = [
-//   '07:00',
-//   '08:00',
-//   '09:00',
-//   '10:00',
-//   '11:00',
-//   '12:00',
-//   '13:00',
-//   '14:00',
-//   '15:00',
-//   '16:00',
-//   '17:00',
-//   '18:00',
-//   '19:00',
-//   '20:00',
-//   '21:00',
-//   '22:00',
-//   '23:00',
-// ]
 
 const HOUR_START = 7
 const HOUR_END = 23
@@ -179,8 +151,9 @@ function Schedules() {
 
   useEffect(() => {
     if (searchFilters.view === 'calendar') {
-      const filtered = schedules.filter((schedule: Schedule) =>
-        isToday(parseISO(schedule.date))
+      const filtered = schedules.filter(
+        (schedule: Schedule) =>
+          isToday(parseISO(schedule.date)) && schedule.status !== 'canceled'
       )
       setFilteredSchedules(filtered)
     } else {

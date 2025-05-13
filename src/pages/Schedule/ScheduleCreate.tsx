@@ -141,9 +141,9 @@ function ScheduleCreate() {
           },
         })
 
-        const workouts: Workout[] = res.data.workouts.filter(
-          (workout: Workout) => !workout.public
-        )
+        const workouts: Workout[] = res.data.workouts
+          ? res.data.workouts.filter((workout: Workout) => !workout.public)
+          : []
 
         setClientWorkouts(workouts)
       } catch (error) {
@@ -421,12 +421,17 @@ function ScheduleCreate() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {clientWorkouts.length > 0 &&
+                        {clientWorkouts.length > 0 ? (
                           clientWorkouts.map((workout) => (
                             <SelectItem key={workout.id} value={workout.id}>
                               {workout.name}
                             </SelectItem>
-                          ))}
+                          ))
+                        ) : (
+                          <SelectItem disabled value={'none'}>
+                            Sem planos de treino
+                          </SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />

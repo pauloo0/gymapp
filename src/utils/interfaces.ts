@@ -27,10 +27,13 @@ export interface ClientLocation {
   associatedClients: number
 }
 
+type ScheduleStatus = 'scheduled' | 'completed' | 'canceled'
+
 export interface Schedule {
   id: string
   date: string
   time: string
+  status: ScheduleStatus
   workouts: Workout | null
   clients: {
     id: string
