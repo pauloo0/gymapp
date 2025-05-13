@@ -79,7 +79,7 @@ function TrainerDashboard() {
           className='relative bg-center bg-cover'
           style={{ backgroundImage: `url(${calendarPhoto})` }}
         >
-          <div className='absolute inset-0 bg-black bg-opacity-70'></div>
+          <div className='absolute inset-0 bg-black rounded-md bg-opacity-70'></div>
           <CardHeader className='relative'>
             <CardTitle className='text-lg font-bold text-white'>
               Agenda
