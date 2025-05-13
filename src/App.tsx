@@ -25,10 +25,16 @@ import WorkoutCreate from './pages/Workouts/WorkoutCreate'
 import WorkoutPage from './pages/Workouts/WorkoutPage'
 import WorkoutEdit from './pages/Workouts/WorkoutEdit'
 
-import Measurements from './pages/Measurements/Measurements'
-import MeasurementPage from './pages/Measurements/MeasurementPage'
-import MeasurementCreate from './pages/Measurements/MeasurementCreate'
-import MeasurementEdit from './pages/Measurements/MeasurementEdit'
+import PhysicalTests from './pages/PhysicalTests/PhysicalTests'
+
+import Measurements from './pages/PhysicalTests/Measurements/Measurements'
+import MeasurementPage from './pages/PhysicalTests/Measurements/MeasurementPage'
+import MeasurementCreate from './pages/PhysicalTests/Measurements/MeasurementCreate'
+import MeasurementEdit from './pages/PhysicalTests/Measurements/MeasurementEdit'
+
+import StrengthTests from './pages/PhysicalTests/StrengthTest/StrengthTests'
+
+import PowerTests from './pages/PhysicalTests/PowerTest/PowerTests'
 
 import TrainerPackages from './pages/TrainerPackages/TrainerPackages'
 import PackagePage from './pages/TrainerPackages/PackagesPage'
@@ -142,16 +148,30 @@ function App() {
               element={<WorkoutEdit />}
             />
             <Route path='/treinos/novo' element={<WorkoutCreate />} />
-            <Route path='/avaliacoes' element={<Measurements />} />
+
+            <Route path='/avaliacoes' element={<PhysicalTests />} />
+
             <Route
-              path='/avaliacao/:measurement_id'
+              path='/avaliacoes/antropometricos'
+              element={<Measurements />}
+            />
+            <Route
+              path='/avaliacoes/antropometricos/:measurement_id'
               element={<MeasurementPage />}
             />
-            <Route path='/avaliacoes/novo' element={<MeasurementCreate />} />
             <Route
-              path='/avaliacao/:measurement_id/editar'
+              path='/avaliacoes/antropometricos/novo'
+              element={<MeasurementCreate />}
+            />
+            <Route
+              path='/avaliacoes/antropometricos/:measurement_id/editar'
               element={<MeasurementEdit />}
             />
+
+            <Route path='/avaliacoes/forca' element={<StrengthTests />} />
+
+            <Route path='/avaliacoes/potencia' element={<PowerTests />} />
+
             <Route path='/pacotes' element={<TrainerPackages />} />
             <Route path='/pacote/:package_id' element={<PackagePage />} />
             <Route
