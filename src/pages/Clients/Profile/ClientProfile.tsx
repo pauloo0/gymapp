@@ -49,6 +49,8 @@ const emptyClient: Client = {
   goal: '',
   trainer_id: '',
   active: false,
+  injuries: '',
+  health_conditions: '',
   users: {
     id: '',
     email: '',
@@ -240,7 +242,13 @@ function ClientProfile() {
         const schedules =
           res6.status === 204 ? emptySchedule : res6.data.schedule
 
-        setClient(client)
+        setClient({
+          ...client,
+          injuries: !client.injuries ? 'Nada a revelar' : client.injuries,
+          health_conditions: !client.health_conditions
+            ? 'Nada a revelar'
+            : client.health_conditions,
+        })
         setMeasurements(measurements)
         setInvoices(invoices)
         setWorkouts(workouts)
@@ -344,16 +352,20 @@ function ClientProfile() {
                     <p>{client.phone_number}</p>
                   </div>
                   <div className={label_group}>
-                    <p className={label}>Email</p>
-                    <p>{client.users.email}</p>
-                  </div>
-                  <div className={label_group}>
                     <p className={label}>Data Entrada</p>
                     <p>
                       {new Date(client.join_date).toLocaleDateString('pt-PT')}
                     </p>
                   </div>
                   <div className={label_group}>
+                    <p className={label}>Ativo ?</p>
+                    <p>{client.active ? 'Sim' : 'Não'}</p>
+                  </div>
+                  <div className={`${label_group} col-span-2`}>
+                    <p className={label}>Email</p>
+                    <p>{client.users.email}</p>
+                  </div>
+                  <div className={`${label_group} col-span-2`}>
                     <p className={label}>Pacote Subscrito</p>
                     <p>
                       {subscription.id === ''
@@ -361,11 +373,7 @@ function ClientProfile() {
                         : subscription.packages.name}
                     </p>
                   </div>
-                  <div className={label_group}>
-                    <p className={label}>Ativo ?</p>
-                    <p>{client.active ? 'Sim' : 'Não'}</p>
-                  </div>
-                  <div className={label_group}>
+                  <div className={`${label_group} col-span-2`}>
                     <p className={label}>Localização</p>
                     <p
                       className={`border-l-8 pl-2`}
@@ -378,7 +386,15 @@ function ClientProfile() {
                   </div>
                   <div className={`${label_group} col-span-2`}>
                     <p className={label}>Objetivo</p>
-                    <p>{client.goal}</p>
+                    <pre className='font-sans'>{client.goal}</pre>
+                  </div>
+                  <div className={`${label_group} col-span-2`}>
+                    <p className={label}>Lesões</p>
+                    <pre className='font-sans'>{client.injuries}</pre>
+                  </div>
+                  <div className={`${label_group} col-span-2`}>
+                    <p className={label}>Patologias</p>
+                    <pre className='font-sans'>{client.health_conditions}</pre>
                   </div>
                 </div>
               </AccordionContent>

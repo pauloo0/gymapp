@@ -9,6 +9,8 @@ export interface Client {
   goal: string
   trainer_id: string
   active: boolean
+  injuries: string
+  health_conditions: string
   users: {
     id: string
     email: string

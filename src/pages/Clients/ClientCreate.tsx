@@ -66,6 +66,8 @@ const emptyClient: Client = {
   goal: '',
   trainer_id: '',
   active: false,
+  injuries: '',
+  health_conditions: '',
   users: {
     id: '',
     email: '',
@@ -115,6 +117,10 @@ const formSchema = z.object({
     .max(30, { message: 'Número de telefone muito extenso.' }),
   email: z.string().email({ message: 'Email inválido.' }),
   goal: z.string().max(255, { message: 'Objetivo muito extenso.' }),
+  injuries: z.string().max(255, { message: 'Lesões muito extenso.' }),
+  health_conditions: z
+    .string()
+    .max(255, { message: 'Patologias muito extenso.' }),
   package_id: z.string(),
   location_id: z.string(),
 })
@@ -151,6 +157,8 @@ function ClientCreate() {
       phone_number: emptyClient.phone_number,
       email: emptyClient.users.email,
       goal: emptyClient.goal,
+      injuries: emptyClient.injuries,
+      health_conditions: emptyClient.health_conditions,
       package_id: emptyClient.subscriptions[0].packages.id,
       location_id: emptyClient.client_locations.id,
     },
@@ -176,6 +184,8 @@ function ClientCreate() {
       birthday: format(values.birthday, 'yyyy-MM-dd'),
       join_date: format(new Date(), 'yyyy-MM-dd'),
       goal: values.goal,
+      injuries: values.injuries,
+      health_conditions: values.health_conditions,
       location_id: values.location_id,
     }
 
@@ -462,6 +472,46 @@ function ClientCreate() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Objetivo</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='injuries'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='flex flex-row items-center justify-start gap-1'>
+                      Lesões
+                      <span className='text-xs font-light text-gray-500'>
+                        (opcional)
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='health_conditions'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='flex flex-row items-center justify-start gap-1'>
+                      Patologias
+                      <span className='text-xs font-light text-gray-500'>
+                        (opcional)
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Textarea {...field} />
                     </FormControl>

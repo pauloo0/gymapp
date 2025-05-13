@@ -64,6 +64,8 @@ const emptyClient: Client = {
   goal: '',
   trainer_id: '',
   active: false,
+  injuries: '',
+  health_conditions: '',
   users: {
     id: '',
     email: '',
@@ -113,6 +115,10 @@ const formSchema = z.object({
   birthday: z.date(),
   join_date: z.date(),
   goal: z.string().max(255, { message: 'Objetivo muito extenso.' }),
+  injuries: z.string().max(255, { message: 'Lesões muito extenso.' }),
+  health_conditions: z
+    .string()
+    .max(255, { message: 'Patologias muito extenso.' }),
   active: z.boolean(),
   package_id: z.string(),
   location_id: z.string(),
@@ -154,6 +160,8 @@ const ClientEdit = () => {
       birthday: new Date(),
       join_date: new Date(),
       goal: '',
+      injuries: '',
+      health_conditions: '',
       active: true,
       package_id: '',
       location_id: '',
@@ -193,6 +201,8 @@ const ClientEdit = () => {
           ...client,
           birthday: new Date(client.birthday),
           join_date: new Date(client.join_date),
+          injuries: client.injuries || '',
+          health_conditions: client.health_conditions || '',
           package_id: client.subscriptions[0].packages.id,
           location_id: client.client_locations.id,
         })
@@ -228,6 +238,8 @@ const ClientEdit = () => {
       birthday: format(values.birthday, 'yyyy-MM-dd'),
       join_date: format(values.join_date, 'yyyy-MM-dd'),
       goal: values.goal,
+      injuries: values.injuries,
+      health_conditions: values.health_conditions,
       package_id: values.package_id,
       location_id: values.location_id,
     }
@@ -503,7 +515,6 @@ const ClientEdit = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name='active'
@@ -522,6 +533,7 @@ const ClientEdit = () => {
                 </FormItem>
               )}
             />
+
             <div className='col-span-2'>
               <FormField
                 control={form.control}
@@ -529,6 +541,46 @@ const ClientEdit = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Objetivo</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='injuries'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='flex flex-row items-center justify-start gap-1'>
+                      Lesões
+                      <span className='text-xs font-light text-gray-500'>
+                        (opcional)
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className='col-span-2'>
+              <FormField
+                control={form.control}
+                name='health_conditions'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='flex flex-row items-center justify-start gap-1'>
+                      Patologias
+                      <span className='text-xs font-light text-gray-500'>
+                        (opcional)
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Textarea {...field} />
                     </FormControl>
