@@ -83,8 +83,10 @@ function WorkoutPage() {
                 onClick={() => navigate('/treinos')}
               />
               <h1 className='text-2xl font-semibold'>
-                Treino de{' '}
-                {workout.clients.firstname + ' ' + workout.clients.lastname}
+                {workout.type === 'regular'
+                  ? `Treino de
+                ${workout.clients.firstname + ' ' + workout.clients.lastname}`
+                  : `Treino de ${workout.type === 'power_test'}`}
               </h1>
             </div>
 
@@ -120,37 +122,83 @@ function WorkoutPage() {
 
             <div className='flex flex-col w-full gap-2 overflow-y-auto'>
               <h3 className='text-xl font-bold'>Exercícios</h3>
-              {workout.workout_exercises.map((workout_exercise) => (
-                <div
-                  key={workout_exercise.exercises.id}
-                  className='flex flex-col px-3 py-2 space-y-2 border border-gray-800 rounded-md'
-                >
-                  <div className='flex flex-row items-center justify-between'>
-                    <span className='text-lg font-semibold'>
-                      {workout_exercise.exercises.name}
-                    </span>
-                  </div>
+              {workout.workout_exercises.map((workout_exercise) => {
+                const measurementUnits =
+                  workout_exercise.exercises.exercise_measurements.map(
+                    (measurement) => {
+                      switch (measurement.measurement_type) {
+                        case 'reps':
+                          return { heading: 'Reps', fieldName: 'reps' }
+                        case 'weight':
+                          return { heading: 'Kg', fieldName: 'weight' }
+                        case 'time':
+                          return { heading: 'Mins', fieldName: 'time' }
+                        case 'distance':
+                          return { heading: 'Kms', fieldName: 'distance' }
+                        default:
+                          return { heading: '', fieldName: '' }
+                      }
+                    }
+                  )
 
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Série</TableHead>
-                        <TableHead>Reps</TableHead>
-                        <TableHead>Kg</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {workout_exercise.sets.map((set) => (
-                        <TableRow key={set.id}>
-                          <TableCell>{set.set_number}</TableCell>
-                          <TableCell>{set.reps}</TableCell>
-                          <TableCell>{set.weight}</TableCell>
+                return (
+                  <div
+                    key={workout_exercise.exercises.id}
+                    className='flex flex-col px-3 py-2 space-y-2 border border-gray-800 rounded-md'
+                  >
+                    <div className='flex flex-row items-center justify-between'>
+                      <span className='text-lg font-semibold'>
+                        {workout_exercise.exercises.name}
+                      </span>
+                    </div>
+
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className='text-start'>Série</TableHead>
+                          <TableHead className='text-center'>
+                            {measurementUnits[0].heading}
+                          </TableHead>
+                          <TableHead className='text-center'>
+                            {measurementUnits[1].heading}
+                          </TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              ))}
+                      </TableHeader>
+                      <TableBody>
+                        {workout_exercise.sets
+                          .sort((a, b) => a.set_number - b.set_number)
+                          .map((set) => (
+                            <TableRow key={set.id}>
+                              <TableCell className='text-start'>
+                                {set.set_number}
+                              </TableCell>
+                              <TableCell className='text-center'>
+                                {measurementUnits[0].fieldName === 'reps' &&
+                                  set.reps}
+                                {measurementUnits[0].fieldName === 'weight' &&
+                                  set.weight}
+                                {measurementUnits[0].fieldName === 'time' &&
+                                  set.time}
+                                {measurementUnits[0].fieldName === 'distance' &&
+                                  set.distance}
+                              </TableCell>
+                              <TableCell className='text-center'>
+                                {measurementUnits[1].fieldName === 'reps' &&
+                                  set.reps}
+                                {measurementUnits[1].fieldName === 'weight' &&
+                                  set.weight}
+                                {measurementUnits[1].fieldName === 'time' &&
+                                  set.time}
+                                {measurementUnits[1].fieldName === 'distance' &&
+                                  set.distance}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )
+              })}
             </div>
           </main>
         )}

@@ -84,12 +84,14 @@ export interface Measurement {
   }
 }
 
+type WorkoutType = 'regular' | 'power_test' | 'one_rm_test'
+
 export interface Workout {
   id: string
   name: string
   active: boolean
   public: boolean
-  is_power_test: boolean
+  type: WorkoutType
   notes: string
   clients: {
     id: string
@@ -103,14 +105,19 @@ export interface WorkoutExercise {
   id: string
   exercises: Exercise
   order: number
+  rest_after_exercise: number
   sets: Set[]
 }
 
 export interface Set {
   id: string
   set_number: number
-  reps: number
-  weight: number
+  reps?: number
+  weight?: number
+  time?: number
+  distance?: number
+  is_failure: boolean
+  rest_after_set: number
 }
 
 export interface Subscription {
@@ -156,10 +163,12 @@ export interface Package {
   active: boolean
 }
 
+type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced'
 export interface Exercise {
   id: string
   name: string
   description?: string
+  difficulty_level: DifficultyLevel
   media: {
     id: string
     type: string
@@ -173,6 +182,14 @@ export interface Exercise {
     id: string
     name: string
   }
+  exercise_measurements: ExerciseMeasurement[]
+}
+
+export type MeasurementType = 'reps' | 'weight' | 'time' | 'distance'
+export interface ExerciseMeasurement {
+  id: string
+  measurement_type: MeasurementType
+  is_required: boolean
 }
 
 export interface Bodypart {

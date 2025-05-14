@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Exercise, Bodypart, Equipment } from '@/utils/interfaces'
+import {
+  Exercise,
+  Bodypart,
+  Equipment,
+  MeasurementType,
+} from '@/utils/interfaces'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,13 +15,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface WorkoutAddExercisesProps {
   availableExercises: Exercise[]
   appendExercises: (
     exercises: {
       exercise_id: string
-      sets: { reps: number; weight: number }[]
+      exercise_measurements: {
+        measurement_type: MeasurementType
+        is_required: boolean
+      }[]
+      rest_after_exercise: number
+      sets: {
+        rest_after_set: number
+        reps: number
+        weight: number
+        time: number
+        distance: number
+      }[]
     }[]
   ) => void
   handleOpenClose: () => void
@@ -78,7 +95,9 @@ function WorkoutAddExercises({
   const handleAddExercise = (newExercises: Exercise[]) => {
     const exercisesForForm = newExercises.map((exercise) => ({
       exercise_id: exercise.id,
-      sets: [{ reps: 0, weight: 0 }],
+      exercise_measurements: exercise.exercise_measurements,
+      rest_after_exercise: 0,
+      sets: [{ rest_after_set: 0, reps: 0, weight: 0, time: 0, distance: 0 }],
     }))
 
     appendExercises(exercisesForForm)
@@ -140,10 +159,13 @@ function WorkoutAddExercises({
         </div>
       </div>
 
-      <div id='exerciseList' className='grid grid-cols-1 gap-2 overflow-auto'>
+      <ScrollArea
+        id='exerciseList'
+        className='flex flex-col max-h-[calc(100vh_-_340px)]'
+      >
         {filteredExercises.map((exercise) => (
           <div
-            className={`px-3 py-2 cursor-pointer border border-gray-700 rounded hover:bg-gray-800 ${
+            className={`flex flex-col my-2 gap-1 px-3 py-2 cursor-pointer border border-gray-700 rounded hover:bg-gray-800 ${
               exercisesToAdd.find((e) => exercise.id === e.id)
                 ? 'border-l-8 border-lime-500 bg-gray-800'
                 : ''
@@ -152,9 +174,52 @@ function WorkoutAddExercises({
             onClick={() => handleExercise(exercise)}
           >
             {exercise.name}
+            <div className='flex flex-col items-start justify-start gap-1 text-xs text-gray-400'>
+              <div className='flex flex-row items-center gap-1 justif-start'>
+                Uni. Medida:
+                {exercise.exercise_measurements.length > 0 ? (
+                  exercise.exercise_measurements.map((measurement, index) => {
+                    let measurementUnit = ''
+                    switch (measurement.measurement_type) {
+                      case 'reps':
+                        measurementUnit = 'Repetições'
+                        break
+                      case 'weight':
+                        measurementUnit = 'Peso'
+                        break
+                      case 'time':
+                        measurementUnit = 'Tempo'
+                        break
+                      case 'distance':
+                        measurementUnit = 'Distância'
+                        break
+                      default:
+                        break
+                    }
+                    return (
+                      <span key={index}>
+                        {measurementUnit}
+                        {index < exercise.exercise_measurements.length - 1 &&
+                          ','}
+                      </span>
+                    )
+                  })
+                ) : (
+                  <span>Por definir</span>
+                )}
+              </div>
+
+              <div className='flex flex-row items-center gap-1 justif-start'>
+                Equipamento: {exercise.equipment.name}
+              </div>
+
+              <div className='flex flex-row items-center gap-1 justif-start'>
+                Parte do corpo: {exercise.bodyparts.name}
+              </div>
+            </div>
           </div>
         ))}
-      </div>
+      </ScrollArea>
 
       <div className='absolute flex flex-col items-center justify-center gap-2 left-6 right-6 bottom-6'>
         <Button

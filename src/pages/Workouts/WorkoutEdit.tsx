@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -16,6 +16,7 @@ import {
   Equipment,
   Exercise,
   WorkoutExercise,
+  MeasurementType,
 } from '@/utils/interfaces'
 
 import TrainerNavbar from '@/components/TrainerNavbar'
@@ -58,6 +59,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -83,7 +92,7 @@ const formSchema = z.object({
     .max(30, { message: 'O nome deve ter no máximo 30 caracteres.' }),
   active: z.boolean().default(true),
   public: z.boolean().default(false),
-  is_power_test: z.boolean().default(false),
+  type: z.enum(['regular', 'power_test', 'one_rm_test']),
   notes: z
     .string()
     .trim()
@@ -92,10 +101,19 @@ const formSchema = z.object({
     .array(
       z.object({
         exercise_id: z.string(),
+        exercise_measurements: z.array(
+          z.object({
+            id: z.string().optional(),
+            measurement_type: z.enum(['reps', 'weight', 'time', 'distance']),
+            is_required: z.boolean().default(false),
+          })
+        ),
         sets: z.array(
           z.object({
-            reps: z.number(),
+            reps: z.number().optional().default(0),
             weight: z.number().optional().default(0),
+            time: z.number().optional().default(0),
+            distance: z.number().optional().default(0),
           })
         ),
       })
@@ -114,7 +132,14 @@ function WorkoutEdit() {
     navigate('/login')
   }
 
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    undefined
+  )
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [currentClient, setCurrentClient] = useState<Client | null>(null)
   const [dbExercises, setDbExercises] = useState<Exercise[]>([])
@@ -129,7 +154,7 @@ function WorkoutEdit() {
       name: '',
       active: true,
       public: false,
-      is_power_test: false,
+      type: 'regular',
       notes: '',
       exercises: [],
     },
@@ -153,16 +178,18 @@ function WorkoutEdit() {
         })
         const workout: Workout = resWorkout.data.workout
 
-        const resClient = await axios.get(
-          `${apiUrl}/clients/${workout.clients.id}`,
-          {
-            headers: {
-              'Auth-Token': token,
-            },
-          }
-        )
-        const client: Client = resClient.data.client
-        setCurrentClient(client)
+        if (workout.clients) {
+          const resClient = await axios.get(
+            `${apiUrl}/clients/${workout.clients.id}`,
+            {
+              headers: {
+                'Auth-Token': token,
+              },
+            }
+          )
+          const client: Client = resClient.data.client
+          setCurrentClient(client)
+        }
 
         const [resExercises, resBodyparts, resEquipment] = await Promise.all([
           axios.get(`${apiUrl}/exercises`),
@@ -180,10 +207,15 @@ function WorkoutEdit() {
         const initialExercises = workout.workout_exercises.map(
           (ex: WorkoutExercise) => ({
             exercise_id: ex.exercises.id,
-            sets: ex.sets.map((set) => ({
-              reps: set.reps,
-              weight: set.weight || 0,
-            })),
+            exercise_measurements: ex.exercises.exercise_measurements,
+            sets: ex.sets
+              .sort((a, b) => a.set_number - b.set_number)
+              .map((set) => ({
+                reps: set.reps || 0,
+                weight: set.weight || 0,
+                time: set.time || 0,
+                distance: set.distance || 0,
+              })),
           })
         )
 
@@ -191,7 +223,7 @@ function WorkoutEdit() {
           name: workout.name,
           active: workout.active,
           public: workout.public,
-          is_power_test: workout.is_power_test,
+          type: workout.type,
           notes: workout.notes || '',
           exercises: initialExercises,
         })
@@ -210,10 +242,19 @@ function WorkoutEdit() {
   }, [token, workout_id, form])
 
   const cancelEdit = () => {
-    navigate(`/treino/${workout_id}`)
+    if (!currentClient) {
+      navigate(
+        workoutType === 'power_test'
+          ? `/avaliacoes/potencia`
+          : `/avaliacoes/forca`
+      )
+    } else {
+      navigate(`/treino/${workout_id}`)
+    }
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setErrorMessage(undefined)
     setIsLoading(true)
 
     const updatedWorkoutInfo = {
@@ -242,16 +283,21 @@ function WorkoutEdit() {
 
       setIsLoading(false)
 
-      if (resUpdatedWorkout.status === 200) {
-        navigate(`/treino/${workout_id}`)
+      if (resUpdatedWorkout.status !== 200) {
+        console.error(resUpdatedWorkout.data)
+        throw new Error(resUpdatedWorkout.data)
       }
+
+      setErrorMessage(undefined)
+      setSuccessMessage('Plano de treino atualizado com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.status)
-        console.error(error.response?.data)
+        setErrorMessage(error.response?.data)
       } else {
+        setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error occurred:', error)
       }
+    } finally {
       setIsLoading(false)
     }
   }
@@ -269,18 +315,22 @@ function WorkoutEdit() {
     setExercisesDrawerOpen(!exercisesDrawerOpen)
   }
 
-  const addedExerciseIds = form
-    .watch('exercises')
-    .map((exercise) => exercise.exercise_id)
+  const addedExerciseIds = useMemo(
+    () => form.watch('exercises').map((exercise) => exercise.exercise_id),
+    [form]
+  )
+
+  const workoutType = form.watch('type')
 
   useEffect(() => {
-    setAvailableExercises(() => {
-      return addedExerciseIds.length === 0
+    const filteredExercises =
+      addedExerciseIds.length === 0
         ? dbExercises
         : dbExercises.filter(
             (exercise) => !addedExerciseIds.includes(exercise.id)
           )
-    })
+
+    setAvailableExercises(filteredExercises)
   }, [addedExerciseIds, dbExercises])
 
   const addSet = (exerciseId: string) => {
@@ -294,12 +344,15 @@ function WorkoutEdit() {
             {
               reps: 0,
               weight: 0,
+              time: 0,
+              distance: 0,
             },
           ],
         }
       }
       return exercise
     })
+
     form.setValue('exercises', updatedExercises)
   }
 
@@ -317,6 +370,33 @@ function WorkoutEdit() {
     form.setValue('exercises', updatedExercises)
   }
 
+  useEffect(() => {
+    if (errorMessage) setIsDialogOpen(true)
+  }, [errorMessage])
+
+  useEffect(() => {
+    if (successMessage) setIsDialogOpen(true)
+  }, [successMessage])
+
+  const handleSuccessClose = () => {
+    setIsDialogOpen(false)
+
+    if (!currentClient) {
+      navigate(
+        workoutType === 'power_test'
+          ? `/avaliacoes/potencia`
+          : `/avaliacoes/forca`
+      )
+    } else {
+      navigate(`/treino/${workout_id}`)
+    }
+  }
+
+  const handleErrorClose = () => {
+    setIsDialogOpen(false)
+    setErrorMessage(undefined)
+  }
+
   if (isLoading) return <Loading />
 
   return (
@@ -329,6 +409,52 @@ function WorkoutEdit() {
           {currentClient &&
             ' de ' + currentClient.firstname + ' ' + currentClient.lastname}
         </h1>
+
+        {successMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleSuccessClose()}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sucesso</DialogTitle>
+              </DialogHeader>
+              {successMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleSuccessClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {errorMessage && (
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => !open && handleErrorClose}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Erro</DialogTitle>
+              </DialogHeader>
+              {errorMessage}
+              <DialogFooter>
+                <Button
+                  type='button'
+                  variant={'default'}
+                  onClick={handleErrorClose}
+                >
+                  Ok
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Form {...form}>
           <form
@@ -401,41 +527,25 @@ function WorkoutEdit() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name='public'
-                render={({ field }) => (
-                  <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className='space-y-1 leading-none'>
-                      <FormLabel>Público</FormLabel>
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='is_power_test'
-                render={({ field }) => (
-                  <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className='space-y-1 leading-none'>
-                      <FormLabel>Teste Máximo</FormLabel>
-                    </div>
-                  </FormItem>
-                )}
-              />
+              {workoutType === 'regular' && (
+                <FormField
+                  control={form.control}
+                  name='public'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-start p-2 space-x-3 space-y-0'>
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className='space-y-1 leading-none'>
+                        <FormLabel>Público</FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              )}
             </section>
 
             <div className='col-span-2'>
@@ -470,6 +580,23 @@ function WorkoutEdit() {
                   const exercise = form.getValues(`exercises.${index}`)
                   const isFirst = index === 0
                   const isLast = index === fields.length - 1
+
+                  const measurementUnits = exercise.exercise_measurements.map(
+                    (measurement) => {
+                      switch (measurement.measurement_type) {
+                        case 'reps':
+                          return { heading: 'Reps', fieldName: 'reps' }
+                        case 'weight':
+                          return { heading: 'Kg', fieldName: 'weight' }
+                        case 'time':
+                          return { heading: 'Mins', fieldName: 'time' }
+                        case 'distance':
+                          return { heading: 'Kms', fieldName: 'distance' }
+                        default:
+                          return { heading: '', fieldName: '' }
+                      }
+                    }
+                  )
 
                   return (
                     <div
@@ -523,8 +650,8 @@ function WorkoutEdit() {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Série</TableHead>
-                            <TableHead>Reps</TableHead>
-                            <TableHead>Kg</TableHead>
+                            <TableHead>{measurementUnits[0].heading}</TableHead>
+                            <TableHead>{measurementUnits[1].heading}</TableHead>
                             <TableHead></TableHead>
                           </TableRow>
                         </TableHeader>
@@ -534,7 +661,10 @@ function WorkoutEdit() {
                               <TableCell>{setIndex + 1}</TableCell>
                               <TableCell>
                                 <Controller
-                                  name={`exercises.${index}.sets.${setIndex}.reps`}
+                                  name={`exercises.${index}.sets.${setIndex}.${
+                                    measurementUnits[0]
+                                      .fieldName as MeasurementType
+                                  }`}
                                   control={form.control}
                                   render={({ field }) => (
                                     <Input
@@ -550,7 +680,10 @@ function WorkoutEdit() {
                               </TableCell>
                               <TableCell>
                                 <Controller
-                                  name={`exercises.${index}.sets.${setIndex}.weight`}
+                                  name={`exercises.${index}.sets.${setIndex}.${
+                                    measurementUnits[1]
+                                      .fieldName as MeasurementType
+                                  }`}
                                   control={form.control}
                                   render={({ field }) => (
                                     <Input
