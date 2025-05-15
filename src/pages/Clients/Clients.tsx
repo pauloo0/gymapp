@@ -33,6 +33,8 @@ const emptyClient: Client[] = [
     join_date: '',
     birthday: '',
     goal: '',
+    injuries: '',
+    health_conditions: '',
     trainer_id: '',
     active: false,
     users: {

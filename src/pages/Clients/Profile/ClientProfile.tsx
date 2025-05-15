@@ -136,6 +136,7 @@ const emptySchedule: Schedule[] = [
     id: '',
     date: '',
     time: '',
+    status: 'scheduled',
     clients: {
       id: '',
       firstname: '',
