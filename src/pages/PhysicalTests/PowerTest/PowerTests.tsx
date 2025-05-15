@@ -4,7 +4,6 @@ import { useUser } from '@/utils/userWrapper'
 import TrainerNavbar from '@/components/TrainerNavbar'
 import ClientNavbar from '@/components/ClientNavbar'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
 import UnderConstruction from '@/pages/UnderConstruction'
 
 export default function PowerTests() {
