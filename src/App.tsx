@@ -48,6 +48,12 @@ import ClientLocations from './pages/Locations/Locations'
 import LocationEdit from './pages/Locations/LocationEdit'
 import LocationCreate from './pages/Locations/LocationCreate'
 
+// Admin Routes
+import ExercisesList from './pages/Admin/Exercises/ExercisesList'
+import ExercisePage from './pages/Admin/Exercises/ExercisePage'
+import ExercisesCreate from './pages/Admin/Exercises/ExercisesCreate'
+import ExercisesEdit from './pages/Admin/Exercises/ExercisesEdit'
+
 import DBConnectionError from './pages/DBConnectionError'
 import Loading from './components/reusable/Loading'
 
@@ -187,6 +193,21 @@ function App() {
               element={<LocationEdit />}
             />
             <Route path='/localizacoes/nova' element={<LocationCreate />} />
+
+            <Route path='/admin/exercicios' element={<ExercisesList />} />
+            <Route
+              path='/admin/exercicios/:exercise_id'
+              element={<ExercisePage />}
+            />
+            <Route
+              path='/admin/exercicios/novo'
+              element={<ExercisesCreate />}
+            />
+            <Route
+              path='/admin/exercicios/:exercicios_id/editar'
+              element={<ExercisesEdit />}
+            />
+
             <Route path='*' element={<NotFound />} />
           </Routes>
         </div>
