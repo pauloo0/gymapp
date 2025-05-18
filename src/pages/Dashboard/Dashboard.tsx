@@ -7,6 +7,7 @@ import TrainerDashboard from './TrainerDashboard'
 import ClientNavbar from '@/components/ClientNavbar'
 import TrainerNavbar from '@/components/TrainerNavbar'
 import { useNavigate } from 'react-router'
+import AdminDashboard from './AdminDashboard'
 
 function Dashboard() {
   const navigate = useNavigate()
@@ -32,6 +33,14 @@ function Dashboard() {
       <div className='pb-[80px]'>
         <TrainerNavbar />
         <TrainerDashboard />
+      </div>
+    )
+  }
+
+  if (user.userRole === 'admin') {
+    return (
+      <div className='pb-[80px]'>
+        <AdminDashboard />
       </div>
     )
   }
