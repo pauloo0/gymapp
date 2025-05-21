@@ -39,11 +39,26 @@ import {
 } from '@/components/ui/dialog'
 
 import Loading from '@/components/reusable/Loading'
-import { UploadIcon, Save, X, Plus } from 'lucide-react'
+import { UploadIcon, Save, X, Plus, AlertCircle, Check } from 'lucide-react'
 
 import { Bodypart, Equipment } from '@/utils/interfaces'
 import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/utils/hooks'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Badge } from '@/components/ui/badge'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
 
@@ -52,6 +67,15 @@ const formSchema = z.object({
   equipment_id: z.string().min(1, 'Selecione o equipamento'),
   bodypart_id: z.string().min(1, 'Selecione o músculo treinado'),
   difficulty_level: z.string(),
+  exercise_measurements: z
+    .array(
+      z.object({
+        measurement_type: z.string(),
+        is_required: z.boolean(),
+      })
+    )
+    .min(2, 'Selecione 2 unidades de medida')
+    .max(2),
   description: z.string(),
   media: z.array(
     z.object({
@@ -62,6 +86,13 @@ const formSchema = z.object({
 })
 
 type FormValues = z.infer<typeof formSchema>
+
+const measurementTypes = [
+  { value: 'weight', label: 'Peso' },
+  { value: 'reps', label: 'Repetições' },
+  { value: 'distance', label: 'Distância' },
+  { value: 'time', label: 'Tempo' },
+]
 
 export default function ExercisesCreate() {
   const navigate = useNavigate()
@@ -90,6 +121,11 @@ export default function ExercisesCreate() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
+      equipment_id: '',
+      bodypart_id: '',
+      difficulty_level: 'beginner',
+      exercise_measurements: [],
+      description: '',
       media: [],
     },
   })
@@ -119,6 +155,9 @@ export default function ExercisesCreate() {
 
     fetchData()
   }, [token])
+
+  const [openSelect, setOpenSelect] = useState(false)
+  const [selectionError, setSelectionError] = useState<string | null>(null)
 
   // Ref to store raw File objects
   const filesRef = useRef<File[]>([])
@@ -173,6 +212,51 @@ export default function ExercisesCreate() {
     navigate(-1)
   }
 
+  // Function to toggle a measurement type (add if not present, remove if present)
+  const toggleMeasurementType = (
+    type: string,
+    onChange: (value: FormValues['exercise_measurements']) => void
+  ) => {
+    const currentMeasurements = form.getValues().exercise_measurements || []
+
+    // Check if the measurement type already exists
+    const existingIndex = currentMeasurements.findIndex(
+      (m) => m.measurement_type === type
+    )
+
+    if (existingIndex >= 0) {
+      // If it exists, remove it
+      onChange(currentMeasurements.filter((_, i) => i !== existingIndex))
+      setSelectionError(null)
+    } else {
+      // If it doesn't exist, add it if we have less than 2 items
+      if (currentMeasurements.length < 2) {
+        onChange([
+          ...currentMeasurements,
+          { measurement_type: type, is_required: true },
+        ])
+        setSelectionError(null)
+      } else {
+        // Show error if trying to add more than 2 items
+        setSelectionError(
+          'Só pode selecionar 2 unidades de medida. Remova 1 antes de continuar.'
+        )
+      }
+    }
+  }
+
+  // Function to remove a measurement type
+  const removeMeasurementType = (index: number) => {
+    const currentMeasurements = form.getValues().exercise_measurements
+
+    form.setValue(
+      'exercise_measurements',
+      currentMeasurements.filter((_, i) => i !== index),
+      { shouldValidate: true }
+    )
+    setSelectionError(null)
+  }
+
   const onSubmit = async (data: FormValues) => {
     const formData = new FormData()
 
@@ -180,6 +264,10 @@ export default function ExercisesCreate() {
     formData.append('equipment_id', data.equipment_id)
     formData.append('bodypart_id', data.bodypart_id)
     formData.append('difficulty_level', data.difficulty_level)
+    formData.append(
+      'exercise_measurements',
+      JSON.stringify(data.exercise_measurements)
+    )
     formData.append('description', data.description)
     formData.append('name', data.name)
 
@@ -188,6 +276,8 @@ export default function ExercisesCreate() {
     })
 
     try {
+      setIsLoading(true)
+
       const res = await axios.post(`${apiUrl}/exercises`, formData, {
         headers: {
           'Auth-Token': token,
@@ -399,6 +489,137 @@ export default function ExercisesCreate() {
                     <SelectItem value='advanced'>Avançado</SelectItem>
                   </SelectContent>
                 </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='exercise_measurements'
+            render={({ field }) => (
+              <FormItem className='flex flex-col w-full'>
+                <FormLabel className={errorMessage ? 'text-red-500' : ''}>
+                  Unidades de medida (Selecionar 2)
+                </FormLabel>
+                <Popover open={openSelect} onOpenChange={setOpenSelect}>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant='outline'
+                        role='combobox'
+                        aria-expanded={openSelect}
+                        className={cn(
+                          'w-full justify-between hover:bg-gray-900'
+                        )}
+                      >
+                        Selecionar unidades de medida
+                        <Badge
+                          variant={
+                            field.value.length === 2 ? 'default' : 'outline'
+                          }
+                          className={cn(
+                            'ml-2',
+                            field.value.length === 2
+                              ? 'bg-lime-500 text-gray-950 hover:bg-lime-600'
+                              : 'border-gray-600 text-gray-200'
+                          )}
+                        >
+                          {field.value.length}/2
+                        </Badge>
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-[calc(100vw_-_2rem)] max-w-[500px] p-0 border-gray-700'>
+                    <Command>
+                      <CommandInput placeholder='Unidade de medida...' />
+                      <CommandList>
+                        {selectionError && (
+                          <div className='px-2 py-1.5'>
+                            <Alert
+                              variant='destructive'
+                              className='py-2 text-gray-100 border-red-800 bg-red-900/50'
+                            >
+                              <AlertCircle className='w-4 h-4 text-red-400' />
+                              <AlertDescription className='text-xs text-gray-100'>
+                                {selectionError}
+                              </AlertDescription>
+                            </Alert>
+                          </div>
+                        )}
+                        <CommandGroup>
+                          {measurementTypes.map((type) => {
+                            const isSelected = field.value.some(
+                              (item) => item.measurement_type === type.value
+                            )
+                            const isDisabled =
+                              field.value.length >= 2 && !isSelected
+
+                            return (
+                              <CommandItem
+                                key={type.value}
+                                value={type.value}
+                                disabled={isDisabled}
+                                onSelect={() =>
+                                  toggleMeasurementType(
+                                    type.value,
+                                    field.onChange
+                                  )
+                                }
+                                className={cn(
+                                  'text-gray-100 aria-selected:bg-gray-700',
+                                  isDisabled && 'opacity-50 cursor-not-allowed',
+                                  isSelected && 'bg-gray-700'
+                                )}
+                              >
+                                <Check
+                                  className={cn(
+                                    'mr-2 h-4 w-4',
+                                    isSelected
+                                      ? 'text-lime-500 opacity-100'
+                                      : 'opacity-0'
+                                  )}
+                                />
+                                {type.label}
+                              </CommandItem>
+                            )
+                          })}
+                        </CommandGroup>
+                        <CommandEmpty className='text-gray-400'>
+                          Não encontrei esta medida
+                        </CommandEmpty>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+
+                {field.value.length > 0 && (
+                  <div className='flex flex-wrap gap-2 mt-3'>
+                    {field.value.map((item, index) => {
+                      const measurementType = measurementTypes.find(
+                        (type) => type.value === item.measurement_type
+                      )
+
+                      return (
+                        <Badge
+                          key={index}
+                          variant='secondary'
+                          className='px-3 py-1 text-gray-100 bg-gray-800 border-gray-700 hover:bg-gray-700'
+                        >
+                          {measurementType?.label || item.measurement_type}
+                          <button
+                            type='button'
+                            className='ml-2 text-gray-400 hover:text-lime-400'
+                            onClick={() => removeMeasurementType(index)}
+                          >
+                            <X className='w-3 h-3' />
+                            <span className='sr-only'>Remove</span>
+                          </button>
+                        </Badge>
+                      )
+                    })}
+                  </div>
+                )}
                 <FormMessage />
               </FormItem>
             )}
