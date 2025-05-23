@@ -140,7 +140,7 @@ export default function ExercisesCreate() {
         ])
 
         if (!resEquipment || !resBodyparts) {
-          setErrorMessage('Não encontrei equipamentos ou')
+          setErrorMessage('Não encontrei equipamentos ou partes do corpo')
           return
         }
 
