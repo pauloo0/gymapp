@@ -269,7 +269,6 @@ export default function ExercisesCreate() {
       JSON.stringify(data.exercise_measurements)
     )
     formData.append('description', data.description)
-    formData.append('name', data.name)
 
     filesRef.current.forEach((file) => {
       formData.append('media', file)
@@ -293,7 +292,18 @@ export default function ExercisesCreate() {
       setSuccessMessage('Exercício criado com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setErrorMessage(error.response?.data)
+        setErrorMessage(() => {
+          let errorMessages = ''
+
+          if (error.response?.data.details) {
+            error.response?.data.details.map((detail: string) => {
+              errorMessages += `${detail}\n`
+            })
+          } else {
+            errorMessages = error.response?.data
+          }
+          return errorMessages
+        })
       } else {
         setErrorMessage(`Erro inesperado: ${error}`)
         console.error('An unexpected error ocurred:', error)
