@@ -204,7 +204,7 @@ function App() {
               element={<ExercisesCreate />}
             />
             <Route
-              path='/admin/exercicios/:exercicios_id/editar'
+              path='/admin/exercicios/:exercise_id/editar'
               element={<ExercisesEdit />}
             />
 
