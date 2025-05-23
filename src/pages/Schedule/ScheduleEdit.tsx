@@ -9,7 +9,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { Client, Workout } from '@/utils/interfaces'
+import { Client, Schedule, Workout } from '@/utils/interfaces'
 import TrainerNavbar from '@/components/TrainerNavbar'
 import Loading from '@/components/reusable/Loading'
 
@@ -51,11 +51,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Checkbox } from '@/components/ui/checkbox'
 
 const formSchema = z.object({
   date: z.date(),
   time: z.string(),
   workout_id: z.string().nullable(),
+  update_all: z.boolean().optional(),
 })
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -83,6 +85,9 @@ function ScheduleEdit() {
   const [isLoading, setIsLoading] = useState(true)
   const [client, setClient] = useState<Client | null>(null)
   const [clientWorkouts, setClientWorkouts] = useState<Workout[]>([])
+  const [currentSchedule, setCurrentSchedule] = useState<Schedule | undefined>(
+    undefined
+  )
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -90,6 +95,7 @@ function ScheduleEdit() {
       date: new Date(),
       time: '',
       workout_id: '',
+      update_all: false,
     },
   })
 
@@ -111,6 +117,8 @@ function ScheduleEdit() {
           time: schedule.time,
           workout_id: schedule.workout_id || '',
         })
+
+        setCurrentSchedule(schedule)
 
         const resClient = await axios.get(
           `${apiUrl}/clients/${schedule.clients.id}`,
@@ -181,6 +189,7 @@ function ScheduleEdit() {
       client_id: client?.id,
       date: format(values.date, 'yyyy-MM-dd'),
       workout_id: values.workout_id === '' ? null : values.workout_id,
+      update_all: values.update_all || false,
     }
 
     try {
@@ -203,9 +212,18 @@ function ScheduleEdit() {
       setSuccessMessage('Alterações gravadas com sucesso!')
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setErrorMessage(error.response?.data)
+        const errorData = error.response?.data
+        if (errorData?.errors) {
+          // Handle multiple errors from batch update
+          setErrorMessage(errorData.errors.join(', '))
+        } else if (errorData?.message) {
+          // Handle single error message
+          setErrorMessage(errorData.message)
+        } else {
+          setErrorMessage('An unexpected error occurred.')
+        }
       } else {
-        setErrorMessage(`Erro inesperado: ${error}`)
+        setErrorMessage(`Unexpected error: ${error}`)
         console.error('An unexpected error occurred:', error)
       }
     } finally {
@@ -368,6 +386,26 @@ function ScheduleEdit() {
                 </FormItem>
               )}
             />
+
+            {currentSchedule && currentSchedule.repeating && (
+              <FormField
+                control={form.control}
+                name='update_all'
+                render={({ field }) => (
+                  <FormItem className='flex flex-row items-start col-span-2 p-2 space-x-3 space-y-0'>
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className='leading-none'>
+                      <FormLabel>Atualizar todos os agendamentos</FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
+            )}
 
             <div className='col-span-2'>
               <FormField

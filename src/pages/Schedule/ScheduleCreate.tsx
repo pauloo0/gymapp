@@ -8,7 +8,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { addMonths, addWeeks, format } from 'date-fns'
+import { format } from 'date-fns'
 import { pt } from 'date-fns/locale'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -60,7 +60,7 @@ const formSchema = z.object({
   date: z.date(),
   time: z.string(),
   workout_id: z.string().nullable(),
-  repeat_type: z.enum(['no-repeat', 'weekly', 'two-weeks', 'monthly']),
+  repeat_type: z.enum(['no_repeat', 'weekly', 'biweekly', 'monthly']),
 })
 
 const apiUrl: string = import.meta.env.VITE_API_URL || ''
@@ -96,7 +96,7 @@ function ScheduleCreate() {
       date: new Date(),
       time: '',
       workout_id: '',
-      repeat_type: 'no-repeat',
+      repeat_type: 'no_repeat',
     },
   })
 
@@ -175,66 +175,20 @@ function ScheduleCreate() {
       date: format(values.date, 'yyyy-MM-dd'),
       time: values.time,
       workout_id: values.workout_id === '' ? null : values.workout_id,
+      repeating: values.repeat_type !== 'no_repeat',
+      repeat_type: values.repeat_type,
     }
 
     try {
-      if (values.repeat_type !== 'no-repeat') {
-        const repeatMap: Record<
-          string,
-          { count: number; addFn: (date: Date) => Date }
-        > = {
-          weekly: { count: 52, addFn: (date) => addWeeks(date, 1) },
-          'two-weeks': { count: 26, addFn: (date) => addWeeks(date, 2) },
-          monthly: { count: 12, addFn: (date) => addMonths(date, 1) },
-        }
-        const { count: repeat_number, addFn } =
-          repeatMap[values.repeat_type] || repeatMap['weekly']
+      const resSchedule = await axios.post(`${apiUrl}/schedule`, scheduleInfo, {
+        headers: {
+          'Auth-Token': token,
+        },
+      })
 
-        const dates: Date[] = []
-        let currentDate = values.date
-        for (let i = 0; i < repeat_number; i++) {
-          dates.push(currentDate)
-          currentDate = addFn(currentDate)
-        }
-
-        const repeatResults = await Promise.all(
-          dates.map((date) =>
-            axios.post(
-              `${apiUrl}/schedule`,
-              {
-                ...scheduleInfo,
-                date: format(date, 'yyyy-MM-dd'),
-              },
-              {
-                headers: {
-                  'Auth-Token': token,
-                },
-              }
-            )
-          )
-        )
-
-        repeatResults.forEach((result) => {
-          if (result.status !== 201) {
-            console.error(result.data)
-            throw new Error(result.data)
-          }
-        })
-      } else {
-        const resSchedule = await axios.post(
-          `${apiUrl}/schedule`,
-          scheduleInfo,
-          {
-            headers: {
-              'Auth-Token': token,
-            },
-          }
-        )
-
-        if (resSchedule.status !== 201) {
-          console.error(resSchedule.data)
-          throw new Error(resSchedule.data)
-        }
+      if (resSchedule.status !== 201) {
+        console.error(resSchedule.data)
+        throw new Error(resSchedule.data)
       }
 
       setErrorMessage(undefined)
@@ -471,12 +425,12 @@ function ScheduleCreate() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={'no-repeat'}>Não repetir</SelectItem>
+                      <SelectItem value={'no_repeat'}>Não repetir</SelectItem>
                       <SelectItem value={'weekly'}>Todas as semanas</SelectItem>
-                      <SelectItem value={'two-weeks'}>
+                      <SelectItem value={'biweekly'}>
                         A cada duas semanas
                       </SelectItem>
-                      <SelectItem value={'monthle'}>Todos os meses</SelectItem>
+                      <SelectItem value={'monthly'}>Todos os meses</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

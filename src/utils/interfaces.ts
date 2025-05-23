@@ -28,12 +28,15 @@ export interface ClientLocation {
 }
 
 type ScheduleStatus = 'scheduled' | 'completed' | 'canceled'
-
+type ScheduleRepeatType = 'no_repeat' | 'weekly' | 'biweekly' | 'monthly'
 export interface Schedule {
   id: string
   date: string
   time: string
   status: ScheduleStatus
+  repeating?: boolean
+  repeat_type?: ScheduleRepeatType
+  originel_schedule_id?: string
   workouts: Workout | null
   clients: {
     id: string
