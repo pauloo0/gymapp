@@ -217,7 +217,7 @@ function MeasurementEdit() {
   }, [token, measurement])
 
   const cancelEdit = () => {
-    navigate(`/avaliacao/${measurement_id}`)
+    navigate(`/avaliacoes/antropometricos/${measurement_id}`)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -270,7 +270,7 @@ function MeasurementEdit() {
 
   const handleSuccessClose = () => {
     setIsDialogOpen(false)
-    navigate(`/avaliacao/${measurement_id}`)
+    navigate(`/avaliacoes/antropometricos/${measurement_id}`)
   }
   const handleErrorClose = () => {
     setIsDialogOpen(false)
@@ -292,7 +292,7 @@ function MeasurementEdit() {
         <div className='flex flex-row justify-between w-full gap-2 items-cnter'>
           <ArrowLeft
             className='w-6 h-6'
-            onClick={() => navigate('/avaliacoes')}
+            onClick={() => navigate('/avaliacoes/antropometricos/')}
           />
           <h1 className='text-2xl font-semibold'>
             Avaliação{' '}

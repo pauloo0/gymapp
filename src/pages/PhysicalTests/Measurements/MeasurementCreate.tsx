@@ -153,7 +153,7 @@ function MeasurementCreate() {
   }, [token])
 
   const cancelCreate = () => {
-    navigate(`/avaliacoes`)
+    navigate(`/avaliacoes/antropometricos/`)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -205,7 +205,7 @@ function MeasurementCreate() {
 
   const handleSuccessClose = () => {
     setIsDialogOpen(false)
-    navigate('/avaliacoes')
+    navigate('/avaliacoes/antropometricos/')
   }
   const handleErrorClose = () => {
     setIsDialogOpen(false)

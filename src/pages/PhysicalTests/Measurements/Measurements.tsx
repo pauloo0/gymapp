@@ -161,7 +161,11 @@ function Measurements() {
                     <TableRow
                       key={measurement.id}
                       className='w-full hover:bg-gray-900'
-                      onClick={() => navigate(`/avaliacao/${measurement.id}`)}
+                      onClick={() =>
+                        navigate(
+                          `/avaliacoes/antropometricos/${measurement.id}`
+                        )
+                      }
                     >
                       <TableCell className='text-center'>
                         {format(measurement.date, 'dd')}
@@ -194,7 +198,7 @@ function Measurements() {
           <div className='flex flex-row items-center justify-start w-full gap-2 mb-6'>
             <ArrowLeft
               className='w-6 h-6'
-              onClick={() => navigate('/avaliacoes')}
+              onClick={() => navigate('/avaliacoes/antropometricos/')}
             />
             <h1 className='text-2xl font-semibold'>Dados Antropométricos</h1>
           </div>
@@ -220,7 +224,7 @@ function Measurements() {
               type='button'
               variant='default'
               size='sm'
-              onClick={() => navigate('/avaliacoes/novo')}
+              onClick={() => navigate('/avaliacoes/antropometricos/novo')}
             >
               <Plus className='w-5 h-5 mr-1' /> Criar nova
             </Button>
@@ -243,7 +247,11 @@ function Measurements() {
                       <TableRow
                         key={measurement.id}
                         className='hover:bg-gray-900'
-                        onClick={() => navigate(`/avaliacao/${measurement.id}`)}
+                        onClick={() =>
+                          navigate(
+                            `/avaliacoes/antropometricos/${measurement.id}`
+                          )
+                        }
                       >
                         <TableCell>
                           {measurement.clients.firstname +

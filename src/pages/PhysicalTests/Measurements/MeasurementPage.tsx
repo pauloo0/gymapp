@@ -71,13 +71,13 @@ function MeasurementPage() {
   const label = 'text-sm font-semibold leading-none'
 
   const editMeasurement = (measurement: Measurement) => {
-    navigate(`/avaliacao/${measurement.id}/editar`)
+    navigate(`/avaliacoes/antropometricos/${measurement.id}/editar`)
   }
 
   if (isLoading) return <Loading />
 
   if (!measurement) {
-    navigate('/avaliacoes')
+    navigate('/avaliacoes/antropometricos')
   } else {
     return (
       <>
@@ -87,7 +87,7 @@ function MeasurementPage() {
           <div className='flex flex-row justify-between w-full gap-2 items-cnter'>
             <ArrowLeft
               className='w-6 h-6'
-              onClick={() => navigate('/avaliacoes')}
+              onClick={() => navigate('/avaliacoes/antropometricos')}
             />
             <h1 className='text-2xl font-semibold'>
               Avaliação de
