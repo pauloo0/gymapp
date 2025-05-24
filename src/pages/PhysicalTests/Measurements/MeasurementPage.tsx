@@ -172,6 +172,14 @@ function MeasurementPage() {
               <p>{measurement.chest} cm</p>
             </div>
             <div className={label_group}>
+              <p className={label}>Braço Esquerdo</p>
+              <p>{measurement.leftarm} cm</p>
+            </div>
+            <div className={label_group}>
+              <p className={label}>Braço Direito</p>
+              <p>{measurement.rightarm} cm</p>
+            </div>
+            <div className={label_group}>
               <p className={label}>Cintura</p>
               <p>{measurement.waist} cm</p>
             </div>
@@ -180,20 +188,12 @@ function MeasurementPage() {
               <p>{measurement.hip} cm</p>
             </div>
             <div className={label_group}>
-              <p className={label}>Perna Esquerda</p>
+              <p className={label}>Coxa Esquerda</p>
               <p>{measurement.leftthigh} cm</p>
             </div>
             <div className={label_group}>
-              <p className={label}>Perna Direita</p>
+              <p className={label}>Coxa Direita</p>
               <p>{measurement.rightthigh} cm</p>
-            </div>
-            <div className={label_group}>
-              <p className={label}>Braço Esquerdo</p>
-              <p>{measurement.leftarm} cm</p>
-            </div>
-            <div className={label_group}>
-              <p className={label}>Braço Direito</p>
-              <p>{measurement.rightarm} cm</p>
             </div>
             <div className={label_group}>
               <p className={label}>Gémeo Esquerdo</p>

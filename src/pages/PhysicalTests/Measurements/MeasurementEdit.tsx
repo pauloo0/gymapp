@@ -603,6 +603,52 @@ function MeasurementEdit() {
 
             <FormField
               control={form.control}
+              name='leftarm'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Braço Esquerdo
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='rightarm'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${errorMessage} ? 'text-red-500' : ''`}
+                  >
+                    Braço Direito
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      className={`${errorMessage} : 'border-red-500' : ''`}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name='waist'
               render={({ field }) => (
                 <FormItem>
@@ -655,7 +701,7 @@ function MeasurementEdit() {
                   <FormLabel
                     className={`${errorMessage} ? 'text-red-500' : ''`}
                   >
-                    Perna Esquerda
+                    Coxa Esquerda
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -678,53 +724,7 @@ function MeasurementEdit() {
                   <FormLabel
                     className={`${errorMessage} ? 'text-red-500' : ''`}
                   >
-                    Perna Direita
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      className={`${errorMessage} : 'border-red-500' : ''`}
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='leftarm'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    className={`${errorMessage} ? 'text-red-500' : ''`}
-                  >
-                    Braço Esquerdo
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      className={`${errorMessage} : 'border-red-500' : ''`}
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='rightarm'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    className={`${errorMessage} ? 'text-red-500' : ''`}
-                  >
-                    Braço Direito
+                    Coxa Direita
                   </FormLabel>
                   <FormControl>
                     <Input
