@@ -120,9 +120,22 @@ function Clients() {
 
         const clients = res.data.clients.sort(
           (clientA: Client, clientB: Client) => {
-            const active = clientA.active ? 1 : 0
-            const active2 = clientB.active ? 1 : 0
-            return active - active2
+            // Active clients first
+            if (clientA.active !== clientB.active) {
+              return clientA.active ? -1 : 1
+            }
+            // Then sort alphabetically by firstname, then lastname
+            const nameA = (
+              clientA.firstname +
+              ' ' +
+              clientA.lastname
+            ).toLowerCase()
+            const nameB = (
+              clientB.firstname +
+              ' ' +
+              clientB.lastname
+            ).toLowerCase()
+            return nameA.localeCompare(nameB)
           }
         )
 
