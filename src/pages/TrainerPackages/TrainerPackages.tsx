@@ -85,7 +85,7 @@ function TrainerPackages() {
           </Button>
         </div>
 
-        <section id='package-list' className='overflow-y-auto max-h-[32rem]'>
+        <section id='package-list'>
           <Table>
             <TableHeader>
               <TableRow>

@@ -172,7 +172,7 @@ function Workouts() {
 
           <section
             id='client_workouts'
-            className='flex flex-col items-center gap-4 jusftify-center overflow-y-auto max-h-[32rem]'
+            className='flex flex-col items-center gap-4 jusftify-center'
           >
             {filteredWorkouts.length > 0 ? (
               filteredWorkouts.map((workout: Workout) => (
@@ -249,7 +249,7 @@ function Workouts() {
 
           <section
             id='client_workouts'
-            className='flex flex-col items-center gap-4 jusftify-center overflow-y-auto max-h-[32rem]'
+            className='flex flex-col items-center gap-4 jusftify-center'
           >
             {filteredWorkouts.length > 0 ? (
               filteredWorkouts.map((workout: Workout) => (

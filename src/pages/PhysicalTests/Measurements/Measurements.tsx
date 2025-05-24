@@ -239,10 +239,7 @@ function Measurements() {
             </Button>
           </div>
 
-          <section
-            id='client_measurements'
-            className='overflow-y-auto max-h-[32rem]'
-          >
+          <section id='client_measurements'>
             <Table>
               <TableHeader>
                 <TableRow>

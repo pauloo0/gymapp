@@ -290,10 +290,7 @@ function Schedules() {
               </div>
             </div>
 
-            <section
-              id='schedule-list'
-              className='overflow-y-auto max-h-[32rem]'
-            >
+            <section id='schedule-list'>
               <Table>
                 <TableHeader>
                   <TableRow>
