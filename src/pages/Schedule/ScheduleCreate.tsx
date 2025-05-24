@@ -109,13 +109,16 @@ function ScheduleCreate() {
           },
         })
 
-        const clients = res.data.clients.sort(
-          (clientA: Client, clientB: Client) => {
-            const active = clientA.active ? 1 : 0
-            const active2 = clientB.active ? 1 : 0
-            return active - active2
-          }
-        )
+        const clients = res.data.clients
+          .filter((client: Client) => client.active === true)
+          .sort((clientA: Client, clientB: Client) => {
+            const nameA =
+              `${clientA.firstname} ${clientA.lastname}`.toLowerCase()
+            const nameB =
+              `${clientB.firstname} ${clientB.lastname}`.toLowerCase()
+
+            return nameA.localeCompare(nameB)
+          })
 
         setClients(clients)
       } catch (error) {

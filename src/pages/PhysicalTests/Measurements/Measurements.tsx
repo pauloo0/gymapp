@@ -69,6 +69,15 @@ function Measurements() {
         })
 
         const clients: Client[] = res.data.clients
+          .filter((client: Client) => client.active === true)
+          .sort((clientA: Client, clientB: Client) => {
+            const nameA =
+              `${clientA.firstname} ${clientA.lastname}`.toLowerCase()
+            const nameB =
+              `${clientB.firstname} ${clientB.lastname}`.toLowerCase()
+
+            return nameA.localeCompare(nameB)
+          })
         setClients(clients)
       } catch (error) {
         if (axios.isAxiosError(error)) {
